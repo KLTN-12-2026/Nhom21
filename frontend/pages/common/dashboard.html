@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard - VAX AI</title>
+
+    <!-- CSS riêng của Dashboard -->
+    <link rel="stylesheet" href="../../css/dashboard.css">
+    <link rel="stylesheet" href="../../css/mobile.css">
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-left">
+            <a href="trangchu.html" class="header-home-link">
+                HỆ THỐNG QUẢN LÝ TIÊM CHỦNG VAX AI
+            </a>
+        </div>
+    </header>
+
+
+    <div class="layout">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+
+            <!-- THÔNG TIN TÀI KHOẢN -->
+            <div class="user-box">
+                <div class="user-box-title" id="userBoxTitle">
+                    Tài khoản:
+                </div>
+
+                <strong id="usernameDisplay"></strong>
+            </div>
+
+
+            <!-- MENU -->
+            <div>
+                <!-- Tiêu đề menu sẽ thay đổi theo role -->
+                <div class="menu-title" id="menuTitle">
+                    Menu
+                </div>
+
+                <!--
+          JavaScript sẽ tạo menu ở đây
+          dựa vào user.role
+        -->
+                <ul class="menu-list" id="menuList"></ul>
+            </div>
+
+
+            <!-- ĐĂNG XUẤT -->
+            <div id="logout">
+                Đăng xuất
+            </div>
+
+        </aside>
+
+
+        <!-- NỘI DUNG -->
+        <main class="content">
+
+            <div class="content-card">
+
+                <!-- HEADER NỘI DUNG -->
+                <div class="content-header">
+
+                    <h2 id="contentTitle">
+                        Xin chào
+                    </h2>
+
+                    <p id="contentSubtitle">
+                        Chọn chức năng ở bên trái để sử dụng.
+                    </p>
+
+                </div>
+
+
+                <!-- TRANG TỔNG QUAN -->
+                <div id="welcomeBox" class="welcome-box">
+
+                    <!--
+            Nội dung Tổng quan của từng role
+            sẽ được dashboard.js tạo ở đây
+          -->
+                    <div class="welcome-panels" id="welcomePanels">
+                    </div>
+
+                </div>
+
+
+                <!-- TRANG CON -->
+                <iframe id="pageFrame" src="" title="Nội dung chức năng">
+                </iframe>
+
+            </div>
+
+        </main>
+
+    </div>
+
+
+    <!-- JS Dashboard dùng chung -->
+    <script src="../../js/common/dashboard.js"></script>
+
+</body>
+
+</html>

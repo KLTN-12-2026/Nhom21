@@ -1,0 +1,85 @@
+/* Đặt font và nền chung */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: linear-gradient(135deg, #4fc3f7, #0288d1);
+}
+
+/* Căn giữa khối login */
+.login-page {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Hộp đăng nhập */
+.login-box {
+    background: #ffffff;
+    padding: 24px 32px;
+    border-radius: 10px;
+    width: 360px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.login-box h2 {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #0277bd;
+}
+
+/* Nhóm input + label */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 4px;
+    font-weight: bold;
+    color: #333;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #0288d1;
+    box-shadow: 0 0 2px rgba(2, 136, 209, 0.8);
+}
+
+/* Nút đăng nhập */
+button[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: none;
+    border-radius: 4px;
+    background-color: #0288d1;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button[type="submit"]:hover {
+    background-color: #0277bd;
+}
+
+/* Text nhỏ bên dưới */
+.helper-text {
+    margin-top: 10px;
+    font-size: 13px;
+    color: #666;
+    text-align: center;
+}
