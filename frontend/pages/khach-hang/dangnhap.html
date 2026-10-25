@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Đăng nhập - Hệ thống quản lý tiêm chủng</title>
+  <link rel="stylesheet" href="../css/style.css">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(135deg, #03a9f4, #0288d1);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-page {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .login-box {
+      background: #fff;
+      width: 400px;
+      padding: 26px 26px 22px;
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+      box-sizing: border-box;
+    }
+
+    .login-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .login-logo {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+    }
+
+    .login-title-wrap {
+      text-align: center;
+      line-height: 1.3;
+    }
+
+    .login-title-main {
+      font-size: 20px;
+      font-weight: 700;
+      color: #0277bd;
+    }
+
+    .login-title-sub {
+      font-size: 20px;
+      font-weight: 700;
+      color: #0288d1;
+    }
+
+    .login-subtitle {
+      font-size: 13px;
+      color: #607d8b;
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+      font-size: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 4px;
+      font-weight: 600;
+      color: #01579b;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 6px;
+      border: 1px solid #b0bec5;
+      font-size: 14px;
+      outline: none;
+      box-sizing: border-box;
+      transition: 0.2s;
+    }
+
+    .form-group input:focus {
+      border-color: #0288d1;
+      box-shadow: 0 0 0 2px rgba(2, 136, 209, 0.15);
+    }
+
+    button[type="submit"] {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      background: #0288d1;
+      color: white;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 5px;
+    }
+
+    button[type="submit"]:hover {
+      background: #0277bd;
+    }
+
+    .login-extra-row {
+      display: flex;
+      justify-content: flex-start;
+      margin-top: 8px;
+      font-size: 13px;
+    }
+
+    .login-extra-row a {
+      color: #0288d1;
+      text-decoration: none;
+    }
+
+    .login-divider {
+      display: flex;
+      align-items: center;
+      margin: 16px 0 10px;
+      font-size: 12px;
+      color: #90a4ae;
+    }
+
+    .login-divider::before,
+    .login-divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: #e0e0e0;
+    }
+
+    .login-divider span {
+      margin: 0 8px;
+      white-space: nowrap;
+    }
+
+    .social-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .btn-social {
+      width: 100%;
+      border-radius: 6px;
+      padding: 8px 10px;
+      border: 1px solid #b0bec5;
+      font-size: 14px;
+      cursor: pointer;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .icon-circle {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #eeeeee;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-footer {
+      font-size: 13px;
+      text-align: center;
+      margin-top: 4px;
+      color: #607d8b;
+    }
+
+    .login-footer a {
+      color: #0288d1;
+      font-weight: 600;
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="login-page">
+    <div class="login-box">
+
+      <div class="login-header">
+        <img src="../img/logo.png" class="login-logo" alt="Logo">
+
+        <div class="login-title-wrap">
+          <div class="login-title-main">
+            Đăng nhập hệ thống
+          </div>
+
+          <div class="login-title-sub">
+            tiêm chủng
+          </div>
+        </div>
+      </div>
+
+      <div class="login-subtitle">
+        Vui lòng nhập thông tin tài khoản để tiếp tục sử dụng hệ thống.
+      </div>
+
+      <form id="loginForm">
+
+        <div class="form-group">
+          <label for="username">Tài khoản</label>
+
+          <input type="text" id="username" placeholder="Nhập tài khoản" required>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Mật khẩu</label>
+
+          <input type="password" id="password" placeholder="Nhập mật khẩu" required>
+        </div>
+
+        <button type="submit">
+          Đăng nhập
+        </button>
+
+        <div class="login-extra-row">
+          <a href="dat-lai-mat-khau.html">
+            Quên mật khẩu?
+          </a>
+        </div>
+
+      </form>
+
+      <div class="login-footer">
+        Chưa có tài khoản?
+        <a href="dangky.html">
+          Đăng ký ngay
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="../js/dangnhap.js"></script>
+
+</body>
+
+</html>
