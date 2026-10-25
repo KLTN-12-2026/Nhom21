@@ -2,9 +2,7 @@
 const API_VACCINE = "http://localhost:3000/api/vaccine";
 const API_ORIGIN = "http://localhost:3000";
 
-// ==================================================
-// KIỂM TRA ĐĂNG NHẬP VÀ QUYỀN ADMIN
-// ==================================================
+
 
 let user = null;
 
@@ -34,9 +32,7 @@ if (user.vai_tro !== "ADMIN") {
   throw new Error("Không có quyền ADMIN");
 }
 
-// ==================================================
-// DOM
-// ==================================================
+
 
 const vaccineBody = document.getElementById("vaccineBody");
 const searchVaccine = document.getElementById("searchVaccine");
@@ -48,7 +44,7 @@ const editModal = document.getElementById("editVaccineModal");
 const vaccineForm = document.getElementById("vaccineForm");
 const editVaccineForm = document.getElementById("editVaccineForm");
 
-// FORM THÊM
+
 const tenVaccineInput = document.getElementById("ten_vaccine");
 const phongBenhInput = document.getElementById("phong_benh");
 const loaiDoiTuongInput = document.getElementById("loai_doi_tuong");
@@ -61,7 +57,6 @@ const addImagePreview = document.getElementById("preview_hinh_anh");
 const addDetailInput = document.getElementById("noi_dung_chi_tiet");
 const addSourceInput = document.getElementById("nguon_tham_khao");
 
-// FORM CẬP NHẬT
 const editIdInput = document.getElementById("edit_id");
 const editTenVaccineInput = document.getElementById("edit_ten_vaccine");
 const editPhongBenhInput = document.getElementById("edit_phong_benh");
@@ -77,9 +72,7 @@ const editSourceInput = document.getElementById("edit_nguon_tham_khao");
 
 let danhSachVaccine = [];
 
-// ==================================================
-// COMBOBOX NƯỚC SẢN XUẤT
-// ==================================================
+
 
 const DEFAULT_COUNTRIES = [
   "Việt Nam",
@@ -223,9 +216,7 @@ function setupCountryCombobox(input) {
 setupCountryCombobox(nuocSXInput);
 setupCountryCombobox(editNuocSXInput);
 
-// ==================================================
-// REGEX / HẰNG SỐ
-// ==================================================
+
 
 const vaccineNameRegex =
   /^(?![.,-])[A-Za-zÀ-ỹ0-9\s.,()+-]{2,100}(?<![.,-])$/;
@@ -247,9 +238,7 @@ const ALLOWED_IMAGE_TYPES = [
   "image/webp"
 ];
 
-// ==================================================
-// HÀM DÙNG CHUNG
-// ==================================================
+
 
 function isEmpty(value) {
   return (
@@ -352,9 +341,7 @@ function getTrangThaiHtml(status) {
   return `<span class="status-badge">${escapeHtml(status || "Không xác định")}</span>`;
 }
 
-// ==================================================
-// XỬ LÝ HÌNH ẢNH
-// ==================================================
+
 
 function validateVaccineImage(input) {
   clearError(input);
@@ -445,9 +432,7 @@ function previewSelectedImage(input, preview, fallbackUrl = "") {
   showImagePreview(preview, objectUrl);
 }
 
-// ==================================================
-// CHUYỂN TAB
-// ==================================================
+
 
 function chuyenTabVaccine(formId, tab) {
   const form = document.getElementById(formId);
@@ -481,9 +466,7 @@ document.querySelectorAll(".vaccine-tab").forEach(button => {
   });
 });
 
-// ==================================================
-// VALIDATE THÔNG TIN CƠ BẢN
-// ==================================================
+
 
 function validateVaccineData(data, inputs) {
   let valid = true;
@@ -547,9 +530,7 @@ function validateVaccineData(data, inputs) {
   return valid;
 }
 
-// ==================================================
-// VALIDATE THÔNG TIN BỔ SUNG
-// ==================================================
+
 
 function validateVaccineExtra(
   data,
@@ -581,9 +562,7 @@ function validateVaccineExtra(
   return valid;
 }
 
-// ==================================================
-// LẤY DỮ LIỆU FORM
-// ==================================================
+
 
 function getAddFormData() {
   return {
@@ -649,9 +628,7 @@ function buildVaccineFormData(payload, imageInput) {
   return formData;
 }
 
-// ==================================================
-// MODAL THÊM
-// ==================================================
+
 
 function moModalThemVaccine() {
   vaccineForm.reset();
@@ -692,9 +669,7 @@ function dongModalThemVaccine() {
   chuyenTabVaccine("vaccineForm", "basic");
 }
 
-// ==================================================
-// MODAL CẬP NHẬT
-// ==================================================
+
 
 function moModalCapNhat(id) {
   const vaccine = danhSachVaccine.find(
@@ -760,9 +735,7 @@ function dongModalCapNhat() {
   chuyenTabVaccine("editVaccineForm", "basic");
 }
 
-// ==================================================
-// RENDER DANH SÁCH
-// ==================================================
+
 
 function renderVaccines(data) {
   vaccineBody.innerHTML = "";
@@ -869,9 +842,6 @@ function renderVaccines(data) {
   });
 }
 
-// ==================================================
-// TÌM KIẾM VÀ LỌC
-// ==================================================
 
 function locDanhSachVaccine() {
   const keyword = searchVaccine.value
@@ -910,9 +880,6 @@ function locDanhSachVaccine() {
   renderVaccines(filtered);
 }
 
-// ==================================================
-// LOAD DANH SÁCH
-// ==================================================
 
 async function loadVaccines() {
   try {
@@ -954,9 +921,7 @@ async function loadVaccines() {
   }
 }
 
-// ==================================================
-// THÊM VACCINE
-// ==================================================
+
 
 vaccineForm.addEventListener("submit", async event => {
   event.preventDefault();
@@ -1016,9 +981,7 @@ vaccineForm.addEventListener("submit", async event => {
   }
 });
 
-// ==================================================
-// CẬP NHẬT VACCINE
-// ==================================================
+
 
 editVaccineForm.addEventListener("submit", async event => {
   event.preventDefault();
@@ -1091,9 +1054,7 @@ editVaccineForm.addEventListener("submit", async event => {
   }
 });
 
-// ==================================================
-// NGỪNG SỬ DỤNG
-// ==================================================
+
 
 async function ngungVaccine(id, encodedName) {
   const vaccineName = decodeURIComponent(encodedName);
@@ -1131,9 +1092,7 @@ async function ngungVaccine(id, encodedName) {
   }
 }
 
-// ==================================================
-// KÍCH HOẠT LẠI
-// ==================================================
+
 
 async function kichHoatVaccine(id, encodedName) {
   const vaccineName = decodeURIComponent(encodedName);
@@ -1171,16 +1130,12 @@ async function kichHoatVaccine(id, encodedName) {
   }
 }
 
-// ==================================================
-// EVENT TÌM KIẾM VÀ LỌC
-// ==================================================
+
 
 searchVaccine.addEventListener("input", locDanhSachVaccine);
 filterTrangThai.addEventListener("change", locDanhSachVaccine);
 
-// ==================================================
-// EVENT HÌNH ẢNH
-// ==================================================
+
 
 addImageInput.addEventListener("change", () => {
   previewSelectedImage(
@@ -1205,9 +1160,7 @@ editImageInput.addEventListener("change", () => {
   );
 });
 
-// ==================================================
-// ĐÓNG MODAL KHI CLICK BÊN NGOÀI
-// ==================================================
+
 
 addModal.addEventListener("click", event => {
   if (event.target === addModal) {
@@ -1221,9 +1174,7 @@ editModal.addEventListener("click", event => {
   }
 });
 
-// ==================================================
-// ESC ĐÓNG MODAL
-// ==================================================
+
 
 document.addEventListener("keydown", event => {
   if (event.key !== "Escape") return;
@@ -1237,9 +1188,6 @@ document.addEventListener("keydown", event => {
   }
 });
 
-// ==================================================
-// XÓA ERROR KHI NHẬP LẠI
-// ==================================================
 
 [
   tenVaccineInput,
@@ -1267,7 +1215,6 @@ document.addEventListener("keydown", event => {
   input.addEventListener("change", () => clearError(input));
 });
 
-// Combobox nước sản xuất
 [
   nuocSXInput,
   editNuocSXInput
@@ -1275,9 +1222,6 @@ document.addEventListener("keydown", event => {
   input.addEventListener("input", () => clearError(input));
 });
 
-// ==================================================
-// GLOBAL - HTML ONCLICK
-// ==================================================
 
 window.moModalThemVaccine = moModalThemVaccine;
 window.dongModalThemVaccine = dongModalThemVaccine;
@@ -1286,8 +1230,6 @@ window.dongModalCapNhat = dongModalCapNhat;
 window.ngungVaccine = ngungVaccine;
 window.kichHoatVaccine = kichHoatVaccine;
 
-// ==================================================
-// LOAD BAN ĐẦU
-// ==================================================
+
 
 loadVaccines();
