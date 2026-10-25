@@ -30,9 +30,6 @@ const detailBody = document.getElementById("detailBody");
 let profiles = [];
 
 
-/* =========================
-   HEADER
-========================= */
 
 function getHeaders() {
   return {
@@ -42,9 +39,6 @@ function getHeaders() {
 }
 
 
-/* =========================
-   FORMAT
-========================= */
 
 function formatDate(value) {
   if (!value) return "Chưa cập nhật";
@@ -67,9 +61,7 @@ function showValue(value) {
 }
 
 
-/* =========================
-   LOAD DANH SÁCH HỒ SƠ
-========================= */
+
 
 async function loadProfiles() {
   try {
@@ -101,9 +93,6 @@ async function loadProfiles() {
 }
 
 
-/* =========================
-   RENDER DANH SÁCH
-========================= */
 
 
 function renderProfiles(list) {
@@ -203,9 +192,6 @@ function filterProfiles() {
 keywordProfile.addEventListener("input", filterProfiles);
 
 
-/* =========================
-   XEM HỒ SƠ TIÊM CHỦNG
-========================= */
 
 async function viewDetail(nguoiDungId) {
   if (!nguoiDungId) {
@@ -261,9 +247,6 @@ async function viewDetail(nguoiDungId) {
 }
 
 
-/* =========================
-   RENDER CHI TIẾT
-========================= */
 
 
 function renderDetail(vaccines) {
@@ -323,9 +306,6 @@ function renderDetail(vaccines) {
 
 
 
-/* =========================
-   ĐÓNG MODAL
-========================= */
 
 function closeDetail() {
   detailModal.classList.remove("show");
@@ -340,9 +320,6 @@ function closeDetail() {
 }
 
 
-/* =========================
-   CLICK RA NGOÀI MODAL
-========================= */
 
 window.addEventListener("click", event => {
   if (event.target === detailModal) {
@@ -351,9 +328,6 @@ window.addEventListener("click", event => {
 });
 
 
-/* =========================
-   PHÍM ESC
-========================= */
 
 document.addEventListener("keydown", event => {
   if (
@@ -365,8 +339,5 @@ document.addEventListener("keydown", event => {
 });
 
 
-/* =========================
-   KHỞI TẠO
-========================= */
 
 loadProfiles();
