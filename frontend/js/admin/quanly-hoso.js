@@ -161,9 +161,6 @@ function renderProfiles(list) {
 
 
 
-/* =========================
-   TÌM KIẾM
-========================= */
 
 function filterProfiles() {
   const keyword = keywordProfile.value.trim().toLowerCase();
