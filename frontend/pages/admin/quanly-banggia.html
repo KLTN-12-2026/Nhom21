@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản lý bảng giá</title>
+  <link rel="stylesheet" href="../../css/mobile.css">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: transparent;
+      color: #1f2937;
+    }
+
+    .page {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid #dbeafe;
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      margin: 0 0 10px;
+      color: #0b72b9;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    /* FORM THÊM BẢNG GIÁ */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr 1.25fr auto;
+      gap: 10px;
+      align-items: start;
+      width: 100%;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: inherit;
+      color: #1f2937;
+      outline: none;
+      background: #fff;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: #0288d1;
+      box-shadow: 0 0 0 2px rgba(2, 136, 209, 0.12);
+    }
+
+    input::placeholder {
+      color: #7c8794;
+    }
+
+    .input-error {
+      border-color: #e53935 !important;
+      box-shadow: 0 0 0 2px rgba(229, 57, 53, 0.12) !important;
+    }
+
+    .error-message {
+      min-height: 18px;
+      color: #e53935;
+      font-size: 12px;
+      line-height: 1.4;
+      margin-top: 4px;
+    }
+
+    /* BUTTON CHÍNH */
+    .btn-primary {
+      border: none;
+      border-radius: 8px;
+      background: #0288d1;
+      color: #fff;
+      padding: 9px 12px;
+      font-size: 13px;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-primary:hover {
+      background: #0277bd;
+    }
+
+    .form-action {
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .form-action .btn-primary {
+      width: auto;
+      min-width: 140px;
+      height: 35px;
+      padding: 8px 18px;
+      white-space: nowrap;
+    }
+
+    /* TABLE */
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid #dbeafe;
+      border-radius: 10px;
+    }
+
+    table {
+      width: 100%;
+      min-width: 1100px;
+      border-collapse: collapse;
+      font-size: 13px;
+      color: #1f2937;
+    }
+
+    th {
+      background: #0288d1;
+      color: #fff;
+      padding: 10px 8px;
+      border: 1px solid #dbeafe;
+      text-align: center;
+      white-space: nowrap;
+      font-weight: 700;
+    }
+
+    td {
+      padding: 9px 8px;
+      border: 1px solid #dbeafe;
+      background: #fff;
+      color: #1f2937;
+      vertical-align: middle;
+      font-weight: 400;
+    }
+
+    tbody tr:nth-child(even) td {
+      background: #f8fbff;
+    }
+
+    tbody tr:hover td {
+      background: #eef7ff;
+    }
+
+    th:first-child,
+    td:first-child {
+      width: 55px;
+      text-align: center;
+    }
+
+    .readonly-cell {
+      color: #1f2937;
+      font-weight: 400;
+    }
+
+    .action-group {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: nowrap;
+      white-space: nowrap;
+    }
+
+    /* BUTTON TRONG BẢNG */
+    .small-btn {
+      border-radius: 8px;
+      padding: 7px 12px;
+      font-size: 13px;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
+    }
+
+    .save-btn {
+      background: #fff;
+      color: #0288d1;
+      border: 1px solid #0288d1;
+    }
+
+    .save-btn:hover {
+      background: #e1f5fe;
+    }
+
+    .history-btn {
+      background: #fff;
+      color: #0288d1;
+      border: 1px solid #0288d1;
+    }
+
+    .history-btn:hover {
+      background: #e1f5fe;
+    }
+
+    /* TRẠNG THÁI */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 90px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-family: inherit;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .status-active,
+    .status-dang-ap-dung {
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    .status-inactive,
+    .status-het-hieu-luc {
+      background: #e2e8f0;
+      color: #475569;
+    }
+
+    /* MODAL */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(15, 23, 42, 0.35);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-content {
+      width: 100%;
+      max-width: 760px;
+      max-height: 90vh;
+      overflow-y: auto;
+      background: #fff;
+      border: 1px solid #dbeafe;
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+    }
+
+    .history-modal-content {
+      max-width: 1100px;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 18px 18px 12px;
+      border-bottom: 1px solid #dbeafe;
+    }
+
+    .modal-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0;
+      color: #0277bd;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .modal-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .modal-close {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      padding: 0;
+      border: 1px solid #0288d1;
+      border-radius: 8px;
+      background: #fff;
+      color: #0288d1;
+      font-size: 22px;
+      line-height: 1;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    .modal-close:hover {
+      background: #e1f5fe;
+    }
+
+    .modal-body {
+      padding: 18px;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      padding: 0 18px 18px;
+      flex-wrap: wrap;
+    }
+
+    /* THÔNG TIN GIÁ HIỆN TẠI */
+    .price-current {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      padding: 14px;
+      margin-bottom: 18px;
+      border: 1px solid #dbeafe;
+      border-radius: 10px;
+      background: #f8fbff;
+    }
+
+    .price-info-item {
+      min-width: 0;
+    }
+
+    .price-info-item strong {
+      display: block;
+      margin-bottom: 5px;
+      color: #01579b;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .price-info-item span {
+      display: block;
+      color: #1f2937;
+      font-size: 13px;
+      font-weight: 400;
+      overflow-wrap: anywhere;
+    }
+
+    /* FORM MODAL */
+    .modal-form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .modal-form-group {
+      margin-bottom: 12px;
+    }
+
+    .modal-form-group label {
+      display: block;
+      margin-bottom: 6px;
+      color: #01579b;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .modal-form-group input {
+      padding: 8px 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: inherit;
+      color: #1f2937;
+    }
+
+    /* BUTTON MODAL */
+    .btn-secondary,
+    .btn-confirm {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border-radius: 8px;
+      padding: 9px 14px;
+      font-size: 13px;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-secondary {
+      border: 1px solid #0288d1;
+      background: #fff;
+      color: #0288d1;
+    }
+
+    .btn-secondary:hover {
+      background: #e1f5fe;
+    }
+
+    .btn-confirm {
+      border: 1px solid #0288d1;
+      background: #0288d1;
+      color: #fff;
+    }
+
+    .btn-confirm:hover {
+      background: #0277bd;
+    }
+
+    /* LỊCH SỬ GIÁ */
+    .history-table {
+      width: 100%;
+      min-width: 760px;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .history-table th {
+      background: #0288d1;
+      color: #fff;
+      padding: 10px 8px;
+      border: 1px solid #dbeafe;
+      text-align: center;
+      white-space: nowrap;
+      font-weight: 700;
+    }
+
+    .history-table td {
+      padding: 9px 8px;
+      border: 1px solid #dbeafe;
+      background: #fff;
+      color: #1f2937;
+      text-align: center;
+      vertical-align: middle;
+      font-weight: 400;
+    }
+
+    .history-table tbody tr:nth-child(even) td {
+      background: #f8fbff;
+    }
+
+    .history-table tbody tr:hover td {
+      background: #eef7ff;
+    }
+
+    /* TOAST - GIỮ LẠI ĐỂ KHÔNG ẢNH HƯỞNG CẤU TRÚC CŨ */
+    .toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 10000;
+      min-width: 280px;
+      max-width: 420px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 14px;
+      font-family: inherit;
+      font-weight: 600;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: 0.25s;
+    }
+
+    .toast.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .toast.success {
+      background: #22c55e;
+    }
+
+    .toast.error {
+      background: #ef4444;
+    }
+
+    .toast.warning {
+      background: #f59e0b;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 1100px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-action .btn-primary {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .modal {
+        padding: 12px;
+      }
+
+      .modal-header {
+        padding: 16px;
+      }
+
+      .modal-body {
+        padding: 16px;
+      }
+
+      .modal-footer {
+        padding: 0 16px 16px;
+      }
+
+      .price-current,
+      .modal-form-grid {
+        grid-template-columns: 1fr;
+      }
+
+    }
+
+
+    /* FIX MOBILE - QUẢN LÝ BẢNG GIÁ */
+    @media (max-width: 768px) {
+      #priceTable tbody td:not([colspan]) {
+        display: grid !important;
+        grid-template-columns: 92px minmax(0, 1fr) !important;
+        gap: 8px;
+        align-items: start;
+        width: 100% !important;
+        text-align: left !important;
+        overflow-wrap: anywhere;
+      }
+
+      #priceTable tbody td[data-label="STT"] {
+        display: none !important;
+      }
+
+      #priceTable tbody td:not([colspan])::before {
+        content: attr(data-label);
+        display: block;
+        font-weight: 600;
+        color: #01579b;
+        text-align: left;
+      }
+
+      #priceTable tbody td[data-label="Thao tác"] {
+        display: block !important;
+      }
+
+      #priceTable tbody td[data-label="Thao tác"]::before {
+        display: none !important;
+      }
+
+      #priceTable .action-group {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        width: 100%;
+      }
+
+      #priceTable .action-group .small-btn {
+        width: 100%;
+        min-width: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+
+    <!-- THÊM BẢNG GIÁ -->
+    <div class="card">
+      <h2 class="section-title">Thêm bảng giá</h2>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <select id="vaccine_id">
+            <option value="">Chọn vaccine</option>
+          </select>
+          <div class="error-message" data-for="vaccine_id"></div>
+        </div>
+
+        <div class="form-group">
+          <input id="gia_ban" type="number" min="1" step="1" placeholder="Giá bán">
+          <div class="error-message" data-for="gia_ban"></div>
+        </div>
+
+        <div class="form-group">
+          <input id="gia_uu_dai" type="number" min="1" step="1" placeholder="Giá ưu đãi (không bắt buộc)">
+          <div class="error-message" data-for="gia_uu_dai"></div>
+        </div>
+
+        <div class="form-action">
+          <button type="button" class="btn-primary" onclick="themBangGia()">
+            Thêm bảng giá
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- DANH SÁCH BẢNG GIÁ -->
+    <div class="card">
+      <h2 class="section-title">Danh sách bảng giá hiện tại</h2>
+
+      <div class="table-wrap">
+        <table id="priceTable">
+          <thead>
+            <tr>
+              <th>STT</th>
+              <th>Vaccine</th>
+              <th>Phòng bệnh</th>
+              <th>Nước SX</th>
+              <th>Giá bán</th>
+              <th>Giá ưu đãi</th>
+              <th>Áp dụng từ</th>
+              <th>Trạng thái</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <!-- JS render -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL ĐỔI GIÁ -->
+  <div id="doiGiaModal" class="modal">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h2 class="modal-title">
+          <span class="modal-icon">💵</span>
+          Đổi giá vaccine
+        </h2>
+
+        <button type="button" class="modal-close" onclick="dongModalDoiGia()">
+          &times;
+        </button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="doi_gia_id">
+        <input type="hidden" id="doi_gia_vaccine_id">
+        <div class="price-current">
+          <div class="price-info-item">
+            <strong>Vaccine</strong>
+            <span id="doi_gia_ten_vaccine">—</span>
+          </div>
+
+          <div class="price-info-item">
+            <strong>Giá hiện tại</strong>
+            <span id="doi_gia_hien_tai">—</span>
+          </div>
+
+          <div class="price-info-item">
+            <strong>Giá ưu đãi hiện tại</strong>
+            <span id="doi_gia_uu_dai_hien_tai">—</span>
+          </div>
+        </div>
+
+        <div class="modal-form-grid">
+          <div class="modal-form-group">
+            <label for="doi_gia_ban">
+              Giá bán mới
+            </label>
+            <input id="doi_gia_ban" type="number" min="1" step="1" placeholder="Nhập giá bán mới">
+          </div>
+
+          <div class="modal-form-group">
+            <label for="doi_gia_uu_dai">
+              Giá ưu đãi mới
+            </label>
+            <input id="doi_gia_uu_dai" type="number" min="1" step="1" placeholder="Không bắt buộc">
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" onclick="dongModalDoiGia()">
+          ✕ Hủy
+        </button>
+
+        <button type="button" class="btn-confirm" onclick="xacNhanDoiGia()">
+          ✓ Xác nhận đổi giá
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL LỊCH SỬ GIÁ -->
+  <div id="lichSuGiaModal" class="modal">
+    <div class="modal-content history-modal-content">
+      <div class="modal-header">
+        <h2 id="lichSuGiaTitle" class="modal-title">
+          <span class="modal-icon">🕘</span>
+          Lịch sử giá
+        </h2>
+        <button type="button" class="modal-close" onclick="dongModalLichSuGia()">
+          &times;
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="table-wrap">
+          <table class="history-table">
+            <thead>
+              <tr>
+                <th>STT</th>
+                <th>Giá bán</th>
+                <th>Giá ưu đãi</th>
+                <th>Bắt đầu</th>
+                <th>Kết thúc</th>
+                <th>Trạng thái</th>
+              </tr>
+            </thead>
+
+            <tbody id="historyTableBody">
+              <!-- JS render -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+  <script src="../../js/common/jwt-handler.js"></script>
+  <script src="../../js/admin/quanly-banggia.js"></script>
+</body>
+
+</html>
