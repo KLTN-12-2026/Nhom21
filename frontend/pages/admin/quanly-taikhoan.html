@@ -1,0 +1,1069 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+  <title>Quản lý tài khoản</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" rel="stylesheet" />
+  <link rel="stylesheet" href="../../css/mobile.css">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: transparent;
+      color: #1f2937;
+    }
+
+    /* =========================
+       PAGE
+    ========================= */
+
+    .page {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    .page-header {
+      margin-bottom: 14px;
+    }
+
+    .page-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 6px;
+      flex-wrap: wrap;
+    }
+
+    .page-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0;
+      color: #0b72b9;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .page-title .material-symbols-rounded {
+      font-size: 26px;
+      color: #0288d1;
+    }
+
+    .page-subtitle {
+      margin: 0;
+      color: #607d8b;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    #btnOpenAdd {
+      margin-left: auto;
+    }
+
+    /* =========================
+       CARD
+    ========================= */
+
+    .card {
+      background: #fff;
+      border: 1px solid #dbeafe;
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+
+    /* =========================
+       FILTER
+    ========================= */
+
+    .filters {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px 16px;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .filter-group label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #01579b;
+    }
+
+    .filter-group select,
+    .filter-group input {
+      width: 100%;
+      padding: 9px 10px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      font-size: 13px;
+      font-family: inherit;
+      outline: none;
+      background: #fff;
+    }
+
+    .filter-group select:focus,
+    .filter-group input:focus {
+      border-color: #0288d1;
+      box-shadow: 0 0 0 2px rgba(2, 136, 209, 0.12);
+    }
+
+    /* =========================
+       BUTTON
+    ========================= */
+
+    .btn {
+      border: none;
+      border-radius: 8px;
+      padding: 9px 14px;
+      font-size: 13px;
+      cursor: pointer;
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+
+      font-family: inherit;
+      font-weight: 600;
+      text-decoration: none;
+      white-space: nowrap;
+
+      transition:
+        background 0.15s ease,
+        border-color 0.15s ease,
+        color 0.15s ease;
+    }
+
+    .btn .material-symbols-rounded {
+      font-size: 18px;
+    }
+
+    .btn-primary {
+      background: #0288d1;
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: #0277bd;
+    }
+
+    .btn-outline {
+      background: #fff;
+      color: #0288d1;
+      border: 1px solid #0288d1;
+    }
+
+    .btn-outline:hover {
+      background: #e1f5fe;
+    }
+
+    .btn-warning {
+      background: #fff;
+      color: #ef6c00;
+      border: 1px solid #ffcc80;
+    }
+
+    .btn-warning:hover {
+      background: #fff3e0;
+    }
+
+    /* =========================
+       TABLE
+    ========================= */
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid #dbeafe;
+      border-radius: 10px;
+
+      /*
+        Cho dropdown hành động không bị cắt theo chiều dọc.
+        Chiều ngang vẫn có thể scroll nếu màn hình nhỏ.
+      */
+      overflow-y: visible;
+    }
+
+    table {
+      width: 100%;
+      min-width: 1000px;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th {
+      background: #0288d1;
+      color: #fff;
+      padding: 10px 8px;
+      border: 1px solid #dbeafe;
+      text-align: center;
+      white-space: nowrap;
+      font-weight: 700;
+    }
+
+    td {
+      padding: 9px 8px;
+      border: 1px solid #dbeafe;
+      background: #fff;
+      vertical-align: middle;
+    }
+
+    tbody tr:nth-child(even) td {
+      background: #f8fbff;
+    }
+
+    tbody tr:hover td {
+      background: #eef7ff;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    /* =========================
+       STATUS
+    ========================= */
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .status-active {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .status-locked {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    /* =========================
+       ACTION
+    ========================= */
+
+    .action-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      flex-wrap: nowrap;
+      white-space: nowrap;
+    }
+
+    /* Nút sửa */
+
+    .btn-edit-user {
+      padding: 7px 11px;
+      min-height: 34px;
+    }
+
+    /* =========================
+       ACTION MENU
+    ========================= */
+
+    .action-menu {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    /* Nút ba chấm */
+
+    .btn-more {
+      width: 36px;
+      height: 34px;
+      padding: 0;
+
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+
+      background: #fff;
+      color: #475569;
+
+      cursor: pointer;
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      transition:
+        background 0.15s ease,
+        border-color 0.15s ease,
+        color 0.15s ease;
+    }
+
+    .btn-more:hover {
+      background: #f1f5f9;
+      border-color: #0288d1;
+      color: #0288d1;
+    }
+
+    .btn-more:focus {
+      outline: none;
+      border-color: #0288d1;
+      box-shadow: 0 0 0 2px rgba(2, 136, 209, 0.12);
+    }
+
+    .btn-more .material-symbols-rounded {
+      font-size: 21px;
+    }
+
+    /* =========================
+       ACTION DROPDOWN
+    ========================= */
+
+    .action-dropdown {
+      display: none;
+
+      position: absolute;
+
+      top: calc(100% + 6px);
+      right: 0;
+
+      min-width: 200px;
+
+      padding: 6px;
+
+      background: #fff;
+
+      border: 1px solid #dbeafe;
+      border-radius: 10px;
+
+      box-shadow:
+        0 8px 24px rgba(15, 23, 42, 0.15);
+
+      z-index: 1000;
+    }
+
+    .action-dropdown.show {
+      display: block;
+    }
+
+    /* Item trong menu */
+
+    .action-item {
+      width: 100%;
+
+      border: none;
+      border-radius: 7px;
+
+      background: transparent;
+
+      padding: 9px 10px;
+
+      display: flex;
+      align-items: center;
+      gap: 9px;
+
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+
+      color: #334155;
+
+      cursor: pointer;
+
+      text-align: left;
+      white-space: nowrap;
+
+      transition: background 0.15s ease;
+    }
+
+    .action-item .material-symbols-rounded {
+      font-size: 19px;
+    }
+
+    /* Reset password */
+
+    .action-reset {
+      color: #0288d1;
+    }
+
+    .action-reset:hover {
+      background: #e1f5fe;
+    }
+
+    /* Khóa tài khoản */
+
+    .action-lock {
+      color: #e65100;
+    }
+
+    .action-lock:hover {
+      background: #fff3e0;
+    }
+
+    /* Mở khóa */
+
+    .action-unlock {
+      color: #2e7d32;
+    }
+
+    .action-unlock:hover {
+      background: #e8f5e9;
+    }
+
+    /* =========================
+       EMPTY TABLE
+    ========================= */
+
+    .empty-row {
+      text-align: center;
+      color: #607d8b;
+      padding: 16px;
+    }
+
+    /* =========================
+       MODAL
+    ========================= */
+
+    .modal {
+      display: none;
+
+      position: fixed;
+      inset: 0;
+
+      background: rgba(15, 23, 42, 0.35);
+
+      padding: 20px;
+
+      z-index: 9999;
+
+      overflow-y: auto;
+    }
+
+    .modal.show {
+      display: block;
+    }
+
+    .modal-card {
+      max-width: 720px;
+
+      margin: 40px auto;
+
+      background: #fff;
+
+      border-radius: 14px;
+      border: 1px solid #dbeafe;
+
+      box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.18);
+
+      padding: 18px;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      gap: 10px;
+
+      margin-bottom: 14px;
+    }
+
+    .modal-title {
+      display: flex;
+      align-items: center;
+
+      gap: 8px;
+
+      color: #0277bd;
+
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .modal-title .material-symbols-rounded {
+      color: #0288d1;
+    }
+
+    /* =========================
+       FORM
+    ========================= */
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px 14px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #01579b;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+
+      padding: 9px 10px;
+
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+
+      font-size: 13px;
+      font-family: inherit;
+
+      outline: none;
+
+      background: #fff;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: #0288d1;
+
+      box-shadow:
+        0 0 0 2px rgba(2, 136, 209, 0.12);
+    }
+
+    /* Disabled */
+
+    .form-group input:disabled,
+    .form-group select:disabled {
+      background: #f1f5f9;
+      color: #64748b;
+      cursor: not-allowed;
+    }
+
+    /* =========================
+       VALIDATION
+    ========================= */
+
+    .input-error {
+      border-color: #e53935 !important;
+
+      box-shadow:
+        0 0 0 2px rgba(229, 57, 53, 0.12) !important;
+    }
+
+    .error-message {
+      min-height: 18px;
+
+      color: #e53935;
+
+      font-size: 12px;
+      line-height: 1.4;
+
+      margin-top: 2px;
+    }
+
+    /* =========================
+       MODAL ACTION
+    ========================= */
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+
+      gap: 10px;
+
+      margin-top: 14px;
+
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+
+
+<body>
+
+  <div class="page">
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <div class="page-header">
+
+      <div class="page-title-row">
+
+        <!--
+          Nếu dashboard cha đã có tiêu đề "Quản lý tài khoản"
+          thì có thể để trống phần title tại đây.
+        -->
+
+        <button class="btn btn-primary" type="button" id="btnOpenAdd">
+
+          <span class="material-symbols-rounded">
+            person_add
+          </span>
+
+          <span>Thêm tài khoản</span>
+
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         FILTER
+    ========================== -->
+
+    <div class="card">
+
+      <div class="filters">
+
+        <div class="filter-group">
+
+          <label for="filterRole">
+            Lọc theo vai trò
+          </label>
+
+          <select id="filterRole">
+
+            <option value="ALL">
+              Tất cả
+            </option>
+
+            <option value="ADMIN">
+              ADMIN
+            </option>
+
+            <option value="NHAN_VIEN_Y_TE">
+              NHÂN VIÊN Y TẾ
+            </option>
+
+            <option value="KHACH_HANG">
+              KHÁCH HÀNG
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="filter-group">
+
+          <label for="keyword">
+            Tìm tên đăng nhập
+          </label>
+
+          <input id="keyword" type="text" placeholder="Nhập tên đăng nhập..." maxlength="30" />
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         TABLE
+    ========================== -->
+
+    <div class="card">
+
+      <div class="table-wrap">
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th style="width: 70px;">
+                STT
+              </th>
+
+              <th>
+                Tên đăng nhập
+              </th>
+
+              <th style="width: 200px;">
+                Vai trò
+              </th>
+
+              <th>
+                Cơ sở làm việc
+              </th>
+
+              <th style="width: 130px;">
+                Trạng thái
+              </th>
+
+              <th style="width: 150px;">
+                Hành động
+              </th>
+
+            </tr>
+
+          </thead>
+
+
+          <tbody id="usersBody">
+
+            <tr>
+
+              <td colspan="6" class="empty-row">
+                Đang tải dữ liệu...
+              </td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       MODAL THÊM / SỬA TÀI KHOẢN
+  ====================================================== -->
+
+  <div id="accountModal" class="modal">
+
+    <div class="modal-card">
+
+      <!-- HEADER -->
+
+      <div class="modal-header">
+
+        <div class="modal-title">
+
+          <span class="material-symbols-rounded">
+            person_add
+          </span>
+
+          <span id="modalTitle">
+            Thêm tài khoản
+          </span>
+
+        </div>
+
+
+        <button class="btn btn-outline" type="button" id="btnCloseModalTop" title="Đóng">
+
+          <span class="material-symbols-rounded">
+            close
+          </span>
+
+        </button>
+
+      </div>
+
+
+      <!-- ID -->
+
+      <input type="hidden" id="accountId" />
+
+
+      <!-- FORM -->
+
+      <div class="form-grid">
+
+        <!-- TÊN ĐĂNG NHẬP -->
+
+        <div class="form-group">
+
+          <label for="accountUsername">
+            Tên đăng nhập *
+          </label>
+
+          <input id="accountUsername" type="text" placeholder="Nhập tên đăng nhập" maxlength="30"
+            autocomplete="username" />
+
+          <div class="error-message" data-for="accountUsername">
+          </div>
+
+        </div>
+
+
+        <!-- MẬT KHẨU -->
+
+        <div class="form-group" id="passwordGroup">
+
+          <label for="accountPassword">
+            Mật khẩu *
+          </label>
+
+          <input id="accountPassword" type="password" placeholder="Nhập mật khẩu" maxlength="32"
+            autocomplete="new-password" />
+
+          <div class="error-message" data-for="accountPassword">
+          </div>
+
+        </div>
+
+
+        <!-- VAI TRÒ -->
+
+        <div class="form-group">
+
+          <label for="accountRole">
+            Vai trò *
+          </label>
+
+          <select id="accountRole">
+
+            <option value="">
+              -- Chọn vai trò --
+            </option>
+
+            <option value="NHAN_VIEN_Y_TE">
+              NHÂN VIÊN Y TẾ
+            </option>
+
+          </select>
+
+          <div class="error-message" data-for="accountRole">
+          </div>
+
+        </div>
+
+
+        <!-- CƠ SỞ LÀM VIỆC -->
+
+        <div class="form-group" id="facilityGroup">
+
+          <label for="accountFacility">
+            Cơ sở làm việc *
+          </label>
+
+          <select id="accountFacility">
+
+            <option value="">
+              -- Chọn cơ sở tiêm --
+            </option>
+
+          </select>
+
+          <div class="error-message" data-for="accountFacility">
+          </div>
+
+        </div>
+
+
+        <!-- TRẠNG THÁI -->
+
+        <div class="form-group">
+
+          <label for="accountStatus">
+            Trạng thái
+          </label>
+
+          <select id="accountStatus">
+
+            <option value="ACTIVE">
+              Hoạt động
+            </option>
+
+            <option value="LOCKED">
+              Đã khóa
+            </option>
+
+          </select>
+
+          <div class="error-message" data-for="accountStatus">
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- BUTTONS -->
+
+      <div class="modal-actions">
+
+        <button class="btn btn-outline" type="button" id="btnCloseModalBottom">
+
+          <span class="material-symbols-rounded">
+            undo
+          </span>
+
+          <span>Hủy</span>
+
+        </button>
+
+
+        <button class="btn btn-primary" type="button" id="btnSaveAccount">
+
+          <span class="material-symbols-rounded">
+            save
+          </span>
+
+          <span>Lưu tài khoản</span>
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       MODAL RESET MẬT KHẨU
+  ====================================================== -->
+
+  <div id="resetPasswordModal" class="modal">
+
+    <div class="modal-card">
+
+      <!-- HEADER -->
+
+      <div class="modal-header">
+
+        <div class="modal-title">
+
+          <span class="material-symbols-rounded">
+            lock_reset
+          </span>
+
+          <span>
+            Reset mật khẩu
+          </span>
+
+        </div>
+
+
+        <button class="btn btn-outline" type="button" id="btnCloseResetTop" title="Đóng">
+
+          <span class="material-symbols-rounded">
+            close
+          </span>
+
+        </button>
+
+      </div>
+
+
+      <!-- USER ID -->
+
+      <input type="hidden" id="resetUserId" />
+
+
+      <!-- FORM -->
+
+      <div class="form-grid">
+
+        <!-- TÊN ĐĂNG NHẬP -->
+
+        <div class="form-group">
+
+          <label for="resetUsername">
+            Tài khoản
+          </label>
+
+          <input id="resetUsername" type="text" disabled />
+
+        </div>
+
+
+        <!-- MẬT KHẨU MỚI -->
+
+        <div class="form-group">
+
+          <label for="resetPassword">
+            Mật khẩu mới *
+          </label>
+
+          <input id="resetPassword" type="password" placeholder="Nhập mật khẩu mới" maxlength="32"
+            autocomplete="new-password" />
+
+          <div class="error-message" data-for="resetPassword">
+          </div>
+
+        </div>
+
+
+        <!-- XÁC NHẬN MẬT KHẨU -->
+
+        <div class="form-group">
+
+          <label for="resetPasswordConfirm">
+            Xác nhận mật khẩu *
+          </label>
+
+          <input id="resetPasswordConfirm" type="password" placeholder="Nhập lại mật khẩu mới" maxlength="32"
+            autocomplete="new-password" />
+
+          <div class="error-message" data-for="resetPasswordConfirm">
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- BUTTONS -->
+
+      <div class="modal-actions">
+
+        <button class="btn btn-outline" type="button" id="btnCloseResetBottom">
+
+          <span class="material-symbols-rounded">
+            undo
+          </span>
+
+          <span>
+            Hủy
+          </span>
+
+        </button>
+
+
+        <button class="btn btn-primary" type="button" id="btnResetPassword">
+
+          <span class="material-symbols-rounded">
+            lock_reset
+          </span>
+
+          <span>
+            Reset mật khẩu
+          </span>
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <script src="../../js/common/jwt-handler.js"></script>
+  <script src="../../js/admin/quanly-tai-khoan.js"></script>
+
+</body>
+
+</html>

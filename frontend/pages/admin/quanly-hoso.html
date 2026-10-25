@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Quản lý hồ sơ người dùng</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" rel="stylesheet" />
+  <link rel="stylesheet" href="../../css/mobile.css">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: transparent;
+      color: #1f2937;
+    }
+
+    .page {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid #dbeafe;
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+
+    .filters {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .filter-group label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #01579b;
+    }
+
+    .filter-group input {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      font-size: 13px;
+      font-family: inherit;
+      outline: none;
+      background: #fff;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .filter-group input:focus {
+      border-color: #0288d1;
+      box-shadow: 0 0 0 2px rgba(2, 136, 209, 0.12);
+    }
+
+    .btn {
+      border: none;
+      border-radius: 8px;
+      padding: 9px 14px;
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: inherit;
+      font-weight: 600;
+      text-decoration: none;
+      justify-content: center;
+      white-space: nowrap;
+    }
+
+    .btn-outline {
+      background: #fff;
+      color: #0288d1;
+      border: 1px solid #0288d1;
+    }
+
+    .btn-outline:hover {
+      background: #e1f5fe;
+    }
+
+    .btn-primary {
+      background: #0288d1;
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: #0277bd;
+    }
+
+    .btn-danger {
+      background: #fff;
+      color: #d32f2f;
+      border: 1px solid #ef9a9a;
+      padding: 7px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      font-family: inherit;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .btn-danger:hover {
+      background: #ffebee;
+    }
+
+    .btn .material-symbols-rounded,
+    .btn-danger .material-symbols-rounded {
+      font-size: 18px;
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid #dbeafe;
+      border-radius: 10px;
+    }
+
+    table {
+      width: 100%;
+      min-width: 1100px;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th {
+      background: #0288d1;
+      color: #fff;
+      padding: 10px 8px;
+      border: 1px solid #dbeafe;
+      text-align: center;
+      white-space: nowrap;
+      font-weight: 700;
+    }
+
+    td {
+      padding: 9px 8px;
+      border: 1px solid #dbeafe;
+      background: #fff;
+      vertical-align: top;
+    }
+
+    tbody tr:nth-child(even) td {
+      background: #f8fbff;
+    }
+
+    tbody tr:hover td {
+      background: #eef7ff;
+    }
+
+    .action-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: nowrap;
+      white-space: nowrap;
+    }
+
+    .action-wrap button {
+      width: auto !important;
+      margin: 0;
+    }
+
+    .input-error {
+      border-color: #e53935 !important;
+      box-shadow: 0 0 0 2px rgba(229, 57, 53, 0.12) !important;
+    }
+
+    .error-message {
+      min-height: 18px;
+      color: #e53935;
+      font-size: 12px;
+      line-height: 1.4;
+      margin-top: 2px;
+    }
+
+    /* =========================
+       MODAL
+       ========================= */
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.35);
+      padding: 20px;
+      box-sizing: border-box;
+      z-index: 999;
+      overflow-y: auto;
+    }
+
+    .modal.show {
+      display: block;
+    }
+
+    .modal-card {
+      max-width: 760px;
+      margin: 40px auto;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+      padding: 18px;
+      border: 1px solid #dbeafe;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .modal-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #0277bd;
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .modal-title .material-symbols-rounded {
+      color: #0288d1;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    /* =========================
+       MODAL XEM HỒ SƠ TIÊM
+       ========================= */
+
+    .detail-modal-card {
+      max-width: 1200px;
+      width: 95%;
+    }
+
+    .detail-table {
+      min-width: 1050px;
+    }
+
+    .detail-table th,
+    .detail-table td {
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .detail-table td:first-child,
+    .detail-table td:nth-child(5),
+    .detail-table td:last-child {
+      text-align: left;
+    }
+
+    .empty-detail {
+      text-align: center !important;
+      color: #64748b;
+      padding: 20px !important;
+    }
+
+    @media (max-width: 900px) {
+      .modal-card {
+        margin: 20px auto;
+      }
+
+      .detail-modal-card {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="page">
+
+    <div class="page-header">
+      <h1 class="page-title"></h1>
+    </div>
+
+    <!-- TÌM KIẾM -->
+    <div class="card">
+      <div class="filters">
+        <div class="filter-group">
+          <label for="keywordProfile">Tìm theo họ tên hoặc SĐT</label>
+          <input id="keywordProfile" type="text" placeholder="Nhập họ tên hoặc số điện thoại..." maxlength="100" />
+        </div>
+      </div>
+    </div>
+
+    <!-- DANH SÁCH HỒ SƠ -->
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:90px;">STT</th>
+              <th style="width:170px;">Tên đăng nhập</th>
+              <th style="width:190px;">Họ tên</th>
+              <th style="width:120px;">Ngày sinh</th>
+              <th style="width:120px;">Giới tính</th>
+              <th style="width:140px;">SĐT</th>
+              <th style="width:190px;">Địa chỉ</th>
+              <th style="width:150px;">Chi tiết hồ sơ</th>
+            </tr>
+          </thead>
+
+          <tbody id="profileBody">
+            <!-- admin-profile.js render -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- =====================================
+       MODAL XEM CHI TIẾT HỒ SƠ TIÊM CHỦNG
+       ===================================== -->
+
+  <div id="detailModal" class="modal">
+
+    <div class="modal-card detail-modal-card">
+
+      <div class="modal-header">
+
+        <div class="modal-title">
+          <span class="material-symbols-rounded">vaccines</span>
+          <span id="detailModalTitle">Chi tiết hồ sơ tiêm chủng</span>
+        </div>
+
+        <button class="btn btn-outline" type="button" onclick="closeDetail()" title="Đóng">
+          <span class="material-symbols-rounded">close</span>
+        </button>
+
+      </div>
+
+
+      <!-- LỊCH SỬ TIÊM -->
+      <div class="table-wrap">
+
+        <table class="detail-table">
+
+          <thead>
+            <tr>
+              <th>Người được tiêm</th>
+              <th>Mối quan hệ</th>
+              <th>Ngày sinh</th>
+              <th>Giới tính</th>
+              <th>Vaccine</th>
+              <th>Mũi số</th>
+              <th>Ngày tiêm</th>
+              <th>Cơ sở tiêm</th>
+            </tr>
+          </thead>
+
+          <tbody id="detailBody">
+
+            <tr>
+              <td colspan="8" class="empty-detail">
+                Chưa có dữ liệu hồ sơ tiêm chủng
+              </td>
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+
+      <div class="modal-actions">
+
+        <button class="btn btn-outline" type="button" onclick="closeDetail()">
+          <span class="material-symbols-rounded">close</span>
+          <span>Đóng</span>
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+  <script src="../../js/common/jwt-handler.js"></script>
+  <script src="../../js/admin/quanly-hoso.js"></script>
+
+</body>
+
+</html>

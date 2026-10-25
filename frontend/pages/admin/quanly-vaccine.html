@@ -1,0 +1,1064 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Quản lý vaccine</title>
+  <link rel="stylesheet" href="../../css/mobile.css">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: transparent;
+      color: #1f2937;
+    }
+
+    .page {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid #dbeafe;
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+
+    /* =========================
+       THANH CÔNG CỤ
+       ========================= */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .search-box {
+      position: relative;
+      flex: 1;
+      min-width: 250px;
+    }
+
+    .search-box input {
+      width: 100%;
+      height: 40px;
+      padding: 8px 12px 8px 38px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: inherit;
+      color: #1f2937;
+      background: #fff;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .search-box input:focus {
+      border-color: #0288d1;
+      box-shadow: 0 0 0 2px rgba(2, 136, 209, 0.12);
+    }
+
+    .search-box input::placeholder {
+      color: #7c8794;
+    }
+
+    .search-icon {
+      position: absolute;
+      top: 50%;
+      left: 13px;
+      transform: translateY(-50%);
+      color: #607d8b;
+      font-size: 16px;
+      pointer-events: none;
+    }
+
+    .filter-select {
+      width: 190px;
+      height: 40px;
+      padding: 8px 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: inherit;
+      color: #1f2937;
+      background: #fff;
+      outline: none;
+      cursor: pointer;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .filter-select:focus {
+      border-color: #0288d1;
+      box-shadow: 0 0 0 2px rgba(2, 136, 209, 0.12);
+    }
+
+    /* =========================
+       BUTTON
+       ========================= */
+    .btn-primary {
+      height: 40px;
+      border: none;
+      border-radius: 8px;
+      padding: 9px 14px;
+      background: #0288d1;
+      color: #fff;
+      font-size: 13px;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
+    }
+
+    .btn-primary:hover {
+      background: #0277bd;
+    }
+
+    .btn-cancel {
+      background: #fff;
+      color: #0288d1;
+      border: 1px solid #0288d1;
+      border-radius: 8px;
+      padding: 9px 14px;
+      font-size: 13px;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-cancel:hover {
+      background: #e1f5fe;
+    }
+
+    /* =========================
+       DANH SÁCH
+       ========================= */
+    .list-header {
+      margin-bottom: 12px;
+    }
+
+    .list-header h3 {
+      margin: 0 0 4px;
+      color: #0b72b9;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .list-header p {
+      margin: 0;
+      color: #607d8b;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    /* =========================
+       TABLE
+       ========================= */
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid #dbeafe;
+      border-radius: 10px;
+    }
+
+    table {
+      width: 100%;
+      min-width: 1100px;
+      border-collapse: collapse;
+      font-size: 13px;
+      color: #1f2937;
+    }
+
+    th {
+      background: #0288d1;
+      color: #fff;
+      padding: 10px 8px;
+      border: 1px solid #dbeafe;
+      text-align: center;
+      white-space: nowrap;
+      font-weight: 700;
+    }
+
+    td {
+      padding: 9px 8px;
+      border: 1px solid #dbeafe;
+      background: #fff;
+      color: #1f2937;
+      vertical-align: top;
+      font-weight: 400;
+    }
+
+    tbody tr:nth-child(even) td {
+      background: #f8fbff;
+    }
+
+    tbody tr:hover td {
+      background: #eef7ff;
+    }
+
+    th:first-child,
+    td:first-child {
+      width: 55px;
+      text-align: center;
+    }
+
+    th:nth-child(4),
+    td:nth-child(4),
+    th:nth-child(7),
+    td:nth-child(7) {
+      text-align: center;
+    }
+
+    th:last-child,
+    td:last-child {
+      width: 190px;
+      text-align: center;
+    }
+
+    .vaccine-name {
+      color: #1f2937;
+      font-weight: 400;
+    }
+
+    .description-cell {
+      max-width: 220px;
+      color: #1f2937;
+      font-weight: 400;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .empty-row {
+      text-align: center !important;
+      color: #64748b;
+      padding: 20px !important;
+    }
+
+    /* =========================
+       TRẠNG THÁI
+       ========================= */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 90px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-family: inherit;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .status-con {
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    .status-het {
+      background: #fef3c7;
+      color: #b45309;
+    }
+
+    .status-ngung {
+      background: #e2e8f0;
+      color: #475569;
+    }
+
+    /* =========================
+       HÀNH ĐỘNG
+       ========================= */
+    .actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: nowrap;
+      white-space: nowrap;
+    }
+
+    .btn-edit,
+    .btn-stop,
+    .btn-activate {
+      border-radius: 8px;
+      padding: 7px 12px;
+      font-size: 13px;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
+    }
+
+    .btn-edit {
+      background: #fff;
+      color: #0288d1;
+      border: 1px solid #0288d1;
+    }
+
+    .btn-edit:hover {
+      background: #e1f5fe;
+    }
+
+    .btn-stop {
+      background: #fff;
+      color: #d32f2f;
+      border: 1px solid #ef9a9a;
+    }
+
+    .btn-stop:hover {
+      background: #ffebee;
+    }
+
+    .btn-activate {
+      background: #0288d1;
+      color: #fff;
+      border: 1px solid #0288d1;
+    }
+
+    .btn-activate:hover {
+      background: #0277bd;
+    }
+
+    /* =========================
+       VALIDATION
+       ========================= */
+    .input-error {
+      border-color: #e53935 !important;
+      box-shadow: 0 0 0 2px rgba(229, 57, 53, 0.12) !important;
+    }
+
+    .error-message {
+      min-height: 18px;
+      color: #e53935;
+      font-size: 12px;
+      line-height: 1.4;
+      margin-top: 2px;
+    }
+
+    /* =========================
+       MODAL
+       ========================= */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.35);
+      padding: 20px;
+      z-index: 999;
+      overflow-y: auto;
+    }
+
+    .modal.show {
+      display: block;
+    }
+
+    .modal-content {
+      max-width: 760px;
+      width: 100%;
+      margin: 40px auto;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+      border: 1px solid #dbeafe;
+      overflow: hidden;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 18px 18px 12px;
+      border-bottom: 1px solid #dbeafe;
+    }
+
+    .modal-header h3 {
+      margin: 0;
+      color: #0277bd;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .modal-close {
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      background: #fff;
+      color: #0288d1;
+      border: 1px solid #0288d1;
+      border-radius: 8px;
+      font-size: 22px;
+      line-height: 1;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .modal-close:hover {
+      background: #e1f5fe;
+    }
+
+    .modal-body {
+      padding: 18px;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      padding: 14px 18px 18px;
+      flex-wrap: wrap;
+    }
+
+    .modal-footer .btn-primary {
+      height: auto;
+    }
+
+    /* =========================
+       FORM
+       ========================= */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px 18px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    .form-group label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #01579b;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: inherit;
+      color: #1f2937;
+      background: #fff;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-group input,
+    .form-group select {
+      height: 40px;
+      padding: 8px 10px;
+    }
+
+    .form-group textarea {
+      min-height: 90px;
+      padding: 8px 10px;
+      resize: vertical;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: #0288d1;
+      box-shadow: 0 0 0 2px rgba(2, 136, 209, 0.12);
+    }
+
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+      color: #7c8794;
+    }
+
+    /* =========================
+       RESPONSIVE
+       ========================= */
+    @media (max-width: 900px) {
+      .toolbar {
+        flex-wrap: wrap;
+      }
+
+      .search-box {
+        flex: 1 1 100%;
+      }
+
+      .filter-select {
+        flex: 1;
+        width: auto;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-group.full {
+        grid-column: 1;
+      }
+
+      .modal-content {
+        margin: 20px auto;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .toolbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .filter-select,
+      .toolbar .btn-primary {
+        width: 100%;
+      }
+    }
+
+    /* TAB THÔNG TIN VACCINE */
+    .vaccine-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 18px;
+      border-bottom: 1px solid #dbeafe;
+    }
+
+    .vaccine-tab {
+      background: transparent;
+      border: none;
+      border-bottom: 3px solid transparent;
+      padding: 12px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #64748b;
+      cursor: pointer;
+    }
+
+    .vaccine-tab.active {
+      color: #0288d1;
+      border-bottom-color: #0288d1;
+    }
+
+    .vaccine-tab-panel {
+      display: none;
+    }
+
+    .vaccine-tab-panel.active {
+      display: block;
+    }
+
+    .vaccine-image-preview {
+      display: none;
+      width: 160px;
+      max-height: 120px;
+      object-fit: contain;
+      border: 1px solid #dbeafe;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+
+    .vaccine-detail-input {
+      min-height: 300px !important;
+      line-height: 1.7;
+    }
+
+    /* Khi mở modal, khóa cuộn trang phía sau */
+    body.modal-open {
+      overflow: hidden;
+    }
+
+    /* Modal vẫn được phép cuộn khi nội dung dài */
+    .modal {
+      overflow-y: auto;
+    }
+
+    /* COMBOBOX NƯỚC SẢN XUẤT */
+    .country-combobox {
+      position: relative;
+      min-width: 0;
+    }
+
+    .country-control {
+      display: flex;
+      width: 100%;
+    }
+
+    .form-group .country-control input {
+      flex: 1;
+      min-width: 0;
+      border-radius: 8px 0 0 8px;
+    }
+
+    .country-toggle {
+      width: 42px;
+      flex-shrink: 0;
+      border: 1px solid #cbd5e1;
+      border-left: none;
+      border-radius: 0 8px 8px 0;
+      background: #f1f9ff;
+      color: #0277bd;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .country-toggle:hover {
+      background: #e1f5fe;
+    }
+
+    .country-options {
+      position: absolute;
+      top: calc(100% + 3px);
+      left: 0;
+      right: 0;
+      max-height: 210px;
+      overflow-y: auto;
+      background: white;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+      z-index: 100;
+    }
+
+    .country-options[hidden] {
+      display: none !important;
+    }
+
+    .country-option {
+      display: block;
+      width: 100%;
+      padding: 10px 12px;
+      border: none;
+      background: white;
+      color: #1f2937;
+      font-size: 13px;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .country-option:hover,
+    .country-option:focus {
+      background: #e1f5fe;
+      outline: none;
+    }
+
+    .country-empty {
+      padding: 10px 12px;
+      color: #64748b;
+      font-size: 12px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <!-- TÌM KIẾM + LỌC + THÊM VACCINE -->
+    <div class="card">
+      <div class="toolbar">
+        <div class="search-box">
+          <span class="search-icon">⌕</span>
+          <input type="text" id="searchVaccine" placeholder="Tìm theo tên vaccine, phòng bệnh, nhà cung cấp..."
+            autocomplete="off" />
+        </div>
+        <select id="filterTrangThai" class="filter-select">
+          <option value="ALL">Tất cả trạng thái</option>
+          <option value="CON">Còn hàng</option>
+          <option value="HET">Hết hàng</option>
+          <option value="NGUNG">Ngừng sử dụng</option>
+        </select>
+        <button type="button" class="btn-primary" onclick="moModalThemVaccine()">+ Thêm vaccine</button>
+      </div>
+    </div>
+
+    <!-- DANH SÁCH VACCINE -->
+    <div class="card">
+      <div class="list-header">
+        <h3>Danh sách vaccine</h3>
+        <p>Chọn cập nhật để chỉnh sửa thông tin hoặc thay đổi trạng thái sử dụng vaccine.</p>
+      </div>
+      <div class="table-wrap">
+        <table id="vaccineTable">
+          <thead>
+            <tr>
+              <th style="width:55px;">STT</th>
+              <th style="width:180px;">Tên vaccine</th>
+              <th style="width:220px;">Phòng bệnh</th>
+              <th style="width:120px;">Đối tượng</th>
+              <th style="width:120px;">Nước SX</th>
+              <th style="width:160px;">Nhà cung cấp</th>
+              <th style="width:120px;">Trạng thái</th>
+              <th style="width:180px;">Mô tả</th>
+              <th style="width:190px;">Hành động</th>
+            </tr>
+          </thead>
+          <tbody id="vaccineBody">
+            <tr>
+              <td colspan="9" class="empty-row">Đang tải dữ liệu...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL THÊM VACCINE -->
+  <div class="modal" id="addVaccineModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Thêm vaccine mới</h3>
+        <button type="button" class="modal-close" onclick="dongModalThemVaccine()" title="Đóng">&times;</button>
+      </div>
+      <form id="vaccineForm" novalidate>
+        <div class="modal-body">
+
+          <div class="vaccine-tabs">
+            <button type="button" class="vaccine-tab active" data-form="add" data-tab="basic">
+              Thông tin cơ bản
+            </button>
+
+            <button type="button" class="vaccine-tab" data-form="add" data-tab="detail">
+              Thông tin chi tiết
+            </button>
+          </div>
+
+          <div id="add-basic" class="vaccine-tab-panel active">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="ten_vaccine">Tên vaccine</label>
+                <input type="text" id="ten_vaccine" placeholder="Nhập tên vaccine" maxlength="100" autocomplete="off" />
+                <div class="error-message" data-for="ten_vaccine"></div>
+              </div>
+              <div class="form-group">
+                <label for="phong_benh">Phòng bệnh</label>
+                <input type="text" id="phong_benh" placeholder="VD: Cúm, HPV, Sởi..." maxlength="150"
+                  autocomplete="off" />
+                <div class="error-message" data-for="phong_benh"></div>
+              </div>
+              <div class="form-group">
+                <label for="loai_doi_tuong">Đối tượng</label>
+                <select id="loai_doi_tuong">
+                  <option value="TRE_EM">Trẻ em</option>
+                  <option value="NGUOI_LON">Người lớn</option>
+                  <option value="CA_HAI" selected>Cả hai</option>
+                </select>
+                <div class="error-message" data-for="loai_doi_tuong"></div>
+              </div>
+              <div class="form-group">
+                <label for="nuoc_sx">Nước sản xuất</label>
+
+                <div class="country-combobox" data-country-combobox>
+                  <div class="country-control">
+                    <input type="text" id="nuoc_sx" placeholder="Chọn hoặc nhập nước sản xuất..." maxlength="100"
+                      autocomplete="off" aria-label="Nước sản xuất" aria-expanded="false" />
+
+                    <button type="button" class="country-toggle" aria-label="Mở danh sách quốc gia"
+                      aria-controls="nuoc_sx_options">
+                      &#9662;
+                    </button>
+                  </div>
+
+                  <div class="country-options" id="nuoc_sx_options" role="listbox" hidden></div>
+                </div>
+
+                <div class="error-message" data-for="nuoc_sx"></div>
+              </div>
+              <div class="form-group">
+                <label for="nha_cung_cap">Nhà cung cấp</label>
+                <input type="text" id="nha_cung_cap" placeholder="Nhập nhà cung cấp" maxlength="100"
+                  autocomplete="off" />
+                <div class="error-message" data-for="nha_cung_cap"></div>
+              </div>
+              <div class="form-group full">
+                <label for="mo_ta">Mô tả</label>
+                <textarea id="mo_ta" placeholder="Nhập mô tả vaccine" maxlength="500"></textarea>
+                <div class="error-message" data-for="mo_ta"></div>
+              </div>
+              <div class="form-group full">
+                <label for="hinh_anh">Hình ảnh vaccine</label>
+
+                <input type="file" id="hinh_anh" accept="image/jpeg,image/png,image/webp" />
+
+                <img id="preview_hinh_anh" class="vaccine-image-preview" alt="Xem trước hình ảnh vaccine" />
+
+                <div class="error-message" data-for="hinh_anh"></div>
+              </div>
+
+            </div> <!-- Đóng form-grid -->
+
+          </div> <!-- Đóng add-basic -->
+
+          <!-- TAB THÔNG TIN CHI TIẾT -->
+          <div id="add-detail" class="vaccine-tab-panel">
+
+            <div class="form-group full">
+              <label for="noi_dung_chi_tiet">
+                Nội dung chi tiết vaccine
+              </label>
+
+              <textarea id="noi_dung_chi_tiet" class="vaccine-detail-input"
+                placeholder="Nhập thông tin vaccine, nguồn gốc, đường tiêm, chống chỉ định, phác đồ tiêm..."></textarea>
+            </div>
+
+            <div class="form-group full" style="margin-top: 16px;">
+              <label for="nguon_tham_khao">
+                Nguồn tham khảo
+              </label>
+
+              <textarea id="nguon_tham_khao" placeholder="Nhập đường dẫn hoặc tên tài liệu tham khảo..."></textarea>
+            </div>
+
+          </div> <!-- Đóng add-detail -->
+
+        </div> <!-- Đóng modal-body -->
+
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel" onclick="dongModalThemVaccine()">
+            Hủy
+          </button>
+
+          <button type="submit" class="btn-primary">
+            Thêm vaccine
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+
+  <!-- ========================================= -->
+  <!-- MODAL CẬP NHẬT VACCINE -->
+  <!-- ========================================= -->
+
+  <div class="modal" id="editVaccineModal">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h3>Cập nhật vaccine</h3>
+
+        <button type="button" class="modal-close" onclick="dongModalCapNhat()" title="Đóng">
+          &times;
+        </button>
+      </div>
+
+      <form id="editVaccineForm" novalidate>
+
+        <input type="hidden" id="edit_id" />
+
+        <div class="modal-body">
+
+          <!-- TAB CHUYỂN ĐỔI -->
+          <div class="vaccine-tabs">
+
+            <button type="button" class="vaccine-tab active" data-form="edit" data-tab="basic">
+              Thông tin cơ bản
+            </button>
+
+            <button type="button" class="vaccine-tab" data-form="edit" data-tab="detail">
+              Thông tin chi tiết
+            </button>
+
+          </div>
+
+          <!-- ================================= -->
+          <!-- TAB 1: THÔNG TIN CƠ BẢN -->
+          <!-- ================================= -->
+
+          <div id="edit-basic" class="vaccine-tab-panel active">
+
+            <div class="form-grid">
+
+              <!-- TÊN VACCINE -->
+              <div class="form-group">
+                <label for="edit_ten_vaccine">
+                  Tên vaccine
+                </label>
+
+                <input type="text" id="edit_ten_vaccine" maxlength="100" autocomplete="off" />
+
+                <div class="error-message" data-for="edit_ten_vaccine"></div>
+              </div>
+
+              <!-- PHÒNG BỆNH -->
+              <div class="form-group">
+                <label for="edit_phong_benh">
+                  Phòng bệnh
+                </label>
+
+                <input type="text" id="edit_phong_benh" maxlength="150" autocomplete="off" />
+
+                <div class="error-message" data-for="edit_phong_benh"></div>
+              </div>
+
+              <!-- ĐỐI TƯỢNG -->
+              <div class="form-group">
+                <label for="edit_loai_doi_tuong">
+                  Đối tượng
+                </label>
+
+                <select id="edit_loai_doi_tuong">
+                  <option value="TRE_EM">
+                    Trẻ em
+                  </option>
+
+                  <option value="NGUOI_LON">
+                    Người lớn
+                  </option>
+
+                  <option value="CA_HAI">
+                    Cả hai
+                  </option>
+                </select>
+
+                <div class="error-message" data-for="edit_loai_doi_tuong"></div>
+              </div>
+
+              <!-- NƯỚC SẢN XUẤT -->
+              <div class="form-group">
+                <label for="edit_nuoc_sx">
+                  Nước sản xuất
+                </label>
+
+
+                <div class="country-combobox" data-country-combobox>
+                  <div class="country-control">
+                    <input type="text" id="edit_nuoc_sx" placeholder="Chọn hoặc nhập nước sản xuất..." maxlength="100"
+                      autocomplete="off" aria-label="Nước sản xuất" aria-expanded="false" />
+
+                    <button type="button" class="country-toggle" aria-label="Mở danh sách quốc gia"
+                      aria-controls="edit_nuoc_sx_options">
+                      &#9662;
+                    </button>
+                  </div>
+
+                  <div class="country-options" id="edit_nuoc_sx_options" role="listbox" hidden></div>
+                </div>
+
+                <div class="error-message" data-for="edit_nuoc_sx"></div>
+              </div>
+
+              <!-- NHÀ CUNG CẤP -->
+              <div class="form-group">
+                <label for="edit_nha_cung_cap">
+                  Nhà cung cấp
+                </label>
+
+                <input type="text" id="edit_nha_cung_cap" maxlength="100" autocomplete="off" />
+
+                <div class="error-message" data-for="edit_nha_cung_cap"></div>
+              </div>
+
+              <!-- MÔ TẢ -->
+              <div class="form-group full">
+                <label for="edit_mo_ta">
+                  Mô tả
+                </label>
+
+                <textarea id="edit_mo_ta" maxlength="500" placeholder="Nhập mô tả vaccine"></textarea>
+
+                <div class="error-message" data-for="edit_mo_ta"></div>
+              </div>
+
+              <!-- HÌNH ẢNH VACCINE -->
+              <div class="form-group full">
+
+                <label for="edit_hinh_anh">
+                  Hình ảnh vaccine
+                </label>
+
+                <input type="file" id="edit_hinh_anh" accept="image/jpeg,image/png,image/webp" />
+
+                <img id="edit_preview_hinh_anh" class="vaccine-image-preview" alt="Hình ảnh vaccine hiện tại" />
+
+                <div class="error-message" data-for="edit_hinh_anh"></div>
+
+                <small style="color: #64748b;">
+                  Nếu không chọn ảnh mới, hệ thống sẽ giữ
+                  nguyên hình ảnh hiện tại.
+                </small>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- ================================= -->
+          <!-- TAB 2: THÔNG TIN CHI TIẾT -->
+          <!-- ================================= -->
+
+          <div id="edit-detail" class="vaccine-tab-panel">
+
+            <!-- NỘI DUNG CHI TIẾT -->
+            <div class="form-group full">
+
+              <label for="edit_noi_dung_chi_tiet">
+                Nội dung chi tiết vaccine
+              </label>
+
+              <textarea id="edit_noi_dung_chi_tiet" class="vaccine-detail-input" maxlength="60000"
+                placeholder="Nhập thông tin vaccine, nguồn gốc, đường tiêm, chống chỉ định, phác đồ tiêm..."></textarea>
+
+              <div class="error-message" data-for="edit_noi_dung_chi_tiet"></div>
+
+            </div>
+
+            <!-- NGUỒN THAM KHẢO -->
+            <div class="form-group full" style="margin-top: 16px;">
+
+              <label for="edit_nguon_tham_khao">
+                Nguồn tham khảo
+              </label>
+
+              <textarea id="edit_nguon_tham_khao" maxlength="10000"
+                placeholder="Nhập đường dẫn hoặc tên tài liệu tham khảo..."></textarea>
+
+              <div class="error-message" data-for="edit_nguon_tham_khao"></div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- FOOTER -->
+        <div class="modal-footer">
+
+          <button type="button" class="btn-cancel" onclick="dongModalCapNhat()">
+            Hủy
+          </button>
+
+          <button type="submit" class="btn-primary">
+            Lưu thay đổi
+          </button>
+
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+  <script src="../../js/common/jwt-handler.js"></script>
+  <script src="../../js/admin/quanly-vaccine.js"></script>
+</body>
+
+</html>
