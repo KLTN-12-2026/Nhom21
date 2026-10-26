@@ -4,10 +4,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Đăng ký tài khoản - Hệ thống tiêm chủng</title>
 
-  <link rel="stylesheet" href="../css/style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" rel="stylesheet" />
+  <link rel="stylesheet" href="../../css/style.css">
 
   <style>
     * {
@@ -26,9 +26,9 @@
     }
 
     .register-card {
-      width: 360px;
-      max-width: 95%;
-      background: #ffffff;
+      width: 400px;
+      max-width: 100%;
+      background: #fff;
       border-radius: 14px;
       box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
       padding: 22px 20px;
@@ -47,6 +47,20 @@
       color: #607d8b;
       text-align: center;
       margin-bottom: 16px;
+    }
+
+    .method-row {
+      display: flex;
+      gap: 12px;
+      margin: 10px 0 16px;
+      font-size: 13px;
+    }
+
+    .method-row label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
     }
 
     .form-group {
@@ -69,7 +83,6 @@
       border: 1px solid #b0bec5;
       font-size: 13px;
       outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
       background: #fff;
     }
 
@@ -78,21 +91,15 @@
       box-shadow: 0 0 0 2px rgba(2, 136, 209, 0.12);
     }
 
-    /* =========================
-       SỐ ĐIỆN THOẠI + GỬI OTP
-       ========================= */
-
     .otp-row {
       display: flex;
       gap: 8px;
       align-items: center;
-      width: 100%;
     }
 
     .otp-row input {
       flex: 1;
       min-width: 0;
-      width: auto;
     }
 
     .btn-otp {
@@ -106,34 +113,14 @@
       font-weight: 600;
       cursor: pointer;
       white-space: nowrap;
-      flex-shrink: 0;
-      transition: 0.2s;
     }
-
-    .btn-otp:hover {
-      background: #b3e5fc;
-    }
-
-    /* =========================
-       THÔNG BÁO LỖI
-       ========================= */
 
     .error-message {
       display: block;
-      width: 100%;
       color: #e53935;
       font-size: 12px;
       margin-top: 4px;
       line-height: 1.4;
-      min-height: 0;
-    }
-
-    .input-error {
-      border-color: #e53935 !important;
-    }
-
-    .input-success {
-      border-color: #43a047 !important;
     }
 
     .btn-primary {
@@ -143,16 +130,16 @@
       border-radius: 8px;
       font-size: 15px;
       font-weight: 700;
-      color: #fff;
+      color: white;
       background: linear-gradient(90deg, #0288d1, #03a9f4);
       cursor: pointer;
       margin-top: 6px;
-      transition: box-shadow 0.2s, transform 0.2s;
     }
 
-    .btn-primary:hover {
-      box-shadow: 0 6px 14px rgba(2, 136, 209, 0.25);
-      transform: translateY(-1px);
+    .btn-primary:disabled,
+    .btn-otp:disabled {
+      opacity: 0.65;
+      cursor: wait;
     }
 
     .register-footer {
@@ -172,14 +159,14 @@
       text-decoration: underline;
     }
 
+    [hidden] {
+      display: none !important;
+    }
+
     @media (max-width: 420px) {
       .register-card {
         width: 100%;
         padding: 18px 16px;
-      }
-
-      .register-title {
-        font-size: 22px;
       }
 
       .otp-row {
@@ -187,10 +174,7 @@
         align-items: stretch;
       }
 
-      .otp-row input {
-        width: 100%;
-      }
-
+      .otp-row input,
       .btn-otp {
         width: 100%;
       }
@@ -212,16 +196,29 @@
 
     <form id="registerForm">
 
+      <!-- PHƯƠNG THỨC ĐĂNG KÝ -->
+      <div class="method-row" role="group" aria-label="Phương thức đăng ký">
+
+        <label>
+          <input type="radio" name="registrationMethod" value="PHONE" checked>
+          Số điện thoại
+        </label>
+
+        <label>
+          <input type="radio" name="registrationMethod" value="EMAIL">
+          Gmail
+        </label>
+
+      </div>
+
       <!-- HỌ TÊN -->
       <div class="form-group">
         <label for="fullName">Họ và tên *</label>
 
         <input type="text" id="fullName" placeholder="VD: Nguyễn Văn A" required>
 
-        <div class="error-message" data-for="fullName">
-        </div>
+        <div class="error-message" data-for="fullName"></div>
       </div>
-
 
       <!-- TÀI KHOẢN -->
       <div class="form-group">
@@ -229,10 +226,8 @@
 
         <input type="text" id="username" placeholder="Nhập tên đăng nhập" required>
 
-        <div class="error-message" data-for="username">
-        </div>
+        <div class="error-message" data-for="username"></div>
       </div>
-
 
       <!-- MẬT KHẨU -->
       <div class="form-group">
@@ -240,10 +235,8 @@
 
         <input type="password" id="password" placeholder="Nhập mật khẩu" required>
 
-        <div class="error-message" data-for="password">
-        </div>
+        <div class="error-message" data-for="password"></div>
       </div>
-
 
       <!-- NHẬP LẠI MẬT KHẨU -->
       <div class="form-group">
@@ -251,65 +244,74 @@
 
         <input type="password" id="repassword" placeholder="Nhập lại mật khẩu" required>
 
-        <div class="error-message" data-for="repassword">
-        </div>
+        <div class="error-message" data-for="repassword"></div>
       </div>
 
+      <!-- ĐĂNG KÝ SỐ ĐIỆN THOẠI -->
+      <div class="form-group" id="phoneGroup">
 
-      <!-- SỐ ĐIỆN THOẠI -->
-      <div class="form-group">
         <label for="phone">Số điện thoại *</label>
 
         <div class="otp-row">
 
-          <input type="text" id="phone" placeholder="VD: 09xx xxx xxx" required>
+          <input type="tel" id="phone" placeholder="VD: 0912345678" required>
 
-          <button type="button" class="btn-otp" onclick="sendOtp()">
+          <button type="button" class="btn-otp" id="sendPhoneOtp">
             Gửi OTP
           </button>
 
         </div>
 
-        <!-- QUAN TRỌNG: lỗi nằm NGOÀI otp-row -->
-        <div class="error-message" data-for="phone">
-        </div>
+        <div class="error-message" data-for="phone"></div>
+
       </div>
 
+      <!-- ĐĂNG KÝ GMAIL -->
+      <div class="form-group" id="emailGroup" hidden>
+
+        <label for="email">Gmail *</label>
+
+        <div class="otp-row">
+
+          <input type="email" id="email" placeholder="VD: example@gmail.com">
+
+          <button type="button" class="btn-otp" id="sendEmailOtp">
+            Gửi OTP
+          </button>
+
+        </div>
+
+        <div class="error-message" data-for="email"></div>
+
+      </div>
 
       <!-- OTP -->
       <div class="form-group">
+
         <label for="otp">Mã OTP *</label>
 
-        <input type="text" id="otp" placeholder="Nhập mã OTP" required>
+        <input type="text" id="otp" inputmode="numeric" autocomplete="one-time-code" placeholder="Nhập mã OTP" required>
 
-        <div class="error-message" data-for="otp">
-        </div>
+        <div class="error-message" data-for="otp"></div>
+
       </div>
-
 
       <input type="hidden" id="role" value="KHACH_HANG">
 
-
-      <button type="submit" class="btn-primary">
+      <button type="submit" class="btn-primary" id="registerButton">
         Đăng ký
       </button>
 
     </form>
 
-
     <div class="register-footer">
       Đã có tài khoản?
-
-      <a href="dangnhap.html">
-        Đăng nhập ngay
-      </a>
+      <a href="dangnhap.html">Đăng nhập ngay</a>
     </div>
 
   </div>
 
-
-  <script src="../js/dangky.js"></script>
-
+  <script src="../../js/common/dangky.js"></script>
 </body>
 
 </html>
