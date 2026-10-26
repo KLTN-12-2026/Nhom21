@@ -1,8 +1,6 @@
 console.log("✅ dangnhap.js được load");
 
-// ================================
-// HÀM ĐIỀU HƯỚNG THEO ROLE
-// ================================
+
 function redirectByRole(user) {
   if (!user || !user.vai_tro) {
     window.location.href = "dangnhap.html";
@@ -25,18 +23,14 @@ function redirectByRole(user) {
   }
 }
 
-// ================================
-// REGEX VALIDATE KHỚP BACKEND
-// ================================
+
 const usernameRegex =
   /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,30}$/;
 
 const passwordRegex =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])\S{8,32}$/;
 
-// ================================
-// HÀM HIỂN THỊ / XÓA LỖI
-// ================================
+
 function getOrCreateErrorElement(input) {
   let errorEl =
     input.parentElement.querySelector(
@@ -93,9 +87,7 @@ function clearError(input) {
   input.style.boxShadow = "";
 }
 
-// ================================
-// VALIDATE TÀI KHOẢN
-// ================================
+
 function validateUsername() {
   const usernameInput =
     document.getElementById("username");
@@ -149,9 +141,7 @@ function validateUsername() {
   return true;
 }
 
-// ================================
-// VALIDATE MẬT KHẨU
-// ================================
+
 function validatePassword() {
   const passwordInput =
     document.getElementById("password");
@@ -218,9 +208,7 @@ function validateLoginForm() {
   );
 }
 
-// ================================
-// 1. TỰ ĐỘNG CHUYỂN NẾU ĐÃ ĐĂNG NHẬP
-// ================================
+
 
 const existedUser = localStorage.getItem("user");
 const existedToken = localStorage.getItem("token");
@@ -264,9 +252,7 @@ if (existedUser && existedToken) {
   }
 }
 
-// ================================
-// 2. REALTIME VALIDATION
-// ================================
+
 const form =
   document.getElementById(
     "loginForm"
@@ -324,9 +310,7 @@ if (passwordInput) {
   );
 }
 
-// ================================
-// 3. XỬ LÝ ĐĂNG NHẬP
-// ================================
+
 if (!form) {
   console.error(
     "❌ Không tìm thấy form #loginForm"
@@ -423,13 +407,13 @@ if (!form) {
           return;
         }
 
-        // Lưu thông tin người dùng
+
         localStorage.setItem(
           "user",
           JSON.stringify(data.user)
         );
 
-        // Lưu JWT để sử dụng cho các API cần xác thực
+      
         localStorage.setItem(
           "token",
           data.token

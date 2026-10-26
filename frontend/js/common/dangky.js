@@ -3,9 +3,7 @@ console.log("✅ dangky.js được load");
 
 const API_BASE_URL = "http://localhost:3000/api";
 
-// ===============================
-// LẤY CÁC INPUT
-// ===============================
+
 
 const registerForm = document.getElementById("registerForm");
 
@@ -28,9 +26,7 @@ const registrationMethodInputs = document.querySelectorAll(
   'input[name="registrationMethod"]'
 );
 
-// ===============================
-// REGEX
-// ===============================
+
 
 const fullNameRegex =
   /^[A-Za-zÀ-ỹ]+(?:\s[A-Za-zÀ-ỹ]+)*$/;
@@ -53,25 +49,19 @@ const otpRegex =
 const emailOtpRegex =
   /^\d{6}$/;
 
-// ===============================
-// TRẠNG THÁI XỬ LÝ
-// ===============================
+
 
 let isSendingPhoneOtp = false;
 let isSendingEmailOtp = false;
 let isRegistering = false;
 
-// ===============================
-// HÀM KIỂM TRA RỖNG
-// ===============================
+
 
 function isEmpty(value) {
   return !value || !value.trim();
 }
 
-// ===============================
-// LẤY PHƯƠNG THỨC ĐĂNG KÝ
-// ===============================
+
 
 function getRegistrationMethod() {
   const selectedMethod = document.querySelector(
@@ -87,30 +77,24 @@ function getRegistrationMethod() {
     : "PHONE";
 }
 
-// ===============================
-// KIỂM TRA ĐĂNG KÝ GMAIL
-// ===============================
+
 
 function isEmailRegistration() {
   return getRegistrationMethod() === "EMAIL";
 }
 
-// ===============================
-// TẠO / LẤY PHẦN HIỂN THỊ LỖI
-// ===============================
+
 
 function getOrCreateErrorElement(input) {
 
-  // Tìm error-message trong toàn bộ form.
-  // Quan trọng với input phone/email
-  // vì error nằm ngoài .otp-row.
+
 
   let errorEl =
     registerForm.querySelector(
       `.error-message[data-for="${input.id}"]`
     );
 
-  // Nếu HTML chưa có thì mới tạo.
+
 
   if (!errorEl) {
 
@@ -125,9 +109,7 @@ function getOrCreateErrorElement(input) {
       input.id
     );
 
-    // Số điện thoại và Gmail nằm trong .otp-row.
-    // Error phải nằm SAU .otp-row,
-    // không được nằm bên trong flex.
+
 
     if (
       input.parentElement &&
@@ -150,9 +132,7 @@ function getOrCreateErrorElement(input) {
   return errorEl;
 }
 
-// ===============================
-// HIỂN THỊ LỖI
-// ===============================
+
 
 function showError(input, message) {
 
@@ -169,9 +149,7 @@ function showError(input, message) {
     "0 0 0 2px rgba(229,57,53,0.12)";
 }
 
-// ===============================
-// XÓA LỖI
-// ===============================
+
 
 function clearError(input) {
 
@@ -188,9 +166,7 @@ function clearError(input) {
   input.style.boxShadow = "";
 }
 
-// ===============================
-// VALIDATE HỌ TÊN
-// ===============================
+
 
 function validateFullName() {
 
@@ -254,9 +230,7 @@ function validateFullName() {
   return true;
 }
 
-// ===============================
-// VALIDATE TÀI KHOẢN
-// ===============================
+
 
 function validateUsername() {
 
@@ -317,9 +291,7 @@ function validateUsername() {
   return true;
 }
 
-// ===============================
-// VALIDATE MẬT KHẨU
-// ===============================
+
 
 function validatePassword() {
 
@@ -380,9 +352,7 @@ function validatePassword() {
   return true;
 }
 
-// ===============================
-// VALIDATE NHẬP LẠI MẬT KHẨU
-// ===============================
+
 
 function validateRePassword() {
 
@@ -419,9 +389,7 @@ function validateRePassword() {
   return true;
 }
 
-// ===============================
-// VALIDATE SỐ ĐIỆN THOẠI
-// ===============================
+
 
 function validatePhone() {
 
@@ -457,9 +425,7 @@ function validatePhone() {
   return true;
 }
 
-// ===============================
-// VALIDATE GMAIL (MỚI)
-// ===============================
+
 
 function validateEmail() {
 
@@ -502,7 +468,7 @@ function validateEmail() {
     return false;
   }
 
-  // Chỉ cho phép đăng ký bằng Gmail.
+
 
   if (
     !value.toLowerCase().endsWith("@gmail.com")
@@ -523,9 +489,7 @@ function validateEmail() {
   return true;
 }
 
-// ===============================
-// VALIDATE OTP
-// ===============================
+
 
 function validateOtp() {
 
@@ -542,8 +506,7 @@ function validateOtp() {
     return false;
   }
 
-  // Gmail sử dụng OTP 6 chữ số.
-  // FastOTP giữ nguyên 4-8 chữ số.
+
 
   if (isEmailRegistration()) {
 
@@ -581,9 +544,7 @@ function validateOtp() {
   return true;
 }
 
-// ===============================
-// VALIDATE FORM
-// ===============================
+
 
 function validateRegisterForm() {
 
@@ -599,8 +560,7 @@ function validateRegisterForm() {
   const rePasswordValid =
     validateRePassword();
 
-  // Kiểm tra Gmail hoặc số điện thoại
-  // theo phương thức đang chọn.
+
 
   let contactValid;
 
@@ -628,16 +588,14 @@ function validateRegisterForm() {
   );
 }
 
-// ===============================
-// CHUYỂN PHƯƠNG THỨC ĐĂNG KÝ
-// ===============================
+
 
 function changeRegistrationMethod() {
 
   const emailMode =
     isEmailRegistration();
 
-  // Hiển thị trường tương ứng.
+
 
   if (phoneGroup) {
     phoneGroup.hidden = emailMode;
@@ -647,7 +605,7 @@ function changeRegistrationMethod() {
     emailGroup.hidden = !emailMode;
   }
 
-  // Chỉ bắt buộc nhập trường đang dùng.
+
 
   if (inputPhone) {
     inputPhone.required = !emailMode;
@@ -657,21 +615,18 @@ function changeRegistrationMethod() {
     inputEmail.required = emailMode;
   }
 
-  // Xóa OTP cũ khi đổi phương thức
-  // để tránh nhập nhầm mã.
+
 
   inputOtp.value = "";
 
-  // Xóa thông báo lỗi cũ.
+
 
   clearError(inputPhone);
   clearError(inputEmail);
   clearError(inputOtp);
 }
 
-// ===============================
-// GỬI OTP SỐ ĐIỆN THOẠI
-// ===============================
+
 
 async function sendOtp() {
 
@@ -734,8 +689,7 @@ async function sendOtp() {
       "Đã gửi OTP thành công"
     );
 
-    // Nếu đang ở chế độ điện thoại
-    // thì chuyển đến ô nhập OTP.
+
 
     if (!isEmailRegistration()) {
       inputOtp.focus();
@@ -763,9 +717,7 @@ async function sendOtp() {
   }
 }
 
-// ===============================
-// GỬI OTP ĐĂNG KÝ GMAIL (MỚI)
-// ===============================
+
 
 async function sendEmailOtp() {
 
@@ -817,8 +769,7 @@ async function sendEmailOtp() {
 
     if (!res.ok) {
 
-      // Hiển thị lỗi Gmail ngay dưới input
-      // nếu Backend trả field = email.
+
 
       if (data.field === "email") {
 
@@ -868,9 +819,7 @@ async function sendEmailOtp() {
   }
 }
 
-// ===============================
-// SỰ KIỆN CHỌN PHƯƠNG THỨC
-// ===============================
+
 
 registrationMethodInputs.forEach(
   (radio) => {
@@ -882,15 +831,8 @@ registrationMethodInputs.forEach(
   }
 );
 
-// ===============================
-// SỰ KIỆN NÚT GỬI OTP
-// ===============================
 
-// HTML cũ sử dụng onclick="sendOtp()".
-// Hàm sendOtp() vẫn được giữ nguyên.
-//
-// HTML mới sử dụng id="sendPhoneOtp".
-// Vì vậy cần tránh gọi sendOtp() hai lần.
+
 
 if (sendPhoneOtpButton) {
 
@@ -918,9 +860,7 @@ if (sendEmailOtpButton) {
   }
 }
 
-// ===============================
-// REALTIME VALIDATION
-// ===============================
+
 
 inputFullName.addEventListener(
   "blur",
@@ -967,9 +907,7 @@ inputOtp.addEventListener(
   validateOtp
 );
 
-// ===============================
-// REALTIME - HỌ TÊN
-// ===============================
+
 
 inputFullName.addEventListener(
   "input",
@@ -990,9 +928,7 @@ inputFullName.addEventListener(
   }
 );
 
-// ===============================
-// REALTIME - TÀI KHOẢN
-// ===============================
+
 
 inputUsername.addEventListener(
   "input",
@@ -1013,9 +949,7 @@ inputUsername.addEventListener(
   }
 );
 
-// ===============================
-// REALTIME - MẬT KHẨU
-// ===============================
+
 
 inputPassword.addEventListener(
   "input",
@@ -1043,9 +977,7 @@ inputPassword.addEventListener(
   }
 );
 
-// ===============================
-// REALTIME - NHẬP LẠI MẬT KHẨU
-// ===============================
+
 
 inputRePassword.addEventListener(
   "input",
@@ -1066,9 +998,7 @@ inputRePassword.addEventListener(
   }
 );
 
-// ===============================
-// REALTIME - SỐ ĐIỆN THOẠI
-// ===============================
+
 
 inputPhone.addEventListener(
   "input",
@@ -1093,9 +1023,7 @@ inputPhone.addEventListener(
   }
 );
 
-// ===============================
-// REALTIME - GMAIL (MỚI)
-// ===============================
+
 
 inputEmail.addEventListener(
   "input",
@@ -1120,9 +1048,7 @@ inputEmail.addEventListener(
   }
 );
 
-// ===============================
-// REALTIME - OTP
-// ===============================
+
 
 inputOtp.addEventListener(
   "input",
@@ -1143,9 +1069,7 @@ inputOtp.addEventListener(
   }
 );
 
-// ===============================
-// XỬ LÝ ĐĂNG KÝ
-// ===============================
+
 
 if (!registerForm) {
 
@@ -1171,10 +1095,7 @@ if (!registerForm) {
         return;
       }
 
-      // ===============================
-      // DỮ LIỆU GỬI BACKEND
-      // ===============================
-
+    
       const data = {
 
         ho_ten:
@@ -1193,12 +1114,7 @@ if (!registerForm) {
           inputOtp.value.trim()
       };
 
-      // Đăng ký Gmail:
-      // gửi phuong_thuc = EMAIL và email.
-      //
-      // Đăng ký số điện thoại:
-      // giữ nguyên so_dien_thoai như trước.
-
+   
       if (isEmailRegistration()) {
 
         data.phuong_thuc = "EMAIL";
@@ -1245,9 +1161,7 @@ if (!registerForm) {
           result
         );
 
-        // ===============================
-        // BACKEND TRẢ LỖI FIELD
-        // ===============================
+
 
         if (!res.ok) {
 
@@ -1306,7 +1220,7 @@ if (!registerForm) {
             "email"
           ) {
 
-            // BỔ SUNG XỬ LÝ LỖI GMAIL
+
 
             showError(
               inputEmail,
@@ -1337,10 +1251,7 @@ if (!registerForm) {
           return;
         }
 
-        // ===============================
-        // THÀNH CÔNG
-        // ===============================
-
+  
         alert(
           result.message ||
           "Đăng ký thành công!"
@@ -1372,9 +1283,7 @@ if (!registerForm) {
   );
 }
 
-// ===============================
-// KHỞI TẠO GIAO DIỆN
-// ===============================
+
 
 if (
   registerForm &&
