@@ -1101,61 +1101,7 @@ confirmPasswordInput?.addEventListener(
   }
 );
 
-// // ============================
-// // 10. LOAD LỊCH SỬ TIÊM
-// // ============================
-// async function loadHistory() {
-//   if (!tbodyTiem) return;
 
-//   try {
-//     const res = await fetch(`http://localhost:3000/api/hoso/user/${user.id}`, {
-//       headers: getAuthHeaders()
-//     });
-
-//     if (!res.ok) {
-//       tbodyTiem.innerHTML = `
-//         <tr>
-//           <td colspan="5" style="text-align:center;">Không tải được dữ liệu tiêm chủng</td>
-//         </tr>
-//       `;
-//       return;
-//     }
-
-//     const list = await res.json();
-//     tbodyTiem.innerHTML = "";
-
-//     if (!Array.isArray(list) || list.length === 0) {
-//       tbodyTiem.innerHTML = `
-//         <tr>
-//           <td colspan="6" style="text-align:center;">Chưa có dữ liệu tiêm chủng</td>
-//         </tr>
-//       `;
-//       return;
-//     }
-
-//     list.forEach((item) => {
-//       const tr = document.createElement("tr");
-
-//       tr.innerHTML = `
-//     <td>${item.ho_ten || ""}</td>
-//     <td>${item.moi_quan_he || "Bản thân"}</td>
-//     <td>${item.ten_vaccine || ""}</td>
-//     <td>${item.mui_so ?? ""}</td>
-//     <td>${formatDateOnly(item.ngay_tiem)}</td>
-//     <td>${item.co_so_tiem || item.ten_co_so || ""}</td>
-//   `;
-
-//       tbodyTiem.appendChild(tr);
-//     });
-//   } catch (err) {
-//     console.error("❌ Lỗi load lịch sử tiêm:", err);
-//     tbodyTiem.innerHTML = `
-//       <tr>
-//         <td colspan="5" style="text-align:center;">Không tải được dữ liệu tiêm chủng</td>
-//       </tr>
-//     `;
-//   }
-// }
 
 // ============================
 // 11. GỌI KHI MỞ TRANG
