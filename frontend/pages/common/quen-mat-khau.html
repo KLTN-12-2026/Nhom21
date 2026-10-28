@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quên mật khẩu - Hệ thống tiêm chủng</title>
+    <link rel="stylesheet" href="../../css/style.css" />
+
+    <style>
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: linear-gradient(135deg, #03a9f4, #0288d1);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            box-sizing: border-box;
+        }
+
+        .forgot-card {
+            width: 420px;
+            max-width: 95%;
+            background: #fff;
+            border-radius: 14px;
+            padding: 24px 22px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
+        }
+
+        .title {
+            text-align: center;
+            color: #0277bd;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #607d8b;
+            font-size: 13px;
+            margin-bottom: 18px;
+        }
+
+        /* CHỌN PHƯƠNG THỨC - GIỐNG TRANG ĐĂNG KÝ */
+        .method-switch {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+        }
+
+        .method-option {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0;
+            color: #111;
+            font-size: 14px;
+            font-weight: 400;
+            cursor: pointer;
+        }
+
+        .method-option input[type="radio"] {
+            width: 15px;
+            height: 15px;
+            padding: 0;
+            margin: 0;
+            accent-color: #007bff;
+            cursor: pointer;
+            box-shadow: none;
+            flex-shrink: 0;
+        }
+
+        .method-option input[type="radio"]:focus {
+            box-shadow: none;
+        }
+
+        .form-group {
+            margin-bottom: 13px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #01579b;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            height: 40px;
+            padding: 0 10px;
+            border: 1px solid #b0bec5;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        input:focus {
+            border-color: #0288d1;
+            box-shadow: 0 0 0 2px rgba(2, 136, 209, 0.15);
+        }
+
+        input.input-error {
+            border-color: #e53935 !important;
+            box-shadow: 0 0 0 2px rgba(229, 57, 53, 0.12) !important;
+        }
+
+        input.input-success {
+            border-color: #16a34a !important;
+            box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.12) !important;
+        }
+
+        .otp-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .otp-row input {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .btn {
+            width: 100%;
+            height: 42px;
+            border: none;
+            border-radius: 8px;
+            background: #0288d1;
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 6px;
+        }
+
+        .btn:hover {
+            background: #0277bd;
+        }
+
+        .btn-otp {
+            width: 120px;
+            flex-shrink: 0;
+            height: 40px;
+            border: none;
+            border-radius: 8px;
+            background: #e1f5fe;
+            color: #0277bd;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .btn-otp:hover {
+            background: #b3e5fc;
+        }
+
+        .error-message {
+            color: #e53935;
+            font-size: 12px;
+            margin-top: 4px;
+            min-height: 16px;
+            line-height: 1.35;
+        }
+
+        .password-hint {
+            font-size: 12px;
+            color: #607d8b;
+            margin-top: 4px;
+            line-height: 1.4;
+        }
+
+        .success-message {
+            color: #16a34a;
+            font-size: 13px;
+            margin-top: 8px;
+            text-align: center;
+            min-height: 18px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 14px;
+            font-size: 13px;
+        }
+
+        .footer a {
+            color: #0288d1;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* ĐẢM BẢO THUỘC TÍNH HIDDEN HOẠT ĐỘNG */
+        .form-group[hidden] {
+            display: none !important;
+        }
+
+        @media (max-width: 480px) {
+            .forgot-card {
+                padding: 22px 16px;
+            }
+
+            .title {
+                font-size: 22px;
+            }
+
+            .btn-otp {
+                width: 100px;
+            }
+
+            .method-switch {
+                gap: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="forgot-card">
+
+        <div class="title">Đặt lại mật khẩu</div>
+
+        <div class="subtitle">
+            Chọn phương thức xác thực để đặt lại mật khẩu.
+        </div>
+
+        <form id="forgotForm" novalidate>
+
+            <!-- CHỌN PHƯƠNG THỨC -->
+            <div class="method-switch">
+                <label class="method-option">
+                    <input type="radio" name="resetMethod" id="btnMethodPhone" value="PHONE" checked />
+                    Số điện thoại
+                </label>
+
+                <label class="method-option">
+                    <input type="radio" name="resetMethod" id="btnMethodEmail" value="EMAIL" />
+                    Gmail
+                </label>
+            </div>
+
+            <!-- NHẬP SỐ ĐIỆN THOẠI -->
+            <div class="form-group" id="phoneGroup">
+                <label for="phone">Số điện thoại *</label>
+
+                <input id="phone" type="tel" inputmode="numeric" maxlength="10"
+                    placeholder="Nhập số điện thoại đã đăng ký" autocomplete="tel" />
+
+                <div class="error-message" data-for="phone"></div>
+            </div>
+
+            <!-- NHẬP GMAIL -->
+            <div class="form-group" id="emailGroup" hidden>
+                <label for="email">Gmail *</label>
+
+                <input id="email" type="email" placeholder="Nhập Gmail đã đăng ký" autocomplete="email" />
+
+                <div class="error-message" data-for="email"></div>
+            </div>
+
+            <!-- MÃ OTP -->
+            <div class="form-group">
+                <label for="otp">Mã OTP *</label>
+
+                <div class="otp-row">
+                    <input id="otp" type="text" inputmode="numeric" placeholder="Nhập mã OTP" maxlength="6"
+                        autocomplete="one-time-code" />
+
+                    <button type="button" class="btn-otp" id="btnSendOtp">
+                        Gửi mã
+                    </button>
+                </div>
+
+                <div class="error-message" data-for="otp"></div>
+            </div>
+
+            <!-- MẬT KHẨU MỚI -->
+            <div class="form-group">
+                <label for="newPassword">Mật khẩu mới *</label>
+
+                <input id="newPassword" type="password" placeholder="Nhập mật khẩu mới" autocomplete="new-password" />
+
+                <div class="error-message" data-for="newPassword"></div>
+            </div>
+
+            <!-- XÁC NHẬN MẬT KHẨU -->
+            <div class="form-group">
+                <label for="confirmPassword">
+                    Xác nhận mật khẩu *
+                </label>
+
+                <input id="confirmPassword" type="password" placeholder="Nhập lại mật khẩu mới"
+                    autocomplete="new-password" />
+
+                <div class="error-message" data-for="confirmPassword"></div>
+            </div>
+
+            <!-- NÚT ĐẶT LẠI MẬT KHẨU -->
+            <button type="submit" class="btn">
+                Đặt lại mật khẩu
+            </button>
+
+            <div id="successMessage" class="success-message" role="status" aria-live="polite"></div>
+
+        </form>
+
+        <div class="footer">
+            <a href="dangnhap.html">Quay lại đăng nhập</a>
+        </div>
+
+    </div>
+
+    <script src="../../js/common/quen-mat-khau.js"></script>
+</body>
+
+</html>
