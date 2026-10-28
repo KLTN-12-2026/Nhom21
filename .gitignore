@@ -4,4 +4,4 @@
 
 node_modules/
 .vscode/
-*.log
+*.log.DS_Store
