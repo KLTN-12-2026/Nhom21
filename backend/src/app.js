@@ -1,4 +1,4 @@
-// backend/src/app.js
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
@@ -11,8 +11,6 @@ const app = express();
 const xacThucRoutes = require("./routes/xac-thuc.routes");
 const nguoiDungRoutes = require("./routes/nguoi-dung.routes");
 const thongTinCaNhanRoutes = require("./routes/thong-tin-ca-nhan.routes");
-// Chưa kích hoạt - giữ nguyên trạng thái hiện tại
-// const thongBaoRoutes = require("./routes/thong-bao.routes");
 const tongQuanRoutes = require("./routes/tong-quan.routes");
 
 // ================================
@@ -21,9 +19,6 @@ const tongQuanRoutes = require("./routes/tong-quan.routes");
 app.use(cors());
 app.use(express.json());
 
-// ================================
-// PHỤC VỤ FILE TĨNH FRONTEND
-// ================================
 app.use(
     express.static(
         path.join(__dirname, "../../frontend")
@@ -45,7 +40,7 @@ app.get("/frontend/:page", (req, res) => {
 // GIỮ NGUYÊN URL API HIỆN TẠI
 // ================================
 
-console.log("===== KIỂM TRA ROUTER =====");
+console.log("KIỂM TRA ROUTER");
 
 // Xác thực và người dùng
 app.use("/api/auth", xacThucRoutes);
@@ -62,8 +57,4 @@ app.use("/api/profile", thongTinCaNhanRoutes);
 app.get("/", (req, res) => {
     res.send("Backend vaccine-app đang chạy...");
 });
-
-// ================================
-// EXPORT APP
-// ================================
 module.exports = app;

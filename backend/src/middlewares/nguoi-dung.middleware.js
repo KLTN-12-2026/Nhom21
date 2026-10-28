@@ -1,8 +1,4 @@
 
-// ======================================================
-// REGEX / HẰNG SỐ DÙNG CHUNG
-// ======================================================
-
 const usernameRegex =
     /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d._]{6,30}$/;
 
@@ -17,17 +13,11 @@ const ALLOWED_ROLES = [
 
 const SALT_ROUNDS = 12;
 
-// ======================================================
-// HÀM KIỂM TRA GIÁ TRỊ RỖNG
-// ======================================================
 
 function isEmpty(value) {
     return !value || value.toString().trim() === "";
 }
 
-// ======================================================
-// MIDDLEWARE: CHỈ ADMIN
-// ======================================================
 
 function requireAdmin(req, res, next) {
     const vai_tro = req.headers["x-role"];
@@ -40,14 +30,6 @@ function requireAdmin(req, res, next) {
 
     next();
 }
-
-// ======================================================
-// VALIDATE TÊN ĐĂNG NHẬP
-//
-// SỬ DỤNG CHO:
-// - ADMIN THÊM NHÂN VIÊN
-// - ADMIN CẬP NHẬT NHÂN VIÊN
-// ======================================================
 
 function validateUsername(ten_dang_nhap) {
 
@@ -94,13 +76,6 @@ function validateUsername(ten_dang_nhap) {
     };
 }
 
-// ======================================================
-// VALIDATE MẬT KHẨU
-//
-// SỬ DỤNG CHO:
-// - ADMIN THÊM NHÂN VIÊN
-// - ADMIN RESET MẬT KHẨU
-// ======================================================
 
 function validatePassword(
     mat_khau,
@@ -149,13 +124,6 @@ function validatePassword(
     };
 }
 
-// ======================================================
-// VALIDATE CƠ SỞ LÀM VIỆC
-//
-// SỬ DỤNG CHO:
-// - ADMIN THÊM NHÂN VIÊN
-// - ADMIN CẬP NHẬT NHÂN VIÊN
-// ======================================================
 
 function validateCoSoId(co_so_id) {
 
@@ -192,9 +160,6 @@ function validateCoSoId(co_so_id) {
     };
 }
 
-// ======================================================
-// EXPORT MIDDLEWARE / HÀM DÙNG CHUNG
-// ======================================================
 
 module.exports = {
     usernameRegex,

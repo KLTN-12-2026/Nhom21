@@ -12,11 +12,6 @@ const {
     "../middlewares/nguoi-dung.middleware"
 );
 
-// ======================================================
-// POST /api/users/register
-// ĐĂNG KÝ TÀI KHOẢN KHÁCH HÀNG
-// ======================================================
-
 async function register(req, res) {
     try {
         let {
@@ -70,11 +65,6 @@ async function register(req, res) {
     }
 }
 
-// ======================================================
-// GET /api/users
-// ADMIN XEM DANH SÁCH TÀI KHOẢN
-// ======================================================
-
 async function getAll(req, res) {
     try {
         const includeDeleted =
@@ -98,11 +88,6 @@ async function getAll(req, res) {
     }
 }
 
-// ======================================================
-// POST /api/users
-// ADMIN THÊM TÀI KHOẢN NHÂN VIÊN Y TẾ
-// ======================================================
-
 async function create(req, res) {
     try {
         let {
@@ -121,10 +106,6 @@ async function create(req, res) {
         vai_tro =
             (vai_tro || "").toString();
 
-        // ============================================
-        // VALIDATE TÊN ĐĂNG NHẬP
-        // ============================================
-
         const usernameCheck =
             validateUsername(ten_dang_nhap);
 
@@ -133,10 +114,6 @@ async function create(req, res) {
                 message: usernameCheck.message
             });
         }
-
-        // ============================================
-        // VALIDATE MẬT KHẨU
-        // ============================================
 
         const passwordCheck =
             validatePassword(mat_khau);
@@ -147,9 +124,6 @@ async function create(req, res) {
             });
         }
 
-        // ============================================
-        // VALIDATE VAI TRÒ
-        // ============================================
 
         if (isEmpty(vai_tro)) {
             return res.status(400).json({
@@ -163,10 +137,6 @@ async function create(req, res) {
                     "Admin chỉ được tạo tài khoản NHÂN VIÊN Y TẾ"
             });
         }
-
-        // ============================================
-        // VALIDATE CƠ SỞ LÀM VIỆC
-        // ============================================
 
         const coSoCheck =
             validateCoSoId(co_so_id);
@@ -212,11 +182,6 @@ async function create(req, res) {
     }
 }
 
-// ======================================================
-// PUT /api/users/:id
-// ADMIN CẬP NHẬT TÀI KHOẢN NHÂN VIÊN Y TẾ
-// ======================================================
-
 async function update(req, res) {
     const { id } = req.params;
 
@@ -233,10 +198,6 @@ async function update(req, res) {
         vai_tro =
             (vai_tro || "").toString();
 
-        // ============================================
-        // KIỂM TRA TÀI KHOẢN
-        // ============================================
-
         const userRows =
             await nguoiDungService.getUserById(id);
 
@@ -248,9 +209,6 @@ async function update(req, res) {
 
         const targetUser = userRows[0];
 
-        // ============================================
-        // CHẶN SỬA KHÁCH HÀNG
-        // ============================================
 
         if (targetUser.vai_tro === "KHACH_HANG") {
             return res.status(403).json({
@@ -259,9 +217,6 @@ async function update(req, res) {
             });
         }
 
-        // ============================================
-        // CHẶN SỬA ADMIN
-        // ============================================
 
         if (targetUser.vai_tro === "ADMIN") {
             return res.status(403).json({
@@ -270,9 +225,6 @@ async function update(req, res) {
             });
         }
 
-        // ============================================
-        // CHỈ SỬA NHÂN VIÊN Y TẾ
-        // ============================================
 
         if (targetUser.vai_tro !== "NHAN_VIEN_Y_TE") {
             return res.status(403).json({
@@ -281,10 +233,6 @@ async function update(req, res) {
             });
         }
 
-        // ============================================
-        // KHÔNG CHO THAY ĐỔI VAI TRÒ
-        // ============================================
-
         if (vai_tro !== targetUser.vai_tro) {
             return res.status(403).json({
                 message:
@@ -292,9 +240,6 @@ async function update(req, res) {
             });
         }
 
-        // ============================================
-        // VALIDATE TÊN ĐĂNG NHẬP
-        // ============================================
 
         const usernameCheck =
             validateUsername(ten_dang_nhap);
@@ -305,9 +250,6 @@ async function update(req, res) {
             });
         }
 
-        // ============================================
-        // KIỂM TRA TÊN ĐĂNG NHẬP TRÙNG
-        // ============================================
 
         const duplicateRows =
             await nguoiDungService.checkDuplicateUsername(
@@ -320,10 +262,6 @@ async function update(req, res) {
                 message: "Tên đăng nhập đã tồn tại"
             });
         }
-
-        // ============================================
-        // VALIDATE CƠ SỞ LÀM VIỆC
-        // ============================================
 
         const coSoCheck =
             validateCoSoId(co_so_id);
@@ -369,11 +307,6 @@ async function update(req, res) {
     }
 }
 
-// ======================================================
-// PATCH /api/users/:id/reset-password
-// ADMIN RESET MẬT KHẨU
-// ======================================================
-
 async function resetPassword(req, res) {
     const { id } = req.params;
 
@@ -382,10 +315,6 @@ async function resetPassword(req, res) {
 
         mat_khau =
             (mat_khau || "").toString();
-
-        // ============================================
-        // KIỂM TRA TÀI KHOẢN
-        // ============================================
 
         const userRows =
             await nguoiDungService.getUserById(id);
@@ -398,12 +327,7 @@ async function resetPassword(req, res) {
 
         const targetUser = userRows[0];
 
-        // ============================================
-        // KHÔNG RESET MẬT KHẨU CHÍNH MÌNH
-        // ============================================
-
-        const currentUserId =
-            req.headers["x-user-id"];
+        const currentUserId = req.user.id;
 
         if (
             currentUserId &&
@@ -415,10 +339,6 @@ async function resetPassword(req, res) {
                     "Không thể reset mật khẩu của chính tài khoản đang đăng nhập"
             });
         }
-
-        // ============================================
-        // VALIDATE MẬT KHẨU MỚI
-        // ============================================
 
         const passwordCheck =
             validatePassword(mat_khau, true);
@@ -451,21 +371,12 @@ async function resetPassword(req, res) {
     }
 }
 
-// ======================================================
-// DELETE /api/users/:id
-// ADMIN KHÓA TÀI KHOẢN
-// ======================================================
-
 async function lock(req, res) {
     const { id } = req.params;
 
     try {
-        // ============================================
-        // KHÔNG KHÓA CHÍNH MÌNH
-        // ============================================
 
-        const myUserId =
-            req.headers["x-user-id"];
+        const myUserId = req.user.id;
 
         if (
             myUserId &&
@@ -477,10 +388,6 @@ async function lock(req, res) {
             });
         }
 
-        // ============================================
-        // KIỂM TRA TÀI KHOẢN
-        // ============================================
-
         const rows =
             await nguoiDungService.getUserRoleById(id);
 
@@ -490,20 +397,12 @@ async function lock(req, res) {
             });
         }
 
-        // ============================================
-        // KHÔNG KHÓA ADMIN
-        // ============================================
-
         if (rows[0].vai_tro === "ADMIN") {
             return res.status(403).json({
                 message:
                     "Không được phép khóa tài khoản ADMIN"
             });
         }
-
-        // ============================================
-        // KHÓA TÀI KHOẢN
-        // ============================================
 
         const result =
             await nguoiDungService.lock(id);
@@ -530,11 +429,6 @@ async function lock(req, res) {
         });
     }
 }
-
-// ======================================================
-// PATCH /api/users/:id/unlock
-// ADMIN MỞ KHÓA TÀI KHOẢN
-// ======================================================
 
 async function unlock(req, res) {
     const { id } = req.params;
@@ -565,10 +459,6 @@ async function unlock(req, res) {
         });
     }
 }
-
-// ======================================================
-// EXPORT CONTROLLER
-// ======================================================
 
 module.exports = {
     register,

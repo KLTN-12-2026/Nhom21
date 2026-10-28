@@ -1,15 +1,12 @@
 
-const user = JSON.parse(localStorage.getItem("user"));
+const user = JSON.parse(localStorage.getItem("user") || "null");
+const token = localStorage.getItem("token");
 
-if (!user) {
+if (!user || !token) {
     alert("Bạn chưa đăng nhập!");
-    window.location.href = "../khach-hang/dangnhap.html";
+    window.location.href = "dangnhap.html";
     throw new Error("Chưa đăng nhập");
 }
-
-// ==========================================
-// 1. KIỂM TRA VAI TRÒ
-// ==========================================
 
 const VALID_ROLES = [
     "ADMIN",
@@ -20,13 +17,10 @@ const VALID_ROLES = [
 if (!VALID_ROLES.includes(user.vai_tro)) {
     alert("Tài khoản không có quyền truy cập Dashboard!");
     localStorage.removeItem("user");
-    window.location.href = "../khach-hang/dangnhap.html";
+    localStorage.removeItem("token");
+    window.location.href = "dangnhap.html";
     throw new Error("Role không hợp lệ");
 }
-
-// ==========================================
-// 2. LẤY CÁC PHẦN TỬ HTML
-// ==========================================
 
 const usernameDisplay = document.getElementById("usernameDisplay");
 const userBoxTitle = document.getElementById("userBoxTitle");
@@ -39,9 +33,6 @@ const welcomePanels = document.getElementById("welcomePanels");
 const pageFrame = document.getElementById("pageFrame");
 const logoutBtn = document.getElementById("logout");
 
-// ==========================================
-// 3. CẤU HÌNH NỘI DUNG THEO VAI TRÒ
-// ==========================================
 
 const ROLE_CONFIG = {
     ADMIN: {
@@ -123,15 +114,12 @@ const ROLE_CONFIG = {
     }
 };
 
-// ==========================================
-// 4. CẤU HÌNH MENU
-// ==========================================
 
 const MENU_CONFIG = {
     ADMIN: [
         {
             title: "Quản lý tài khoản",
-            page: "../admin/quanly-taikhoan.html",
+            page: "../admin/quanly-tai-khoan.html",
             icon: "manage_accounts"
         },
         {
@@ -166,7 +154,7 @@ const MENU_CONFIG = {
         },
         {
             title: "Thống kê báo cáo",
-            page: "../admin/thongke-admin.html",
+            page: "../admin/thongke-baocao.html",
             icon: "analytics"
         }
     ],
@@ -174,22 +162,22 @@ const MENU_CONFIG = {
     NHAN_VIEN_Y_TE: [
         {
             title: "Quản lý lịch tiêm",
-            page: "../nhan-vien-y-te/quanly-lichtiem.html",
+            page: "../nhan-vien-y-te/quanly-lich.html",
             icon: "calendar_month"
         },
         {
             title: "Quản lý hồ sơ tiêm chủng",
-            page: "../nhan-vien-y-te/quanly-hoso-tiemchung.html",
+            page: "../nhan-vien-y-te/quanly-hoso.html",
             icon: "folder_open"
         },
         {
             title: "Nhắc lịch tiêm",
-            page: "../nhan-vien-y-te/nhaclich-tiem.html",
+            page: "../nhan-vien-y-te/nhaclichtiem.html",
             icon: "notifications_active"
         },
         {
             title: "Thống kê báo cáo",
-            page: "../nhan-vien-y-te/thongke-nhanvienyte.html",
+            page: "../nhan-vien-y-te/thongke-baocao.html",
             icon: "bar_chart"
         }
     ],
@@ -197,7 +185,7 @@ const MENU_CONFIG = {
     KHACH_HANG: [
         {
             title: "Quản lý thông tin cá nhân",
-            page: "../khach-hang/quanly-thongtin-canhan.html",
+            page: "../khach-hang/thongtin-canhan.html",
             icon: "folder_open"
         },
         {
@@ -207,21 +195,23 @@ const MENU_CONFIG = {
         },
         {
             title: "Đặt lịch tiêm",
-            page: "../khach-hang/datlichtiem.html",
+            page: "../khach-hang/dat-lich-tiem.html",
             icon: "add_circle",
             key: "datlich"
         },
         {
+            title: "Thanh toán",
+            page: "../khach-hang/thanhtoan.html",
+            icon: "payments",
+            key: "thanhtoan"
+        },
+        {
             title: "Lịch sử tiêm",
-            page: "../khach-hang/lich-su-tiem.html",
+            page: "../khach-hang/lichsu-tiemchung.html",
             icon: "history"
         }
     ]
 };
-
-// ==========================================
-// 5. CẤU HÌNH THỐNG KÊ TỔNG QUAN
-// ==========================================
 
 const OVERVIEW_CONFIG = {
     ADMIN: {
@@ -246,11 +236,6 @@ const OVERVIEW_CONFIG = {
                 label: "Tổng lịch tiêm",
                 icon: "calendar_month",
                 apiKey: "tongLichTiem"
-            },
-            {
-                label: "Hoàn tiền chờ xử lý",
-                icon: "payments",
-                apiKey: "hoanTienChoXuLy"
             }
         ]
     },
@@ -298,14 +283,15 @@ const OVERVIEW_CONFIG = {
                 label: "Lịch sử tiêm",
                 icon: "history",
                 apiKey: "tongLichSuTiem"
+            },
+            {
+                label: "Chờ thanh toán",
+                icon: "payments",
+                apiKey: "thanhToanChoXuLy"
             }
         ]
     }
 };
-
-// ==========================================
-// 6. THÔNG TIN VAI TRÒ HIỆN TẠI
-// ==========================================
 
 const currentRoleConfig = ROLE_CONFIG[user.vai_tro];
 const currentMenu = MENU_CONFIG[user.vai_tro];
@@ -313,10 +299,6 @@ const currentMenu = MENU_CONFIG[user.vai_tro];
 const displayName =
     user.ten_dang_nhap ||
     currentRoleConfig.defaultName;
-
-// ==========================================
-// 7. KEY LƯU TRANG ĐANG MỞ
-// ==========================================
 
 const storageUserKey =
     user.id ||
@@ -326,19 +308,11 @@ const storageUserKey =
 const CURRENT_PAGE_KEY =
     `dashboard_${storageUserKey}_current_page`;
 
-// ==========================================
-// 8. HIỂN THỊ THÔNG TIN USER
-// ==========================================
-
 function renderUserInfo() {
     usernameDisplay.textContent = displayName;
     userBoxTitle.textContent = currentRoleConfig.userBoxTitle;
     menuTitle.textContent = currentRoleConfig.menuTitle;
 }
-
-// ==========================================
-// 9. TẠO MENU
-// ==========================================
 
 function renderMenu() {
     menuList.innerHTML = "";
@@ -390,10 +364,6 @@ function renderMenu() {
     });
 }
 
-// ==========================================
-// 10. ACTIVE MENU
-// ==========================================
-
 function setActiveMenu(selectedItem) {
     document.querySelectorAll(".menu-item").forEach((item) => {
         item.classList.remove("active");
@@ -403,10 +373,6 @@ function setActiveMenu(selectedItem) {
         selectedItem.classList.add("active");
     }
 }
-
-// ==========================================
-// 11. TẠO THẺ THỐNG KÊ
-// ==========================================
 
 function createOverviewStat(stat) {
     const card = document.createElement("div");
@@ -443,20 +409,18 @@ function createOverviewStat(stat) {
     return card;
 }
 
-// ==========================================
-// 12. HIỂN THỊ TỔNG QUAN
-// ==========================================
 
 function renderWelcomePanels() {
     welcomePanels.innerHTML = "";
 
-    const overviewConfig = OVERVIEW_CONFIG[user.vai_tro];
+    const role = user.vai_tro;
+    const overviewConfig = OVERVIEW_CONFIG[role];
 
-    if (!overviewConfig) {
-        return;
-    }
+    if (!overviewConfig) return;
 
-    // Khu vực thống kê
+    const mainLayout = document.createElement("div");
+    mainLayout.className = "overview-main-layout";
+
     const statsSection = document.createElement("section");
     statsSection.className = "overview-stats-section";
 
@@ -468,30 +432,138 @@ function renderWelcomePanels() {
     statsGrid.className = "overview-stats-grid";
 
     overviewConfig.stats.forEach((stat) => {
-        statsGrid.appendChild(createOverviewStat(stat));
+        const card = createOverviewStat(stat);
+        statsGrid.appendChild(card);
     });
 
     statsSection.appendChild(statsTitle);
     statsSection.appendChild(statsGrid);
 
-    welcomePanels.appendChild(statsSection);
 
+    const sidePanel = document.createElement("section");
+    sidePanel.className = "overview-side-panel";
+
+    const sideTitle = document.createElement("h3");
+    sideTitle.className = "overview-side-title";
+
+    const sideContent = document.createElement("div");
+    sideContent.className = "overview-side-content";
+
+    if (role === "ADMIN") {
+        sideTitle.textContent = "Công việc cần xử lý";
+
+        const label = document.createElement("p");
+        label.textContent = "Hoàn tiền chờ xử lý";
+
+        const value = document.createElement("div");
+        value.className = "overview-side-value";
+        value.dataset.statKey = "hoanTienChoXuLy";
+        value.textContent = "—";
+
+        const link = document.createElement("a");
+        link.href = "#";
+        link.textContent = "Quản lý thanh toán →";
+
+        link.addEventListener("click", (event) => {
+            event.preventDefault();
+
+            openOverviewMenuPage(
+                "../admin/quanly-thanhtoan.html"
+            );
+        });
+
+        sideContent.append(label, value, link);
+    }
+
+    if (role === "NHAN_VIEN_Y_TE") {
+        sideTitle.textContent = "Công việc cần xử lý";
+
+        const tasks = [
+            {
+                label: "Lịch chờ xử lý",
+                key: "lichChoXuLy",
+                page: "../nhan-vien-y-te/quanly-lich.html"
+            },
+            {
+                label: "Lịch cần nhắc",
+                key: "lichCanNhac",
+                page: "../nhan-vien-y-te/nhaclichtiem.html"
+            }
+        ];
+
+        tasks.forEach((task) => {
+            const item = document.createElement("div");
+            item.className = "overview-task-item";
+
+            const label = document.createElement("span");
+            label.textContent = task.label;
+
+            const value = document.createElement("strong");
+            value.dataset.statKey = task.key;
+            value.textContent = "—";
+
+            const link = document.createElement("a");
+            link.href = "#";
+            link.textContent = "Xem chi tiết →";
+
+            link.addEventListener("click", (event) => {
+                event.preventDefault();
+                openOverviewMenuPage(task.page);
+            });
+
+            item.append(label, value, link);
+            sideContent.appendChild(item);
+        });
+    }
+
+    if (role === "KHACH_HANG") {
+        sideTitle.textContent = "Lịch tiêm của tôi";
+
+        const appointment = document.createElement("div");
+        appointment.id = "overviewNearestAppointment";
+        appointment.className = "overview-appointment";
+        appointment.textContent = "Đang tải lịch tiêm...";
+
+        const link = document.createElement("a");
+        link.href = "#";
+        link.textContent = "Xem tất cả lịch tiêm →";
+
+        link.addEventListener("click", (event) => {
+            event.preventDefault();
+
+            openOverviewMenuPage(
+                "../khach-hang/lich-tiem.html"
+            );
+        });
+
+        sideContent.append(appointment, link);
+    }
+
+    sidePanel.appendChild(sideTitle);
+    sidePanel.appendChild(sideContent);
+
+    mainLayout.appendChild(statsSection);
+    mainLayout.appendChild(sidePanel);
+
+    welcomePanels.appendChild(mainLayout);
 }
-// ==========================================
-// 13. CẬP NHẬT SỐ LIỆU TỪ API
-// ==========================================
 
-// Hàm này chỉ cập nhật dữ liệu khi được gọi.
-// Chưa tự gọi API vì chưa xác định endpoint backend.
-//
-// Ví dụ sau khi có dữ liệu Admin:
-// updateOverviewStats({
-//     tongTaiKhoan: 100,
-//     tongVaccine: 20,
-//     tongCoSo: 5,
-//     tongLichTiem: 120,
-//     hoanTienChoXuLy: 2
-// });
+function openOverviewMenuPage(page) {
+    const menuConfig = findMenuConfig(page);
+    const menuElement = findMenuElement(page);
+
+    if (!menuConfig || !menuElement) {
+        return;
+    }
+
+    loadPage(
+        menuConfig.page,
+        menuElement,
+        menuConfig.title,
+        ""
+    );
+}
+
 
 function updateOverviewStats(data) {
     if (!data || typeof data !== "object") {
@@ -499,7 +571,7 @@ function updateOverviewStats(data) {
     }
 
     document.querySelectorAll(
-        ".overview-stat-value[data-stat-key]"
+        "[data-stat-key]"
     ).forEach((element) => {
         const key = element.dataset.statKey;
         const value = data[key];
@@ -518,12 +590,79 @@ function updateOverviewStats(data) {
             ".overview-stat-note"
         );
 
-        if (note) {
+        if (
+            note &&
+            element.classList.contains("overview-stat-value")
+        ) {
             note.textContent = "Dữ liệu hệ thống";
         }
     });
 }
+function updateNearestAppointment(appointment) {
+    const container = document.getElementById(
+        "overviewNearestAppointment"
+    );
 
+    if (!container) return;
+
+    container.replaceChildren();
+    if (!appointment) {
+        container.textContent =
+            "Bạn chưa có lịch tiêm sắp tới.";
+        return;
+    }
+
+    const dateValue = String(
+        appointment.ngay_tiem || ""
+    ).slice(0, 10);
+
+    const dateParts = dateValue.split("-");
+
+    const formattedDate = dateParts.length === 3
+        ? `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`
+        : "Chưa có";
+    const statusLabels = {
+        CHO_DUYET: "Chờ duyệt",
+        DA_DUYET: "Đã duyệt"
+    };
+
+    const details = [
+        [
+            "Vaccine",
+            appointment.vaccine || "Chưa có"
+        ],
+        [
+            "Ngày tiêm",
+            formattedDate
+        ],
+        [
+            "Giờ tiêm",
+            appointment.gio_tiem || "Chưa có"
+        ],
+        [
+            "Trạng thái",
+            statusLabels[appointment.trang_thai] ||
+            appointment.trang_thai ||
+            "Chưa xác định"
+        ]
+    ];
+
+    details.forEach(([label, value]) => {
+        const row = document.createElement("div");
+        row.className = "overview-appointment-row";
+
+        const labelElement = document.createElement("span");
+        labelElement.textContent = label + ":";
+
+        const valueElement = document.createElement("strong");
+        valueElement.textContent = value;
+
+        row.appendChild(labelElement);
+        row.appendChild(valueElement);
+
+        container.appendChild(row);
+    });
+}
 
 async function loadOverviewStats() {
     try {
@@ -532,12 +671,13 @@ async function loadOverviewStats() {
             {
                 method: "GET",
                 headers: {
-                    "x-user-id": String(user.id),
-                    "x-role": user.vai_tro
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`
                 }
             }
         );
-
+        if (await checkAuthResponse(response)) {
+            return;
+        }
         if (!response.ok) {
             throw new Error(
                 `Không thể lấy dữ liệu tổng quan: ${response.status}`
@@ -547,7 +687,9 @@ async function loadOverviewStats() {
         const data = await response.json();
 
         updateOverviewStats(data);
-
+        if (user.vai_tro === "KHACH_HANG") {
+            updateNearestAppointment(data.lichTiemGanNhat);
+        }
     } catch (error) {
         console.error("Lỗi tải Tổng quan:", error);
 
@@ -556,13 +698,16 @@ async function loadOverviewStats() {
         ).forEach((note) => {
             note.textContent = "Không thể tải dữ liệu";
         });
+
+        const appointment = document.getElementById(
+            "overviewNearestAppointment"
+        );
+
+        if (appointment) {
+            appointment.textContent = "Không thể tải lịch tiêm.";
+        }
     }
 }
-
-
-// ==========================================
-// 14. TIÊU ĐỀ WELCOME
-// ==========================================
 
 function getWelcomeTitle() {
     if (user.vai_tro === "KHACH_HANG") {
@@ -571,10 +716,6 @@ function getWelcomeTitle() {
 
     return currentRoleConfig.welcomeTitle;
 }
-
-// ==========================================
-// 15. HIỂN THỊ TRANG TỔNG QUAN
-// ==========================================
 
 function showWelcome(selectedItem) {
     setActiveMenu(selectedItem);
@@ -590,10 +731,6 @@ function showWelcome(selectedItem) {
 
     localStorage.removeItem(CURRENT_PAGE_KEY);
 }
-
-// ==========================================
-// 16. LOAD TRANG VÀO IFRAME
-// ==========================================
 
 function loadPage(
     page,
@@ -614,27 +751,16 @@ function loadPage(
     localStorage.setItem(CURRENT_PAGE_KEY, page);
 }
 
-// ==========================================
-// 17. TÌM MENU THEO PAGE
-// ==========================================
-
 function findMenuElement(page) {
     return Array.from(
         document.querySelectorAll(".menu-item")
     ).find((item) => item.dataset.page === page);
 }
 
-// ==========================================
-// 18. TÌM CONFIG MENU THEO PAGE
-// ==========================================
 
 function findMenuConfig(page) {
     return currentMenu.find((menu) => menu.page === page);
 }
-
-// ==========================================
-// 19. KHÔI PHỤC TRANG ĐANG MỞ
-// ==========================================
 
 function restoreCurrentPage() {
     const savedPage = localStorage.getItem(CURRENT_PAGE_KEY);
@@ -643,7 +769,6 @@ function restoreCurrentPage() {
         return false;
     }
 
-    // Chỉ khôi phục trang thuộc menu vai trò hiện tại
     const menuConfig = findMenuConfig(savedPage);
 
     if (!menuConfig) {
@@ -663,10 +788,6 @@ function restoreCurrentPage() {
     return true;
 }
 
-// ==========================================
-// 20. XỬ LÝ ?page=...
-// ==========================================
-
 function handlePageFromURL() {
     const params = new URLSearchParams(window.location.search);
     const requestedPage = params.get("page");
@@ -675,7 +796,6 @@ function handlePageFromURL() {
         return false;
     }
 
-    // Ví dụ: dashboard.html?page=datlich
     const menuConfig = currentMenu.find((menu) => {
         return menu.key === requestedPage;
     });
@@ -696,16 +816,12 @@ function handlePageFromURL() {
     return true;
 }
 
-// ==========================================
-// 21. ĐĂNG XUẤT
-// ==========================================
-
 logoutBtn.addEventListener("click", () => {
     localStorage.removeItem("user");
-
+    localStorage.removeItem("token");
+    localStorage.removeItem(CURRENT_PAGE_KEY);
     alert("Đã đăng xuất");
-
-    window.location.href = "../khach-hang/dangnhap.html";
+    window.location.href = "dangnhap.html";
 });
 
 // ==========================================

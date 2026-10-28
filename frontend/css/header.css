@@ -1,0 +1,39 @@
+/* HEADER DÙNG CHUNG */
+
+.topbar {
+    background: #0288d1;
+    color: #fff;
+    padding: 10px 0;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+    position: relative;
+    z-index: 1000;
+}
+
+.topbar-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.logo {
+    font-size: 18px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.logo a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 18px;
+    flex: 1;
+}

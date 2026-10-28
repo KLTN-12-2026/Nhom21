@@ -3,42 +3,15 @@ const tongQuanService = require(
     "../services/tong-quan.service"
 );
 
-// =====================================================
-// 1. API TỔNG QUAN DASHBOARD
-//
-// GET /api/dashboard/overview
-//
-// ADMIN:
-// - Thống kê toàn hệ thống.
-//
-// NHAN_VIEN_Y_TE:
-// - Thống kê theo cơ sở được phân công.
-//
-// KHACH_HANG:
-// - Thống kê lịch tiêm và hồ sơ cá nhân.
-// =====================================================
-
 async function getDashboardOverview(req, res) {
 
     try {
-
-        // =============================================
-        // 1.1. LẤY NGƯỜI DÙNG ĐÃ ĐƯỢC XÁC THỰC
-        // =============================================
-
-        const user = req.currentUser;
+        const user = req.user;
 
         let stats;
 
-        // =============================================
-        // 1.2. XỬ LÝ THEO VAI TRÒ
-        // =============================================
-
         switch (user.vai_tro) {
 
-            // =========================================
-            // ADMIN
-            // =========================================
 
             case "ADMIN":
 
@@ -46,10 +19,6 @@ async function getDashboardOverview(req, res) {
                     await tongQuanService.getAdminOverview();
 
                 break;
-
-            // =========================================
-            // NHÂN VIÊN Y TẾ
-            // =========================================
 
             case "NHAN_VIEN_Y_TE":
 
@@ -60,10 +29,6 @@ async function getDashboardOverview(req, res) {
 
                 break;
 
-            // =========================================
-            // KHÁCH HÀNG
-            // =========================================
-
             case "KHACH_HANG":
 
                 stats =
@@ -73,10 +38,6 @@ async function getDashboardOverview(req, res) {
 
                 break;
 
-            // =========================================
-            // VAI TRÒ KHÔNG ĐƯỢC HỖ TRỢ
-            // =========================================
-
             default:
 
                 return res.status(403).json({
@@ -84,10 +45,6 @@ async function getDashboardOverview(req, res) {
                         "Vai trò không được hỗ trợ"
                 });
         }
-
-        // =============================================
-        // 1.3. TRẢ DỮ LIỆU THỐNG KÊ
-        // =============================================
 
         return res.status(200).json(stats);
 
@@ -107,13 +64,6 @@ async function getDashboardOverview(req, res) {
             });
     }
 }
-
-// =====================================================
-// 2. XỬ LÝ LỖI TỪ MIDDLEWARE
-//
-// Middleware sử dụng next(error).
-// Hàm này giữ nguyên phản hồi lỗi của Route gốc.
-// =====================================================
 
 function handleDashboardError(
     error,
@@ -136,9 +86,6 @@ function handleDashboardError(
         });
 }
 
-// =====================================================
-// EXPORT CONTROLLER
-// =====================================================
 
 module.exports = {
     getDashboardOverview,

@@ -1,10 +1,5 @@
-
 const xacThucService = require("../services/xac-thuc.service");
 
-// =====================================================
-// 1. ĐĂNG NHẬP
-// POST /api/auth/login
-// =====================================================
 async function login(req, res) {
     try {
         const result = await xacThucService.login(req);
@@ -19,10 +14,6 @@ async function login(req, res) {
     }
 }
 
-// =====================================================
-// 2. GỬI OTP ĐĂNG KÝ
-// POST /api/auth/send-otp
-// =====================================================
 async function sendOtp(req, res) {
     try {
         const result = await xacThucService.sendOtp(req);
@@ -37,10 +28,6 @@ async function sendOtp(req, res) {
     }
 }
 
-// =====================================================
-// 3. ĐĂNG KÝ TÀI KHOẢN
-// POST /api/auth/register
-// =====================================================
 async function register(req, res) {
     try {
         const result = await xacThucService.register(req);
@@ -55,10 +42,6 @@ async function register(req, res) {
     }
 }
 
-// =====================================================
-// 4. GỬI OTP QUÊN MẬT KHẨU
-// POST /api/auth/quen-mat-khau/gui-otp
-// =====================================================
 async function sendForgotPasswordOtp(req, res) {
     try {
         const result =
@@ -74,10 +57,6 @@ async function sendForgotPasswordOtp(req, res) {
     }
 }
 
-// =====================================================
-// 5. ĐẶT LẠI MẬT KHẨU
-// POST /api/auth/quen-mat-khau/dat-lai
-// =====================================================
 async function resetPassword(req, res) {
     try {
         const result = await xacThucService.resetPassword(req);
@@ -92,10 +71,6 @@ async function resetPassword(req, res) {
     }
 }
 
-// =====================================================
-// 6. ĐỔI MẬT KHẨU
-// PUT /api/auth/change-password
-// =====================================================
 async function changePassword(req, res) {
     try {
         const result = await xacThucService.changePassword(req);
@@ -110,14 +85,62 @@ async function changePassword(req, res) {
     }
 }
 
-// =====================================================
-// EXPORT CONTROLLER
-// =====================================================
+async function sendRegisterEmailOtp(req, res) {
+    try {
+        const result =
+            await xacThucService.sendRegisterEmailOtp(req);
+
+        return res
+            .status(result.status || 200)
+            .json(result.body);
+
+    } catch (err) {
+        console.error("Lỗi gửi OTP đăng ký Gmail:", err);
+
+        return res.status(500).json({
+            message: "Không thể gửi OTP đăng ký Gmail"
+        });
+    }
+}
+
+async function sendForgotPasswordPhoneOtp(req, res) {
+    try {
+        const result =
+            await xacThucService.sendForgotPasswordPhoneOtp(req);
+
+        return res.status(result.status || 200).json(result.body);
+    } catch (err) {
+        console.error("Lỗi gửi OTP quên mật khẩu SĐT:", err);
+
+        return res.status(500).json({
+            message: "Gửi OTP thất bại"
+        });
+    }
+}
+
+async function resetPasswordByPhone(req, res) {
+    try {
+        const result =
+            await xacThucService.resetPasswordByPhone(req);
+
+        return res.status(result.status || 200).json(result.body);
+    } catch (err) {
+        console.error("Lỗi đặt lại mật khẩu bằng SĐT:", err);
+
+        return res.status(500).json({
+            message: "Lỗi server khi đặt lại mật khẩu"
+        });
+    }
+}
+
 module.exports = {
     login,
     sendOtp,
     register,
     sendForgotPasswordOtp,
     resetPassword,
-    changePassword
+    changePassword,
+    sendRegisterEmailOtp,
+    sendForgotPasswordPhoneOtp,
+    resetPasswordByPhone
 };

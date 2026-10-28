@@ -655,3 +655,166 @@ body {
         padding: 12px;
     }
 }
+
+/* BỐ CỤC TỔNG QUAN CHUNG */
+
+.overview-main-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    gap: 20px;
+    align-items: stretch;
+}
+
+.overview-main-layout .overview-stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.overview-side-panel {
+    min-width: 0;
+    padding: 18px;
+    background: #ffffff;
+    border: 1px solid #dbeafe;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.overview-side-title {
+    margin: 0 0 16px;
+    font-size: 17px;
+    font-weight: 700;
+    color: #01579b;
+}
+
+/* TABLET */
+@media (max-width: 992px) {
+    .overview-main-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* MOBILE */
+@media (max-width: 480px) {
+    .overview-main-layout .overview-stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .overview-side-panel {
+        padding: 14px;
+    }
+}
+
+/* ==========================================
+   THÔNG TIN BÊN PHẢI DASHBOARD
+========================================== */
+
+.overview-side-content {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-width: 0;
+}
+
+.overview-side-content p {
+    margin: 0;
+    font-size: 14px;
+    color: #546e7a;
+}
+
+.overview-side-value {
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #0277bd;
+}
+
+.overview-side-content a {
+    display: inline-block;
+    width: fit-content;
+    max-width: 100%;
+    font-size: 13px;
+    font-weight: 600;
+    color: #0288d1;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+}
+
+.overview-side-content a:hover {
+    text-decoration: underline;
+}
+
+/* Công việc nhân viên y tế */
+
+.overview-task-item {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #e3f2fd;
+}
+
+.overview-task-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.overview-task-item span {
+    font-size: 14px;
+    color: #546e7a;
+}
+
+.overview-task-item strong {
+    font-size: 24px;
+    color: #0277bd;
+}
+
+/* Lịch tiêm gần nhất của khách hàng */
+
+.overview-appointment {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+    font-size: 14px;
+    color: #546e7a;
+}
+
+.overview-appointment-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.overview-appointment-row span {
+    flex-shrink: 0;
+    color: #607d8b;
+}
+
+.overview-appointment-row strong {
+    min-width: 0;
+    text-align: right;
+    color: #01579b;
+    overflow-wrap: anywhere;
+}
+
+/* Màn hình điện thoại */
+
+@media (max-width: 480px) {
+    .overview-side-title {
+        font-size: 16px;
+    }
+
+    .overview-side-value {
+        font-size: 26px;
+    }
+
+    .overview-appointment-row {
+        flex-wrap: wrap;
+        gap: 4px 8px;
+    }
+
+    .overview-appointment-row strong {
+        text-align: left;
+    }
+}

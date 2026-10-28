@@ -9,7 +9,9 @@ async function loadSharedHeader() {
     if (!container) return;
 
     try {
-        const response = await fetch("header.html");
+        const response = await fetch(
+            new URL("../common/header.html", window.location.href)
+        );
 
         if (!response.ok) {
             throw new Error("Không tải được Header chung");
@@ -40,7 +42,16 @@ async function loadSharedHeader() {
         }
 
         container.appendChild(template.content.cloneNode(true));
+        container.querySelectorAll("a[href]").forEach((link) => {
+            const href = link.getAttribute("href");
 
+            if (href && !href.startsWith("#")) {
+                link.href = new URL(
+                    href,
+                    new URL("../common/", window.location.href)
+                ).href;
+            }
+        });
         initSharedHeader();
 
     } catch (error) {
@@ -76,12 +87,34 @@ function initSharedHeader() {
     // TÀI KHOẢN
     if (userBox) {
         userBox.addEventListener("click", () => {
-            window.location.href = user
-                ? "dashboard.html"
-                : "../khach-hang/dangnhap.html";
+            const role = user?.vai_tro || user?.role;
+
+            const loginUrl = new URL(
+                "../common/dangnhap.html",
+                window.location.href
+            ).href;
+
+            const dashboardUrl = new URL(
+                "../common/dashboard.html",
+                window.location.href
+            ).href;
+
+            if (!user || !localStorage.getItem("token")) {
+                window.top.location.href = loginUrl;
+                return;
+            }
+
+            if (
+                role === "ADMIN" ||
+                role === "NHAN_VIEN_Y_TE" ||
+                role === "KHACH_HANG"
+            ) {
+                window.top.location.href = dashboardUrl;
+            } else {
+                window.top.location.href = loginUrl;
+            }
         });
     }
-
     // CẨM NANG
     if (camNangToggle && camNangMenu && camNangDropdown) {
         camNangToggle.addEventListener("click", (event) => {
@@ -99,10 +132,7 @@ function initSharedHeader() {
 
     // THÔNG BÁO
     if (notificationBox) {
-        notificationBox.style.display = user
-            ? "inline-flex"
-            : "none";
-
+        notificationBox.style.display = "inline-flex";
         if (user && notificationDropdown) {
             notificationBox.addEventListener("click", (event) => {
                 event.stopPropagation();
