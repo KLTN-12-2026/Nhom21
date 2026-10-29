@@ -1,28 +1,9 @@
-
 const db = require("../config/db");
-
-// =====================================================
-// 1. HÀM HỖ TRỢ
-//
-// Chuyển dữ liệu COUNT(*) từ MySQL sang Number.
-// Giữ nguyên hàm toNumber của code gốc.
-// =====================================================
 
 function toNumber(value) {
     return Number(value || 0);
 }
 
-
-// =====================================================
-// 2. TỔNG QUAN ADMIN
-//
-// Thống kê:
-// - Tổng tài khoản.
-// - Tổng vaccine.
-// - Tổng cơ sở tiêm.
-// - Tổng lịch tiêm.
-// - Hoàn tiền đang chờ xử lý.
-// =====================================================
 
 async function getAdminOverview() {
 
@@ -34,45 +15,26 @@ async function getAdminOverview() {
         [refundRows]
     ] = await Promise.all([
 
-        // =============================================
-        // 2.1. TỔNG TÀI KHOẢN
-        // =============================================
-
         db.query(`
             SELECT COUNT(*) AS total
             FROM nguoi_dung
         `),
-
-        // =============================================
-        // 2.2. TỔNG VACCINE
-        // =============================================
 
         db.query(`
             SELECT COUNT(*) AS total
             FROM vaccine
         `),
 
-        // =============================================
-        // 2.3. TỔNG CƠ SỞ TIÊM
-        // =============================================
-
         db.query(`
             SELECT COUNT(*) AS total
             FROM co_so_tiem
         `),
-
-        // =============================================
-        // 2.4. TỔNG LỊCH TIÊM
-        // =============================================
 
         db.query(`
             SELECT COUNT(*) AS total
             FROM lich_tiem
         `),
 
-        // =============================================
-        // 2.5. HOÀN TIỀN CHỜ XỬ LÝ
-        // =============================================
 
         db.query(`
             SELECT COUNT(*) AS total
@@ -80,10 +42,6 @@ async function getAdminOverview() {
             WHERE trang_thai = 'CHO_XU_LY'
         `)
     ]);
-
-    // ================================================
-    // 2.6. TRẢ KẾT QUẢ ADMIN
-    // ================================================
 
     return {
         tongTaiKhoan: toNumber(
@@ -109,17 +67,7 @@ async function getAdminOverview() {
 }
 
 
-// =====================================================
-// 3. TỔNG QUAN NHÂN VIÊN Y TẾ
-//
-// Chỉ thống kê dữ liệu thuộc cơ sở được phân công.
-// =====================================================
-
 async function getStaffOverview(userId) {
-
-    // ================================================
-    // 3.1. LẤY CƠ SỞ ĐƯỢC PHÂN CÔNG
-    // ================================================
 
     const [staffRows] = await db.query(
         `
@@ -130,10 +78,6 @@ async function getStaffOverview(userId) {
         `,
         [userId]
     );
-
-    // ================================================
-    // 3.2. KIỂM TRA PHÂN CÔNG CƠ SỞ
-    // ================================================
 
     if (
         staffRows.length === 0 ||
@@ -151,20 +95,12 @@ async function getStaffOverview(userId) {
 
     const coSoId = staffRows[0].co_so_id;
 
-    // ================================================
-    // 3.3. TRUY VẤN THỐNG KÊ THEO CƠ SỞ
-    // ================================================
-
     const [
         [todayRows],
         [pendingRows],
         [completedRows],
         [reminderRows]
     ] = await Promise.all([
-
-        // =============================================
-        // LỊCH TIÊM HÔM NAY
-        // =============================================
 
         db.query(
             `
@@ -176,10 +112,6 @@ async function getStaffOverview(userId) {
             [coSoId]
         ),
 
-        // =============================================
-        // LỊCH ĐANG CHỜ DUYỆT
-        // =============================================
-
         db.query(
             `
             SELECT COUNT(*) AS total
@@ -190,10 +122,6 @@ async function getStaffOverview(userId) {
             [coSoId]
         ),
 
-        // =============================================
-        // HỒ SƠ ĐÃ GHI NHẬN TIÊM
-        // =============================================
-
         db.query(
             `
             SELECT COUNT(*) AS total
@@ -202,10 +130,6 @@ async function getStaffOverview(userId) {
             `,
             [coSoId]
         ),
-
-        // =============================================
-        // LƯỢT NHẮC LỊCH CHƯA GỬI
-        // =============================================
 
         db.query(
             `
@@ -219,10 +143,6 @@ async function getStaffOverview(userId) {
             [coSoId]
         )
     ]);
-
-    // ================================================
-    // 3.4. TRẢ KẾT QUẢ NHÂN VIÊN Y TẾ
-    // ================================================
 
     return {
         lichHomNay: toNumber(
@@ -243,36 +163,28 @@ async function getStaffOverview(userId) {
     };
 }
 
-
-// =====================================================
-// 4. TỔNG QUAN KHÁCH HÀNG
-//
-// Chỉ thống kê dữ liệu của người dùng hiện tại.
-// =====================================================
-
 async function getCustomerOverview(userId) {
 
     const [
         [upcomingRows],
         [injectedRows],
-        [historyRows]
+        [historyRows],
+        [paymentRows],
+        [nearestRows]
     ] = await Promise.all([
 
-        // =============================================
-        // 4.1. LỊCH TIÊM SẮP TỚI
-        // =============================================
-
+        // 1. LỊCH TIÊM SẮP TỚI
         db.query(
             `
             SELECT COUNT(*) AS total
             FROM lich_tiem
             WHERE nguoi_dung_id = ?
               AND (
-                    ngay_tiem > CURDATE()
-                    OR (
-                        ngay_tiem = CURDATE()
-                        AND gio_tiem >= CURTIME()
-                    )
+                  ngay_tiem > CURDATE()
+                  OR (
+                      ngay_tiem = CURDATE()
+                      AND gio_tiem >= CURTIME()
+                  )
               )
               AND trang_thai IN (
                   'CHO_DUYET',
@@ -282,10 +194,7 @@ async function getCustomerOverview(userId) {
             [userId]
         ),
 
-        // =============================================
-        // 4.2. SỐ HỒ SƠ MŨI TIÊM ĐÃ GHI NHẬN
-        // =============================================
-
+        // 2. MŨI ĐÃ TIÊM
         db.query(
             `
             SELECT COUNT(*) AS total
@@ -295,10 +204,7 @@ async function getCustomerOverview(userId) {
             [userId]
         ),
 
-        // =============================================
-        // 4.3. TỔNG BẢN GHI LỊCH SỬ TIÊM
-        // =============================================
-
+        // 3. LỊCH SỬ TIÊM
         db.query(
             `
             SELECT COUNT(*) AS total
@@ -306,12 +212,70 @@ async function getCustomerOverview(userId) {
             WHERE nguoi_dung_id = ?
             `,
             [userId]
+        ),
+
+        // 4. THANH TOÁN CHỜ XỬ LÝ
+        db.query(
+            `
+            SELECT COUNT(*) AS total
+            FROM thanh_toan t
+            INNER JOIN lich_tiem l
+                ON l.id = t.lich_tiem_id
+            WHERE t.nguoi_dung_id = ?
+              AND l.nguoi_dung_id = ?
+              AND t.trang_thai = 'CHUA_THANH_TOAN'
+              AND l.trang_thai <> 'DA_HUY'
+            `,
+            [userId, userId]
+        ),
+
+        // 5. LỊCH TIÊM GẦN NHẤT
+        db.query(
+            `
+            SELECT
+                lt.id,
+                lt.vaccine_id,
+                v.ten_vaccine AS vaccine,
+
+                DATE_FORMAT(
+                    lt.ngay_tiem, '%Y-%m-%d'
+                ) AS ngay_tiem,
+
+                TIME_FORMAT(
+                    lt.gio_tiem, '%H:%i'
+                ) AS gio_tiem,
+
+                lt.trang_thai,
+                lt.co_so_id
+
+            FROM lich_tiem lt
+
+            LEFT JOIN vaccine v
+                ON lt.vaccine_id = v.id
+
+            WHERE lt.nguoi_dung_id = ?
+              AND (
+                  lt.ngay_tiem > CURDATE()
+                  OR (
+                      lt.ngay_tiem = CURDATE()
+                      AND lt.gio_tiem >= CURTIME()
+                  )
+              )
+              AND lt.trang_thai IN (
+                  'CHO_DUYET',
+                  'DA_DUYET'
+              )
+
+            ORDER BY
+                lt.ngay_tiem ASC,
+                lt.gio_tiem ASC,
+                lt.id ASC
+
+            LIMIT 1
+            `,
+            [userId]
         )
     ]);
-
-    // ================================================
-    // 4.4. TRẢ KẾT QUẢ KHÁCH HÀNG
-    // ================================================
 
     return {
         lichSapToi: toNumber(
@@ -324,14 +288,15 @@ async function getCustomerOverview(userId) {
 
         tongLichSuTiem: toNumber(
             historyRows[0]?.total
-        )
+        ),
+
+        thanhToanChoXuLy: toNumber(
+            paymentRows[0]?.total
+        ),
+
+        lichTiemGanNhat: nearestRows[0] || null
     };
 }
-
-
-// =====================================================
-// 5. EXPORT SERVICE
-// =====================================================
 
 module.exports = {
     getAdminOverview,

@@ -12,7 +12,7 @@ const xacThucRoutes = require("./routes/xac-thuc.routes");
 const nguoiDungRoutes = require("./routes/nguoi-dung.routes");
 const thongTinCaNhanRoutes = require("./routes/thong-tin-ca-nhan.routes");
 const tongQuanRoutes = require("./routes/tong-quan.routes");
-
+//const coSoRoutes = require("./routes/co-so.routes");
 // ================================
 // MIDDLEWARE
 // ================================
@@ -50,7 +50,8 @@ app.use("/api/tong-quan", tongQuanRoutes);
 // Thông tin cá nhân
 app.use("/api/profile", thongTinCaNhanRoutes);
 
-
+// Cơ sở tiêm chủng
+//app.use("/api/coso", coSoRoutes);
 // ================================
 // ROUTE TEST BACKEND
 // ================================

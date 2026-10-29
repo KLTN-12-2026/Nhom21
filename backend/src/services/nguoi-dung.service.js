@@ -1,4 +1,3 @@
-
 const db = require("../config/db");
 const bcrypt = require("bcrypt");
 
@@ -7,11 +6,8 @@ const {
 } = require(
     "../middlewares/nguoi-dung.middleware"
 );
-
-// ======================================================
 // POST /api/users/register
 // ĐĂNG KÝ TÀI KHOẢN KHÁCH HÀNG
-// ======================================================
 
 async function register(data) {
     let connection;
@@ -111,11 +107,7 @@ async function register(data) {
         }
     }
 }
-
-// ======================================================
-// GET /api/users
 // ADMIN XEM DANH SÁCH TÀI KHOẢN
-// ======================================================
 
 async function getAll(includeDeleted) {
     const sql = includeDeleted
@@ -155,10 +147,7 @@ async function getAll(includeDeleted) {
 
     return rows;
 }
-
-// ======================================================
 // KIỂM TRA TÀI KHOẢN THEO ID
-// ======================================================
 
 async function getUserById(id) {
     const [rows] = await db.query(
@@ -177,10 +166,7 @@ async function getUserById(id) {
 
     return rows;
 }
-
-// ======================================================
 // KIỂM TRA VAI TRÒ TÀI KHOẢN
-// ======================================================
 
 async function getUserRoleById(id) {
     const [rows] = await db.query(
@@ -197,10 +183,8 @@ async function getUserRoleById(id) {
     return rows;
 }
 
-// ======================================================
 // KIỂM TRA TÊN ĐĂNG NHẬP TRÙNG
 // DÙNG CHO CẬP NHẬT TÀI KHOẢN
-// ======================================================
 
 async function checkDuplicateUsername(
     ten_dang_nhap,
@@ -223,10 +207,7 @@ async function checkDuplicateUsername(
     return rows;
 }
 
-// ======================================================
-// POST /api/users
 // ADMIN THÊM NHÂN VIÊN Y TẾ
-// ======================================================
 
 async function create(data) {
     let connection;
@@ -358,10 +339,7 @@ async function create(data) {
     }
 }
 
-// ======================================================
-// PUT /api/users/:id
 // ADMIN CẬP NHẬT NHÂN VIÊN Y TẾ
-// ======================================================
 
 async function update(
     id,
@@ -494,10 +472,7 @@ async function update(
     }
 }
 
-// ======================================================
-// PATCH /api/users/:id/reset-password
 // ADMIN RESET MẬT KHẨU
-// ======================================================
 
 async function resetPassword(id, mat_khau) {
     const mat_khau_ma_hoa =
@@ -519,10 +494,7 @@ async function resetPassword(id, mat_khau) {
     );
 }
 
-// ======================================================
-// DELETE /api/users/:id
 // ADMIN KHÓA TÀI KHOẢN
-// ======================================================
 
 async function lock(id) {
     const [result] = await db.query(
@@ -537,11 +509,7 @@ async function lock(id) {
 
     return result;
 }
-
-// ======================================================
-// PATCH /api/users/:id/unlock
 // ADMIN MỞ KHÓA TÀI KHOẢN
-// ======================================================
 
 async function unlock(id) {
     const [result] = await db.query(
@@ -556,10 +524,6 @@ async function unlock(id) {
 
     return result;
 }
-
-// ======================================================
-// EXPORT SERVICE
-// ======================================================
 
 module.exports = {
     register,

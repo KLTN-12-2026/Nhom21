@@ -1,9 +1,5 @@
-
 const db = require("../config/db");
 
-// ======================================================
-// 1. REGEX VALIDATE
-// ======================================================
 
 const fullNameRegex =
     /^[A-Za-zÀ-ỹ]+(?:\s[A-Za-zÀ-ỹ]+)*$/;
@@ -14,14 +10,9 @@ const phoneRegex =
 const emailRegex =
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-// Không cho địa chỉ bắt đầu hoặc kết thúc bằng , . / -
 const addressRegex =
     /^[A-Za-zÀ-ỹ0-9](?:[A-Za-zÀ-ỹ0-9\s,./-]{3,98})[A-Za-zÀ-ỹ0-9]$/;
 
-
-// ======================================================
-// 2. HÀM HỖ TRỢ
-// ======================================================
 
 function isEmpty(value) {
 
@@ -92,12 +83,6 @@ function isValidDateString(value) {
 }
 
 
-// ======================================================
-// 3. VALIDATE THÔNG TIN CÁ NHÂN
-//
-// Giữ nguyên thứ tự kiểm tra của Route gốc.
-// ======================================================
-
 function validateThongTinCaNhan(input) {
 
     let {
@@ -108,10 +93,6 @@ function validateThongTinCaNhan(input) {
         dia_chi,
         email
     } = input;
-
-    // ==================================================
-    // 3.1. ÉP KIỂU AN TOÀN
-    // ==================================================
 
     ho_ten = (ho_ten || "").toString();
 
@@ -126,9 +107,6 @@ function validateThongTinCaNhan(input) {
 
     email = (email || "").toString();
 
-    // ==================================================
-    // 3.2. VALIDATION HỌ TÊN
-    // ==================================================
 
     if (isEmpty(ho_ten)) {
         return {
@@ -163,10 +141,6 @@ function validateThongTinCaNhan(input) {
                 "Họ tên không được chứa số hoặc ký tự đặc biệt"
         };
     }
-
-    // ==================================================
-    // 3.3. VALIDATION NGÀY SINH
-    // ==================================================
 
     if (isEmpty(ngay_sinh)) {
         return {
@@ -211,10 +185,6 @@ function validateThongTinCaNhan(input) {
         };
     }
 
-    // ==================================================
-    // 3.4. VALIDATION GIỚI TÍNH
-    // ==================================================
-
     if (isEmpty(gioi_tinh)) {
         return {
             valid: false,
@@ -232,10 +202,6 @@ function validateThongTinCaNhan(input) {
             message: "Giới tính không hợp lệ"
         };
     }
-
-    // ==================================================
-    // 3.5. VALIDATION SỐ ĐIỆN THOẠI
-    // ==================================================
 
     if (isEmpty(so_dien_thoai)) {
         return {
@@ -263,10 +229,6 @@ function validateThongTinCaNhan(input) {
                 "Số điện thoại phải gồm 10 chữ số và bắt đầu bằng số 0"
         };
     }
-
-    // ==================================================
-    // 3.6. VALIDATION EMAIL
-    // ==================================================
 
     if (isEmpty(email)) {
         return {
@@ -298,10 +260,6 @@ function validateThongTinCaNhan(input) {
                 "Email không đúng định dạng"
         };
     }
-
-    // ==================================================
-    // 3.7. VALIDATION ĐỊA CHỈ
-    // ==================================================
 
     if (isEmpty(dia_chi)) {
         return {
@@ -337,10 +295,6 @@ function validateThongTinCaNhan(input) {
         };
     }
 
-    // ==================================================
-    // 3.8. DỮ LIỆU HỢP LỆ
-    // ==================================================
-
     return {
         valid: true,
         data: {
@@ -355,11 +309,6 @@ function validateThongTinCaNhan(input) {
 }
 
 
-// ======================================================
-// 4. LẤY THÔNG TIN CÁ NHÂN
-//
-// GET /api/profile/:userId
-// ======================================================
 
 async function getThongTinCaNhan(userId) {
 
@@ -407,15 +356,6 @@ async function getThongTinCaNhan(userId) {
 }
 
 
-// ======================================================
-// 5. CẬP NHẬT THÔNG TIN CÁ NHÂN
-//
-// PUT /api/profile/:userId
-//
-// Chưa có hồ sơ: INSERT.
-// Đã có hồ sơ: UPDATE.
-// ======================================================
-
 async function capNhatThongTinCaNhan(
     userId,
     data
@@ -429,10 +369,6 @@ async function capNhatThongTinCaNhan(
         dia_chi,
         email
     } = data;
-
-    // ==================================================
-    // 5.1. KIỂM TRA NGƯỜI DÙNG TỒN TẠI
-    // ==================================================
 
     const [userRows] = await db.query(
         `
@@ -454,10 +390,6 @@ async function capNhatThongTinCaNhan(
         };
     }
 
-    // ==================================================
-    // 5.2. KIỂM TRA HỒ SƠ ĐÃ TỒN TẠI
-    // ==================================================
-
     const [profileRows] = await db.query(
         `
         SELECT id
@@ -468,9 +400,6 @@ async function capNhatThongTinCaNhan(
         [userId]
     );
 
-    // ==================================================
-    // 5.3. CHƯA CÓ HỒ SƠ → INSERT
-    // ==================================================
 
     if (profileRows.length === 0) {
 
@@ -502,10 +431,6 @@ async function capNhatThongTinCaNhan(
         );
 
     } else {
-
-        // ==================================================
-        // 5.4. ĐÃ CÓ HỒ SƠ → UPDATE
-        // ==================================================
 
         const updateSql = `
             UPDATE thong_tin_ca_nhan
@@ -542,13 +467,6 @@ async function capNhatThongTinCaNhan(
     };
 }
 
-
-// ======================================================
-// 6. ADMIN - DANH SÁCH THÔNG TIN CÁ NHÂN
-//
-// GET /api/profile
-// ======================================================
-
 async function getDanhSachThongTinCaNhan() {
 
     const sql = `
@@ -578,11 +496,6 @@ async function getDanhSachThongTinCaNhan() {
         body: rows
     };
 }
-
-
-// ======================================================
-// EXPORT SERVICE
-// ======================================================
 
 module.exports = {
     validateThongTinCaNhan,
