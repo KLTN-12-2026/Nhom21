@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý lô vaccine</title>
+    <link rel="stylesheet" href="../../css/mobile.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: transparent;
+            color: #1f2937;
+        }
+
+        .page {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid #dbeafe;
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 14px;
+        }
+
+        /* TOOLBAR */
+        .toolbar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .search-box input {
+            width: 100%;
+            height: 35px;
+            padding: 8px 12px 8px 36px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 13px;
+            font-family: inherit;
+            color: #1f2937;
+            background: #fff;
+            outline: none;
+        }
+
+        .search-box input:focus {
+            border-color: #0288d1;
+            box-shadow: 0 0 0 2px rgba(2, 136, 209, 0.12);
+        }
+
+        .search-box input::placeholder {
+            color: #7c8794;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+            font-size: 17px;
+            pointer-events: none;
+        }
+
+        .filter-select {
+            height: 35px;
+            min-width: 180px;
+            padding: 8px 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            background: #fff;
+            color: #1f2937;
+            font-size: 13px;
+            font-family: inherit;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .filter-select:focus {
+            border-color: #0288d1;
+            box-shadow: 0 0 0 2px rgba(2, 136, 209, 0.12);
+        }
+
+        @media (min-width: 801px) {
+            .toolbar>.btn-primary {
+                height: 35px;
+                min-height: 35px;
+                padding: 0 12px;
+                font-size: 13px;
+                border-radius: 8px;
+            }
+        }
+
+        .btn-primary {
+            height: 40px;
+            border: none;
+            border-radius: 8px;
+            padding: 9px 14px;
+            background: #0288d1;
+            color: #fff;
+            font-size: 13px;
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .btn-primary:hover {
+            background: #0277bd;
+        }
+
+        .btn-secondary {
+            border: 1px solid #0288d1;
+            border-radius: 8px;
+            padding: 9px 14px;
+            background: #fff;
+            color: #0288d1;
+            font-size: 13px;
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-secondary:hover {
+            background: #e1f5fe;
+        }
+
+        .btn-stop {
+            border: 1px solid #ef9a9a;
+            border-radius: 8px;
+            padding: 7px 12px;
+            background: #fff;
+            color: #d32f2f;
+            font-size: 13px;
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .btn-stop:hover {
+            background: #ffebee;
+        }
+
+        .list-header {
+            margin-bottom: 12px;
+        }
+
+        .list-header h3 {
+            margin: 0 0 4px;
+            color: #0277bd;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .list-header p {
+            margin: 0;
+            color: #64748b;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .table-wrap {
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid #dbeafe;
+            border-radius: 10px;
+        }
+
+        table {
+            width: 100%;
+            min-width: 1150px;
+            border-collapse: collapse;
+            font-size: 13px;
+            color: #1f2937;
+        }
+
+        th {
+            background: #0288d1;
+            color: #fff;
+            padding: 10px 8px;
+            border: 1px solid #dbeafe;
+            text-align: center;
+            white-space: nowrap;
+            font-weight: 700;
+        }
+
+        td {
+            padding: 9px 8px;
+            border: 1px solid #dbeafe;
+            background: #fff;
+            color: #1f2937;
+            vertical-align: middle;
+            font-weight: 400;
+        }
+
+        tbody tr:nth-child(even) td {
+            background: #f8fbff;
+        }
+
+        tbody tr:hover td {
+            background: #eef7ff;
+        }
+
+        th:first-child,
+        td:first-child {
+            width: 55px;
+            text-align: center;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .action-group {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+
+            min-width: 100px;
+            min-height: 30px;
+            padding: 6px 10px;
+
+            border-radius: 8px;
+            border: none;
+
+            font-size: 12px;
+            font-family: inherit;
+            font-weight: 600;
+            line-height: 1.2;
+            white-space: nowrap;
+        }
+
+        .status-active {
+            background: #ECFDF3;
+            color: #15803D;
+        }
+
+        .status-empty {
+            background: #FFFBEB;
+            color: #92400E;
+        }
+
+        .status-expired {
+            background: #FEF2F2;
+            color: #B91C1C;
+        }
+
+        .status-stopped {
+            background: #F1F5F9;
+            color: #475569;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: rgba(15, 23, 42, 0.35);
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .modal.show {
+            display: block;
+        }
+
+
+        .modal-card {
+            width: 100%;
+            max-width: 760px;
+            margin: 20px auto;
+
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+            overflow-x: hidden;
+
+            background: #fff;
+            border: 1px solid #dbeafe;
+            border-radius: 14px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 18px;
+            border-bottom: 1px solid #dbeafe;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: #0277bd;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            padding: 0;
+            border: 1px solid #0288d1;
+            border-radius: 8px;
+            background: #fff;
+            color: #0288d1;
+            font-size: 22px;
+            font-family: inherit;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        .modal-close:hover {
+            background: #e1f5fe;
+        }
+
+        .modal-body {
+            padding: 16px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px 12px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            margin-bottom: 4px;
+            color: #01579b;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .required {
+            color: #d32f2f;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            height: 35px;
+            padding: 0 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            background: #fff;
+            color: #1f2937;
+            font-size: 13px;
+            font-family: inherit;
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #0288d1;
+            box-shadow: 0 0 0 2px rgba(2, 136, 209, 0.12);
+        }
+
+        .form-group input::placeholder {
+            color: #7c8794;
+        }
+
+        .input-error {
+            border-color: #e53935 !important;
+            box-shadow: 0 0 0 2px rgba(229, 57, 53, 0.12) !important;
+        }
+
+        .error-message {
+            min-height: 0;
+            margin-top: 4px;
+            color: #e53935;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .error-message:empty {
+            display: none;
+        }
+
+        .form-note {
+            margin-top: 5px;
+            color: #64748b;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding: 0 18px 18px;
+        }
+
+        @media (min-width: 801px) {
+
+            #addLoVaccineModal .modal-footer .btn-secondary,
+            #addLoVaccineModal .modal-footer .btn-primary {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+
+                height: 35px;
+                min-height: 35px;
+                padding: 0 12px;
+
+                border-radius: 8px;
+                font-size: 13px;
+                font-weight: 600;
+                line-height: 1;
+                white-space: nowrap;
+            }
+        }
+
+
+        .empty-row td {
+            padding: 28px 10px;
+            color: #64748b;
+            text-align: center;
+        }
+
+        @media (max-width: 800px) {
+            .toolbar {
+                align-items: stretch;
+            }
+
+            .search-box {
+                flex-basis: 100%;
+                min-width: 100%;
+            }
+
+            .filter-select {
+                flex: 1;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+        }
+
+        @media (min-width: 801px) {
+
+            .toolbar .search-box input {
+                height: 35px;
+                min-height: 35px;
+                font-size: 13px;
+                border-radius: 8px;
+            }
+
+            .toolbar .filter-select {
+                height: 35px;
+                min-height: 35px;
+                font-size: 13px;
+                border-radius: 8px;
+            }
+
+            .toolbar>.btn-primary {
+                height: 35px;
+                min-height: 35px;
+                padding: 0 12px;
+                font-size: 13px;
+                font-weight: 600;
+                border-radius: 8px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page">
+        <div class="card">
+            <div class="toolbar">
+                <div class="search-box">
+                    <span class="search-icon">⌕</span>
+                    <input type="text" id="searchLoVaccine" placeholder="Tìm theo mã lô hoặc tên vaccine..."
+                        autocomplete="off">
+                </div>
+                <select id="filterTrangThai" class="filter-select">
+                    <option value="ALL">Tất cả trạng thái</option>
+                    <option value="DANG_SU_DUNG">Đang sử dụng</option>
+                    <option value="HET_HANG">Hết hàng</option>
+                    <option value="HET_HAN">Hết hạn</option>
+                    <option value="NGUNG">Ngừng lô vaccine</option>
+                </select>
+                <button type="button" class="btn-primary" onclick="moModalThemLo()">
+                    + Thêm lô vaccine
+                </button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="list-header">
+                <h3>Danh sách lô vaccine</h3>
+                <p>Theo dõi số lượng, hạn sử dụng và trạng thái của từng lô vaccine.</p>
+            </div>
+
+            <div class="table-wrap">
+                <table id="loVaccineTable">
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Vaccine</th>
+                            <th>Cơ sở tiêm</th>
+                            <th>Mã lô vaccine</th>
+                            <th>SL nhập</th>
+                            <th>SL còn</th>
+                            <th>Hạn sử dụng</th>
+                            <th>Ngày nhập</th>
+                            <th>Trạng thái</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody id="loVaccineBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="addLoVaccineModal" class="modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Thêm lô vaccine</h3>
+                <button type="button" class="modal-close" onclick="dongModalThemLo()">
+                    &times;
+                </button>
+            </div>
+
+            <form id="loVaccineForm">
+                <div class="modal-body">
+                    <div class="form-grid">
+                        <div class="form-group full">
+                            <label for="vaccine_id">
+                                Vaccine <span class="required">*</span>
+                            </label>
+                            <select id="vaccine_id" name="vaccine_id">
+                                <option value="">Chọn vaccine</option>
+                            </select>
+                            <div class="error-message" data-for="vaccine_id"></div>
+                        </div>
+
+                        <div class="form-group full">
+                            <label for="co_so_id">
+                                Cơ sở tiêm <span class="required">*</span>
+                            </label>
+                            <select id="co_so_id" name="co_so_id">
+                                <option value="">Chọn cơ sở tiêm</option>
+                            </select>
+                            <div class="error-message" data-for="co_so_id"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ma_lo">
+                                Mã lô vaccine <span class="required">*</span>
+                            </label>
+                            <input type="text" id="ma_lo" name="ma_lo" placeholder="Nhập mã lô" maxlength="50"
+                                autocomplete="off">
+                            <div class="error-message" data-for="ma_lo"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="so_luong_nhap">
+                                Số lượng nhập <span class="required">*</span>
+                            </label>
+                            <input type="number" id="so_luong_nhap" name="so_luong_nhap" placeholder="Nhập số lượng"
+                                step="any">
+                            <div class="error-message" data-for="so_luong_nhap"></div>
+                        </div>
+
+                        <div class="form-group full">
+                            <label for="han_su_dung">
+                                Hạn sử dụng <span class="required">*</span>
+                            </label>
+                            <input type="date" id="han_su_dung" name="han_su_dung">
+                            <div class="error-message" data-for="han_su_dung"></div>
+                            <div class="form-note">
+                                Hạn sử dụng phải lớn hơn ngày hiện tại.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" onclick="dongModalThemLo()">
+                        Hủy
+                    </button>
+                    <button type="submit" class="btn-primary">
+                        Thêm lô vaciine
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../../js/common/jwt-handler.js"></script>
+    <script src="../../js/admin/quanly-lovaccine.js"></script>
+</body>
+
+</html>
