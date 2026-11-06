@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Đặt lịch tiêm – Hệ thống tiêm chủng</title>
+
+  <link rel="stylesheet" href="../../css/style.css" />
+  <link rel="stylesheet" href="../../css/mobile.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" rel="stylesheet" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: transparent;
+      color: #1f2937;
+    }
+
+    .page {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    .page-header {
+      margin-bottom: 10px;
+    }
+
+    .page-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 6px;
+      color: #0b72b9;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .page-title .material-symbols-rounded {
+      font-size: 26px;
+      color: #0288d1;
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid #dbeafe;
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 12px;
+    }
+
+    .note-box {
+      background: #e3f2fd;
+      border-left: 4px solid #0288d1;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      color: #37474f;
+      margin-bottom: 16px;
+    }
+
+    .note-box strong {
+      color: #01579b;
+    }
+
+    /* ================= NHÓM THÔNG TIN ================= */
+
+    .form-section {
+      margin-bottom: 18px;
+    }
+
+    .form-section-title {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      color: #0277bd;
+      font-size: 15px;
+      font-weight: 700;
+      margin: 0 0 12px;
+      padding-bottom: 7px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .form-section-title .material-symbols-rounded {
+      font-size: 20px;
+    }
+
+    /* ================= GRID COMPACT ================= */
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: 12px;
+      row-gap: 12px;
+      align-items: start;
+    }
+
+    .col-2 {
+      grid-column: span 2;
+    }
+
+    .col-3 {
+      grid-column: span 3;
+    }
+
+    .col-4 {
+      grid-column: span 4;
+    }
+
+    .col-6 {
+      grid-column: span 6;
+    }
+
+    .col-12,
+    .full-width {
+      grid-column: 1 / -1;
+    }
+
+    /* ================= FORM GROUP ================= */
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      min-width: 0;
+    }
+
+    .form-group label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #0f4c81;
+    }
+
+    .form-group .hint {
+      font-size: 12px;
+      color: #607d8b;
+      font-weight: 400;
+      line-height: 1.4;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      min-width: 0;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      font-size: 13px;
+      font-family: inherit;
+      outline: none;
+      background: #fff;
+      color: #1f2937;
+    }
+
+    .form-group input,
+    .form-group select {
+      height: 40px;
+      padding: 0 11px;
+    }
+
+    .form-group textarea {
+      min-height: 72px;
+      padding: 10px 11px;
+      resize: vertical;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: #0288d1;
+      box-shadow: 0 0 0 2px rgba(2, 136, 209, 0.12);
+    }
+
+    /* ================= THÔNG BÁO LỖI ================= */
+
+    .input-error {
+      border-color: #e53935 !important;
+      box-shadow: 0 0 0 2px rgba(229, 57, 53, 0.12) !important;
+    }
+
+    .error-message {
+      color: #e53935;
+      font-size: 12px;
+      line-height: 1.4;
+      min-height: 0;
+    }
+
+    .error-message:empty {
+      display: none;
+    }
+
+    /* ================= NÚT CHỨC NĂNG ================= */
+
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 10px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 8px;
+      height: 38px;
+      padding: 0 16px;
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-family: inherit;
+      font-weight: 600;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: #0288d1;
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: #0277bd;
+    }
+
+    .btn-outline {
+      background: #fff;
+      color: #0288d1;
+      border: 1px solid #0288d1;
+    }
+
+    .btn-outline:hover {
+      background: #e1f5fe;
+    }
+
+    .btn .material-symbols-rounded {
+      font-size: 18px;
+    }
+
+    /* ================= SỬA HAI NÚT ĐẶT LỊCH ================= */
+
+    #formDatLich .actions {
+      display: flex !important;
+      flex-direction: row !important;
+      justify-content: flex-end !important;
+      align-items: center !important;
+      flex-wrap: wrap !important;
+      gap: 10px !important;
+      margin-top: 16px;
+    }
+
+    #formDatLich .actions .btn {
+      display: inline-flex !important;
+      flex: 0 0 auto !important;
+      width: auto !important;
+      max-width: none !important;
+      height: 40px !important;
+      padding: 0 16px !important;
+      margin: 0 !important;
+      align-items: center !important;
+      justify-content: center !important;
+      white-space: nowrap;
+    }
+
+    #formDatLich #btnDatLich {
+      width: auto !important;
+      min-width: 180px !important;
+      flex: 0 0 auto !important;
+      font-size: 13px !important;
+    }
+
+    #formDatLich .actions .btn-outline {
+      width: auto !important;
+      min-width: 150px !important;
+    }
+
+    /* ================= RESPONSIVE ================= */
+
+    @media (max-width: 1000px) {
+      .form-grid {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+      }
+
+      .col-2,
+      .col-3 {
+        grid-column: span 3;
+      }
+
+      .col-4,
+      .col-6 {
+        grid-column: span 6;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .card {
+        padding: 12px;
+      }
+
+      .form-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+      }
+
+      .col-2,
+      .col-3,
+      .col-4,
+      .col-6,
+      .col-12,
+      .full-width {
+        grid-column: 1 / -1;
+      }
+
+      .actions {
+        justify-content: flex-end;
+        gap: 8px;
+      }
+
+      .btn {
+        padding: 0 10px;
+        font-size: 12px;
+      }
+
+      #btnDatLich {
+        min-width: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+
+    <div class="page-header">
+      <h1 class="page-title"></h1>
+    </div>
+
+    <div class="card">
+
+      <div class="note-box">
+        <strong>Lưu ý:</strong>
+        Thời gian tiêm thực tế có thể được điều chỉnh bởi cơ sở y tế.
+        Bạn sẽ được xác nhận lịch tiêm qua hệ thống hoặc nhân viên y tế liên hệ lại.
+      </div>
+
+      <form id="formDatLich" novalidate>
+
+        <!-- ========== THÔNG TIN CÁ NHÂN ========== -->
+
+        <div class="form-section">
+
+          <h2 class="form-section-title">
+            <span class="material-symbols-rounded">person</span>
+            Thông tin người được tiêm
+          </h2>
+
+          <div class="form-grid">
+
+            <!-- HỌ TÊN -->
+            <div class="form-group col-4">
+              <label for="hoTen">Họ và tên người được tiêm *</label>
+
+              <input type="text" id="hoTen" name="hoTen" placeholder="VD: Nguyễn Văn A" autocomplete="name"
+                maxlength="50" />
+
+              <div class="error-message" data-for="hoTen"></div>
+            </div>
+
+            <!-- SỐ ĐIỆN THOẠI -->
+            <div class="form-group col-3">
+              <label for="soDienThoai">Số điện thoại liên hệ *</label>
+
+              <input type="text" id="soDienThoai" name="soDienThoai" placeholder="VD: 09xx xxx xxx" inputmode="numeric"
+                maxlength="10" autocomplete="tel" />
+
+              <div class="error-message" data-for="soDienThoai"></div>
+            </div>
+
+            <!-- NGÀY SINH -->
+            <div class="form-group col-3">
+              <label for="ngaySinhNguoiTiem">Ngày sinh *</label>
+
+              <input type="date" id="ngaySinhNguoiTiem" name="ngaySinhNguoiTiem" />
+
+              <div class="error-message" data-for="ngaySinhNguoiTiem"></div>
+            </div>
+
+            <!-- GIỚI TÍNH -->
+            <div class="form-group col-2">
+              <label for="gioiTinhNguoiTiem">Giới tính *</label>
+
+              <select id="gioiTinhNguoiTiem" name="gioiTinhNguoiTiem">
+                <option value="">-- Chọn --</option>
+                <option value="Nam">Nam</option>
+                <option value="Nữ">Nữ</option>
+              </select>
+
+              <div class="error-message" data-for="gioiTinhNguoiTiem"></div>
+            </div>
+
+            <!-- EMAIL -->
+            <div class="form-group col-6">
+              <label for="emailNguoiTiem">Email người được tiêm</label>
+
+              <input type="email" id="emailNguoiTiem" name="emailNguoiTiem"
+                placeholder="Có thể bỏ trống nếu không có email" autocomplete="email" maxlength="100" />
+
+              <div class="error-message" data-for="emailNguoiTiem"></div>
+            </div>
+
+            <!-- MỐI QUAN HỆ -->
+            <div class="form-group col-3">
+              <label for="moiQuanHe">Mối quan hệ *</label>
+
+              <select id="moiQuanHe" name="moi_quan_he" required>
+                <option value="Bản thân">Bản thân</option>
+                <option value="Con">Con</option>
+                <option value="Anh">Anh</option>
+                <option value="Chị">Chị</option>
+                <option value="Em">Em</option>
+                <option value="Cha">Cha</option>
+                <option value="Mẹ">Mẹ</option>
+                <option value="Vợ">Vợ</option>
+                <option value="Chồng">Chồng</option>
+              </select>
+
+              <div class="error-message" data-for="moiQuanHe"></div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ========== THÔNG TIN ĐĂNG KÝ TIÊM ========== -->
+
+        <div class="form-section">
+
+          <h2 class="form-section-title">
+            <span class="material-symbols-rounded">calendar_month</span>
+            Thông tin đăng ký tiêm
+          </h2>
+
+          <div class="form-grid">
+
+            <!-- CƠ SỞ -->
+            <div class="form-group col-6">
+              <label for="coSoTiem">Cơ sở tiêm chủng *</label>
+
+              <select id="coSoTiem">
+                <option value="">-- Chọn cơ sở --</option>
+                <option value="1">Cơ sở 1 - Quận Hải Châu</option>
+                <option value="2">Cơ sở 2 - Quận Thanh Khê</option>
+                <option value="3">Cơ sở 3 - Quận Sơn Trà</option>
+              </select>
+
+              <div class="error-message" data-for="coSoTiem"></div>
+            </div>
+
+            <!-- VACCINE -->
+            <div class="form-group col-6">
+              <label for="loaiVaccine">Loại vaccine (hoặc gói) *</label>
+
+              <select id="loaiVaccine" name="vaccine_id" required>
+                <option value="">-- Chọn vaccine --</option>
+              </select>
+
+              <div class="error-message" data-for="loaiVaccine"></div>
+            </div>
+
+            <!-- NGÀY TIÊM -->
+            <div class="form-group col-3">
+              <label for="ngayTiem">Ngày tiêm *</label>
+
+              <input type="date" id="ngayTiem" name="ngayTiem" />
+
+              <div class="error-message" data-for="ngayTiem"></div>
+            </div>
+
+            <!-- GIỜ TIÊM -->
+            <div class="form-group col-3">
+              <label for="gioTiem">Giờ tiêm *</label>
+
+              <input type="time" id="gioTiem" name="gioTiem" />
+
+              <div class="error-message" data-for="gioTiem"></div>
+            </div>
+
+            <!-- GHI CHÚ NGÀY GIỜ -->
+            <div class="form-group col-6">
+              <label>Thông tin thời gian</label>
+
+              <span class="hint">
+                Chọn ngày giờ dự kiến, cơ sở có thể liên hệ
+                để điều chỉnh nếu cần.
+              </span>
+            </div>
+
+            <!-- GHI CHÚ -->
+            <div class="form-group full-width">
+              <label for="ghiChu">Ghi chú cho cơ sở tiêm</label>
+
+              <textarea id="ghiChu" name="ghiChu"
+                placeholder="VD: Bé từng sốc thuốc, đang uống thuốc điều trị bệnh X..." maxlength="200"></textarea>
+
+              <div class="error-message" data-for="ghiChu"></div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ========== NÚT CHỨC NĂNG ========== -->
+
+        <div class="actions">
+
+          <button type="button" class="btn btn-outline" onclick="window.location.href='lich-tiem.html'">
+            <span class="material-symbols-rounded">calendar_month</span>
+            <span>Xem lịch tiêm</span>
+          </button>
+
+          <button type="submit" class="btn btn-primary" id="btnDatLich">
+            <span class="material-symbols-rounded">check_circle</span>
+            <span>Xác nhận đặt lịch</span>
+          </button>
+
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <script src="../../js/common/jwt-handler.js"></script>
+  <script src="../../js/khach-hang/dat-lich-tiem.js"></script>
+</body>
+
+</html>
