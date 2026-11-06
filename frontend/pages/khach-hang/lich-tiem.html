@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lịch tiêm của bạn</title>
+
+  <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="../../css/mobile.css">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: transparent;
+      color: #1f2937;
+    }
+
+    .page {
+      width: 100%;
+      padding: 0;
+    }
+
+    /* CARD CHÍNH */
+    .card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    /* BỘ LỌC */
+    .filter-bar {
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      gap: 16px;
+      align-items: end;
+      margin-bottom: 20px;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .filter-group label {
+      font-weight: 700;
+      color: #075985;
+      font-size: 13px;
+    }
+
+    .filter-group select,
+    .filter-group input {
+      width: 100%;
+      height: 42px;
+      padding: 0 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 13px;
+      color: #1f2937;
+      background: #ffffff;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .filter-group select:focus,
+    .filter-group input:focus {
+      border-color: #0288d1;
+      box-shadow: 0 0 0 3px rgba(2, 136, 209, 0.12);
+    }
+
+    /* BUTTON CHUNG */
+    .btn {
+      min-height: 40px;
+      border: none;
+      border-radius: 10px;
+      padding: 9px 14px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .btn:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn .material-symbols-rounded {
+      font-size: 20px;
+    }
+
+    .btn-primary {
+      background: #0288d1;
+      color: #ffffff;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: #0277bd;
+      box-shadow: 0 4px 12px rgba(2, 119, 189, 0.18);
+    }
+
+    .btn-secondary {
+      background: #f1f5f9;
+      color: #334155;
+      border: 1px solid #e2e8f0;
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      background: #e2e8f0;
+    }
+
+    /* NÚT CHI TIẾT */
+    .btn-detail {
+      min-height: 34px;
+      padding: 6px 12px;
+      background: #e0f2fe;
+      color: #0369a1;
+      border: 1px solid #bae6fd;
+      border-radius: 9px;
+    }
+
+    .btn-detail:hover {
+      background: #bae6fd;
+    }
+
+    /* NÚT HỦY LỊCH */
+    .btn-cancel-appointment {
+      min-height: 34px;
+      padding: 6px 12px;
+      background: #fff1f2;
+      color: #be123c;
+      border: 1px solid #fecdd3;
+      border-radius: 9px;
+    }
+
+    .btn-cancel-appointment:hover {
+      background: #ffe4e6;
+    }
+
+    .btn-danger {
+      background: #dc2626;
+      color: #ffffff;
+    }
+
+    .btn-danger:hover:not(:disabled) {
+      background: #b91c1c;
+    }
+
+    /* BẢNG LỊCH TIÊM */
+    .table-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid #dbe5ee;
+      border-radius: 12px;
+      background: #ffffff;
+    }
+
+    table {
+      width: 100%;
+      min-width: 1100px;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th {
+      padding: 12px 9px;
+      background: #0288d1;
+      color: #ffffff;
+      border-right: 1px solid rgba(255, 255, 255, 0.3);
+      text-align: center;
+      white-space: nowrap;
+      font-weight: 700;
+    }
+
+    th:last-child {
+      border-right: none;
+    }
+
+    td {
+      padding: 11px 9px;
+      border-right: 1px solid #e2e8f0;
+      border-bottom: 1px solid #e2e8f0;
+      background: #ffffff;
+      vertical-align: middle;
+      color: #334155;
+    }
+
+    td:last-child {
+      border-right: none;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    tbody tr:nth-child(even) td {
+      background: #f8fafc;
+    }
+
+    tbody tr:hover td {
+      background: #f0f9ff;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    /* NHÓM THAO TÁC */
+    .action-group {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      flex-wrap: nowrap;
+    }
+
+    .action-menu-trigger {
+      width: 38px;
+      min-width: 38px;
+      height: 34px;
+      min-height: 34px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      flex-shrink: 0;
+      background: #f1f5f9;
+      color: #334155;
+      border: 1px solid #cbd5e1;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .action-group>.btn,
+    .action-group>.action-menu-trigger {
+      height: 34px;
+      min-height: 34px;
+      max-height: 34px;
+      box-sizing: border-box;
+      border-radius: 7px;
+    }
+
+    .action-group>.btn {
+      padding: 7px 12px;
+      font-size: 12px;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .action-menu-trigger .material-symbols-rounded {
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    /* BADGE TRẠNG THÁI */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 30px;
+      padding: 5px 11px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+      border: 1px solid transparent;
+    }
+
+    .status-cho {
+      background: #fff7db;
+      color: #92400e;
+      border-color: #fde68a;
+    }
+
+    .status-duyet {
+      background: #dcfce7;
+      color: #166534;
+      border-color: #bbf7d0;
+    }
+
+    .status-da-tiem {
+      background: #e0f2fe;
+      color: #0369a1;
+      border-color: #bae6fd;
+    }
+
+    .status-huy {
+      background: #fee2e2;
+      color: #b91c1c;
+      border-color: #fecaca;
+    }
+
+    /* KHÔNG CÓ DỮ LIỆU */
+    .empty-state {
+      padding: 32px 20px;
+      text-align: center;
+      font-size: 14px;
+      color: #64748b;
+    }
+
+    .empty-state .material-symbols-rounded {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 36px;
+      color: #94a3b8;
+    }
+
+    /* MODAL OVERLAY */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(15, 23, 42, 0.52);
+      z-index: 9999;
+    }
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+    /* MODAL BOX */
+    .modal-box {
+      width: 100%;
+      max-width: 620px;
+      max-height: 88vh;
+      display: flex;
+      flex-direction: column;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow:
+        0 24px 60px rgba(15, 23, 42, 0.24),
+        0 8px 20px rgba(15, 23, 42, 0.08);
+    }
+
+    /* MODAL HEADER */
+    .modal-header {
+      flex-shrink: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      min-height: 64px;
+      padding: 16px 20px;
+      background: #ffffff;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .modal-header h3 {
+      margin: 0;
+      color: #075985;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .modal-close {
+      width: 38px;
+      height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      border-radius: 10px;
+      background: #f1f5f9;
+      color: #475569;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .modal-close:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    .modal-close .material-symbols-rounded {
+      font-size: 22px;
+    }
+
+    /* MODAL BODY */
+    .modal-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+    }
+
+    /* MODAL FOOTER */
+    .modal-footer {
+      flex-shrink: 0;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 20px;
+      background: #ffffff;
+      border-top: 1px solid #e2e8f0;
+    }
+
+    /* CHI TIẾT LỊCH */
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .detail-item {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      padding: 12px 14px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+    }
+
+    .detail-item.full {
+      grid-column: 1 / -1;
+    }
+
+    .detail-label {
+      color: #64748b;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .detail-value {
+      color: #1f2937;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.5;
+      word-break: break-word;
+    }
+
+    /* THÔNG TIN TRONG MODAL HỦY LỊCH */
+    .payment-summary {
+      margin-bottom: 20px;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #f8fafc;
+    }
+
+    .payment-summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 12px 14px;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 13px;
+    }
+
+    .payment-summary-row:last-child {
+      border-bottom: none;
+    }
+
+    .payment-summary-row span {
+      color: #64748b;
+      font-weight: 600;
+    }
+
+    .payment-summary-row strong {
+      color: #1f2937;
+      text-align: right;
+      font-weight: 700;
+      word-break: break-word;
+    }
+
+    /* HỦY LỊCH / YÊU CẦU HOÀN TIỀN */
+    .cancel-warning {
+      margin-bottom: 16px;
+      padding: 13px 14px;
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      border-radius: 10px;
+      color: #9a3412;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .cancel-form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-top: 16px;
+    }
+
+    .cancel-form-group label {
+      color: #475569;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .cancel-form-group textarea {
+      width: 100%;
+      min-height: 110px;
+      padding: 11px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      resize: vertical;
+      font-family: inherit;
+      font-size: 13px;
+      line-height: 1.5;
+      color: #1f2937;
+      background: #ffffff;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .cancel-form-group textarea:focus {
+      border-color: #0288d1;
+      box-shadow: 0 0 0 3px rgba(2, 136, 209, 0.12);
+    }
+
+    .cancel-form-hint {
+      color: #64748b;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .card {
+        padding: 14px;
+      }
+
+      .filter-bar {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .modal-overlay {
+        padding: 12px;
+      }
+
+      .modal-box {
+        max-height: 92vh;
+        border-radius: 14px;
+      }
+
+      .modal-header {
+        padding: 14px 16px;
+      }
+
+      .modal-body {
+        padding: 16px;
+      }
+
+      .modal-footer {
+        padding: 12px 16px;
+        flex-direction: column-reverse;
+      }
+
+      .modal-footer .btn {
+        width: 100%;
+      }
+
+      .detail-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .detail-item.full {
+        grid-column: auto;
+      }
+
+      .payment-summary-row {
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .payment-summary-row strong {
+        text-align: left;
+      }
+    }
+
+    /* MENU BA CHẤM */
+    .action-popup {
+      min-width: 180px;
+    }
+
+    .action-popup .btn-cancel-appointment {
+      display: flex;
+      width: 100%;
+      min-height: 42px;
+      justify-content: flex-start;
+      padding: 10px 14px;
+      border: none;
+      border-radius: 7px;
+      background: transparent;
+      color: #dc2626;
+      font-size: 13px;
+      font-weight: 500;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .action-popup .btn-cancel-appointment:hover {
+      background: #fff1f2;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+
+    <!-- DANH SÁCH LỊCH TIÊM -->
+    <div class="card">
+
+      <!-- BỘ LỌC -->
+      <div class="filter-bar">
+        <div class="filter-group">
+          <label for="filterTrangThai">Trạng thái</label>
+          <select id="filterTrangThai">
+            <option value="">Tất cả trạng thái</option>
+            <option value="CHO_DUYET">Chờ duyệt</option>
+            <option value="DA_DUYET">Đã duyệt</option>
+            <option value="DA_TIEM">Đã tiêm</option>
+            <option value="DA_HUY">Đã hủy</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="filterNgay">Ngày tiêm</label>
+          <input type="date" id="filterNgay">
+        </div>
+      </div>
+
+      <!-- BẢNG LỊCH TIÊM: 8 CỘT -->
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>STT</th>
+              <th>Người được tiêm</th>
+              <th>Vaccine</th>
+              <th>Cơ sở</th>
+              <th>Ngày tiêm</th>
+              <th>Giờ tiêm</th>
+              <th>Trạng thái</th>
+              <th>Thao tác</th>
+            </tr>
+          </thead>
+          <tbody id="lichTableBody"></tbody>
+        </table>
+      </div>
+
+      <!-- KHÔNG CÓ DỮ LIỆU -->
+      <div class="empty-state" id="lichEmptyState" style="display: none;">
+        <span class="material-symbols-rounded">event_busy</span>
+        Không có lịch tiêm phù hợp.
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL CHI TIẾT LỊCH TIÊM -->
+  <div class="modal-overlay" id="detailModal">
+    <div class="modal-box">
+
+      <div class="modal-header">
+        <h3>Chi tiết lịch tiêm</h3>
+        <button type="button" class="modal-close" id="btnCloseDetailModal" aria-label="Đóng">
+          <span class="material-symbols-rounded">close</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="detail-grid">
+
+          <div class="detail-item">
+            <span class="detail-label">Người được tiêm</span>
+            <span class="detail-value" id="detailHoTen">—</span>
+          </div>
+
+          <div class="detail-item">
+            <span class="detail-label">Mối quan hệ</span>
+            <span class="detail-value" id="detailMoiQuanHe">—</span>
+          </div>
+
+          <div class="detail-item">
+            <span class="detail-label">Ngày sinh</span>
+            <span class="detail-value" id="detailNgaySinh">—</span>
+          </div>
+
+          <div class="detail-item">
+            <span class="detail-label">Giới tính</span>
+            <span class="detail-value" id="detailGioiTinh">—</span>
+          </div>
+
+          <div class="detail-item">
+            <span class="detail-label">Số điện thoại liên hệ</span>
+            <span class="detail-value" id="detailSoDienThoai">—</span>
+          </div>
+
+          <div class="detail-item">
+            <span class="detail-label">Email</span>
+            <span class="detail-value" id="detailEmail">—</span>
+          </div>
+
+          <div class="detail-item full">
+            <span class="detail-label">Vaccine</span>
+            <span class="detail-value" id="detailVaccine">—</span>
+          </div>
+
+          <div class="detail-item full">
+            <span class="detail-label">Cơ sở tiêm</span>
+            <span class="detail-value" id="detailCoSo">—</span>
+          </div>
+
+          <div class="detail-item">
+            <span class="detail-label">Ngày tiêm</span>
+            <span class="detail-value" id="detailNgayTiem">—</span>
+          </div>
+
+          <div class="detail-item">
+            <span class="detail-label">Giờ tiêm</span>
+            <span class="detail-value" id="detailGioTiem">—</span>
+          </div>
+
+          <div class="detail-item">
+            <span class="detail-label">Trạng thái lịch</span>
+            <span class="detail-value" id="detailTrangThai">—</span>
+          </div>
+
+          <div class="detail-item">
+            <span class="detail-label">Thanh toán</span>
+            <span class="detail-value" id="detailThanhToan">—</span>
+          </div>
+
+          <div class="detail-item full">
+            <span class="detail-label">Ghi chú</span>
+            <span class="detail-value" id="detailGhiChu">—</span>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="btnCloseDetail">
+          Đóng
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL HỦY LỊCH / YÊU CẦU HOÀN TIỀN -->
+  <div class="modal-overlay" id="cancelModal">
+    <div class="modal-box">
+
+      <div class="modal-header">
+        <h3 id="cancelModalTitle">Hủy lịch tiêm</h3>
+        <button type="button" class="modal-close" id="btnCloseCancelModal" aria-label="Đóng">
+          <span class="material-symbols-rounded">close</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+
+        <input type="hidden" id="cancelLichTiemId">
+
+        <div class="cancel-warning" id="cancelWarning">
+          Bạn có chắc chắn muốn hủy lịch tiêm này?
+        </div>
+
+        <!-- THÔNG TIN LỊCH -->
+        <div class="payment-summary">
+
+          <div class="payment-summary-row">
+            <span>Người được tiêm</span>
+            <strong id="cancelHoTen">—</strong>
+          </div>
+
+          <div class="payment-summary-row">
+            <span>Vaccine</span>
+            <strong id="cancelVaccine">—</strong>
+          </div>
+
+          <div class="payment-summary-row">
+            <span>Ngày / Giờ</span>
+            <strong id="cancelNgayGio">—</strong>
+          </div>
+
+          <div class="payment-summary-row">
+            <span>Thanh toán</span>
+            <strong id="cancelThanhToan">—</strong>
+          </div>
+
+        </div>
+
+        <!-- LÝ DO HỦY -->
+        <div class="cancel-form-group" id="cancelReasonGroup">
+          <label for="cancelReason">Lý do hủy</label>
+
+          <textarea id="cancelReason" maxlength="500" placeholder="Nhập lý do hủy lịch..."></textarea>
+
+          <div class="cancel-form-hint" id="cancelReasonHint">
+            Tối đa 500 ký tự.
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="btnCancelClose">
+          Đóng
+        </button>
+
+        <button type="button" class="btn btn-danger" id="btnConfirmCancel">
+          Xác nhận hủy
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <script src="../../js/common/jwt-handler.js"></script>
+  <script src="../../js/khach-hang/lich-tiem.js"></script>
+
+</body>
+
+</html>
