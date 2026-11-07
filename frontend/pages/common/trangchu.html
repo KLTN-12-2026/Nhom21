@@ -6,9 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Trang chủ - Hệ thống tiêm chủng VAX AI</title>
     <link rel="stylesheet" href="../../css/style.css" />
-    <!-- <link rel="stylesheet" href="../css/chatbot.css"> -->
+    <link rel="stylesheet" href="../../css/chatbot.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
     <style>
         * {
             box-sizing: border-box;
@@ -43,6 +42,9 @@
             color: inherit;
         }
 
+        /* =========================
+       HEADER
+    ========================= */
         .topbar {
             background: var(--primary);
             color: #fff;
@@ -1092,89 +1094,6 @@
             font-size: 12px;
         }
 
-        /* RESPONSIVE */
-        @media (max-width: 1000px) {
-            .topbar-inner {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .nav {
-                width: 100%;
-                justify-content: flex-start;
-                flex-wrap: wrap;
-            }
-
-            .features,
-            .vaccine-grid,
-            .timeline {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .service-grid,
-            .branch-grid,
-            .news-layout,
-            .footer-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .timeline::before {
-                display: none;
-            }
-        }
-
-        @media (max-width: 600px) {
-            .hero {
-                padding: 58px 0 64px;
-            }
-
-            .hero-text h1 {
-                font-size: 30px;
-            }
-
-            .hero-buttons {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .features,
-            .vaccine-grid,
-            .timeline {
-                grid-template-columns: 1fr;
-            }
-
-            .news-item {
-                grid-template-columns: 1fr;
-            }
-
-            .noti-text {
-                font-size: 12px;
-            }
-
-            .notification-dropdown {
-                right: -40px;
-                width: 280px;
-            }
-
-            .user-box {
-                width: 34px;
-                height: 34px;
-            }
-
-            .ai-chat-toggle {
-                right: 14px;
-                bottom: 14px;
-                width: 52px;
-                height: 52px;
-            }
-
-            .ai-chat-box {
-                right: 12px;
-                bottom: 76px;
-                width: calc(100vw - 24px);
-                height: 70vh;
-            }
-        }
 
         /* Các thẻ vaccine cao bằng nhau */
         #vaccineGrid {
@@ -1203,74 +1122,161 @@
         #vaccineGrid .vaccine-info p {
             line-height: 1.6;
         }
+
+        #header-container {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+
+        /* Giữ bố cục desktop bên trong khối nội dung */
+        #desktopScaleWrapper {
+            width: 100%;
+            position: relative;
+        }
+
+        #desktopScaleContent {
+            width: 100%;
+            transform-origin: top left;
+        }
+
+        @media (max-width: 1000px) {
+            #desktopScaleWrapper {
+                overflow: hidden;
+            }
+
+            #desktopScaleContent {
+                width: 1180px;
+                max-width: none;
+                transform-origin: top left;
+            }
+
+            /* Giữ số cột như desktop */
+            #desktopScaleContent .service-grid,
+            #desktopScaleContent .branch-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+
+            #desktopScaleContent .vaccine-grid,
+            #desktopScaleContent .timeline,
+            #desktopScaleContent .features {
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+            }
+
+            #desktopScaleContent .news-layout {
+                grid-template-columns: 1.55fr 1fr;
+            }
+
+            #desktopScaleContent .footer-grid {
+                grid-template-columns: 1.4fr 1fr 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 1000px) {
+            #desktopScaleWrapper {
+                position: relative;
+                width: 100%;
+                overflow: hidden;
+            }
+
+            #desktopScaleContent {
+                width: 1180px;
+                max-width: none;
+                transform-origin: top left;
+            }
+        }
+
+        @media (max-width: 1000px) {
+            #desktopScaleWrapper {
+                position: relative;
+                width: 100%;
+                overflow: hidden;
+            }
+
+            #desktopScaleContent {
+                width: 1180px;
+                max-width: none;
+                transform-origin: top left;
+            }
+        }
     </style>
 </head>
 
 <body>
+
     <div id="header-container"></div>
 
-    <section class="hero" id="gioithieu">
-        <div class="hero-inner">
-            <div class="hero-text">
-                <h1>Hệ thống tiêm chủng cho trẻ em & người lớn</h1>
-                <p>Đặt lịch tiêm chủng nhanh chóng, nhắc lịch tự động – an toàn và tiện lợi cho cả gia đình.</p>
-                <div class="hero-buttons">
-                    <button class="btn-primary" id="btnDatLich">Đặt lịch tiêm ngay</button>
-                    <button class="btn-outline"
-                        onclick="document.getElementById('goivaccine').scrollIntoView({ behavior: 'smooth' })">
-                        Xem gói vaccine
-                    </button>
-                </div>
-                <p id="welcomeText"></p>
-            </div>
-        </div>
-    </section>
+    <div id="desktopScaleWrapper">
+        <main id="desktopScaleContent">
 
-    <section class="section" id="dichvu">
-        <div class="section-title">
-            <h2>Dịch vụ tiêm chủng</h2>
-        </div>
+            <section class="hero" id="gioithieu">
+                <div class="hero-inner">
 
-        <div class="service-grid">
-            <div class="service-card">
-                <div class="service-image"><img src="../../img/tiem-chung-cho-tre-em.jpg" alt="Tiêm chủng trẻ em"></div>
-                <div class="service-body">
-                    <h3>Tiêm chủng trẻ em</h3>
-                    <p>Lịch tiêm chủng đầy đủ cho trẻ sơ sinh và trẻ nhỏ theo khuyến cáo của Bộ Y tế.</p>
-                    <a href="#" class="more-link">Xem chi tiết »</a>
-                </div>
-            </div>
+                    <div class="hero-text">
+                        <h1>Hệ thống tiêm chủng cho trẻ em & người lớn</h1>
+                        <p>Đặt lịch tiêm chủng nhanh chóng, nhắc lịch tự động – an toàn và tiện lợi cho cả gia đình.</p>
+                        <div class="hero-buttons">
+                            <button class="btn-primary" id="btnDatLich">Đặt lịch tiêm ngay</button>
+                            <button class="btn-outline"
+                                onclick="document.getElementById('loaivaccine').scrollIntoView({ behavior: 'smooth' })">
+                                Xem loại vaccine
+                            </button>
 
-            <div class="service-card">
-                <div class="service-image"><img src="../../img/tiem-chung-cho-nguoi-lon.jpg" alt="Tiêm chủng người lớn">
+                        </div>
+                        <p id="welcomeText"></p>
+                    </div>
                 </div>
-                <div class="service-body">
-                    <h3>Tiêm chủng người lớn</h3>
-                    <p>Phòng ngừa cúm, viêm gan, phế cầu, HPV, zona và các bệnh truyền nhiễm phổ biến.</p>
-                    <a href="#" class="more-link">Xem chi tiết »</a>
-                </div>
-            </div>
+            </section>
 
-            <div class="service-card">
-                <div class="service-image"><img src="../../img/tiem-chunbg-theo-yeu-cau.jpg" alt="Tiêm theo yêu cầu">
+            <section class="section" id="dichvu">
+                <div class="section-title">
+                    <h2>Dịch vụ tiêm chủng</h2>
                 </div>
-                <div class="service-body">
-                    <h3>Tiêm theo yêu cầu</h3>
-                    <p>Gói tiêm cho doanh nghiệp, trường học, nhóm gia đình hoặc theo nhu cầu cá nhân.</p>
-                    <a href="#" class="more-link">Xem chi tiết »</a>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <div class="section-alt">
-        <section class="section" id="loaivaccine">
-            <div class="section-title">
-                <div>
-                    <h2>Danh mục vaccine tại VAX AI</h2>
+                <div class="service-grid">
+                    <div class="service-card">
+                        <div class="service-image"><img src="../../img/tiem-chung-cho-tre-em.jpg"
+                                alt="Tiêm chủng trẻ em"></div>
+                        <div class="service-body">
+                            <h3>Tiêm chủng trẻ em</h3>
+                            <p>Lịch tiêm chủng đầy đủ cho trẻ sơ sinh và trẻ nhỏ theo khuyến cáo của Bộ Y tế.</p>
+                            <a href="#" class="more-link">Xem chi tiết »</a>
+                        </div>
+                    </div>
+
+                    <div class="service-card">
+                        <div class="service-image"><img src="../../img/tiem-chung-cho-nguoi-lon.jpg"
+                                alt="Tiêm chủng người lớn">
+                        </div>
+                        <div class="service-body">
+                            <h3>Tiêm chủng người lớn</h3>
+                            <p>Phòng ngừa cúm, viêm gan, phế cầu, HPV, zona và các bệnh truyền nhiễm phổ biến.</p>
+                            <a href="#" class="more-link">Xem chi tiết »</a>
+                        </div>
+                    </div>
+
+                    <div class="service-card">
+                        <div class="service-image"><img src="../../img/tiem-chunbg-theo-yeu-cau.jpg"
+                                alt="Tiêm theo yêu cầu">
+                        </div>
+                        <div class="service-body">
+                            <h3>Tiêm theo yêu cầu</h3>
+                            <p>Gói tiêm cho doanh nghiệp, trường học, nhóm gia đình hoặc theo nhu cầu cá nhân.</p>
+                            <a href="#" class="more-link">Xem chi tiết »</a>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <!-- <div class="section-title">
+            </section>
+
+            <div class="section-alt">
+                <section class="section" id="loaivaccine">
+                    <div class="section-title">
+                        <div>
+                            <h2>Danh mục vaccine tại VAX AI</h2>
+                        </div>
+                    </div>
+                    <!-- <div class="section-title">
                 <div>
                     <h2>Danh mục vaccine tại VAX AI</h2>
                 </div>
@@ -1278,193 +1284,277 @@
             </div> -->
 
 
-            <div class="vaccine-grid" id="vaccineGrid">
-                <p style="grid-column: 1 / -1; text-align: center; color: #64748b;">
-                    Đang tải danh sách vaccine...
-                </p>
+                    <div class="vaccine-grid" id="vaccineGrid">
+                        <p style="grid-column: 1 / -1; text-align: center; color: #64748b;">
+                            Đang tải danh sách vaccine...
+                        </p>
+                    </div>
+
+                </section>
             </div>
 
-        </section>
+            <section class="section" id="tintuc">
+                <div class="section-title">
+                    <div>
+                        <h2>Tin tức sức khỏe & vắc xin</h2>
+                    </div>
+                </div>
+
+                <div class="news-tabs">
+                    <button class="active">Tin tức sức khỏe</button>
+                </div>
+
+                <div class="news-layout">
+                    <article class="news-featured">
+                        <div class="news-featured-img"><img src="../../img/thunnal2.png"
+                                alt="Tin tức sức khỏe và vắc xin">
+                        </div>
+                        <div class="news-featured-body">
+                            <div class="news-date">15/10/2026</div>
+                            <h3>Tầm quan trọng của việc tiêm chủng định kỳ cho trẻ em trong mùa dịch bệnh</h3>
+                            <p>Tiêm chủng là biện pháp hữu hiệu giúp bảo vệ sức khỏe trẻ em trước các tác nhân gây bệnh
+                                nguy
+                                hiểm.</p>
+                            <a href="#" class="more-link">Xem thêm »</a>
+                        </div>
+                    </article>
+
+                    <div class="news-list">
+                        <article class="news-item">
+                            <div class="news-thumb"><img src="../../img/luu-y-khi-tiem.jpg"
+                                    alt="Lưu ý trước và sau khi tiêm vaccine">
+                            </div>
+                            <div>
+                                <div class="news-date">12/10/2026</div>
+                                <h4>Những lưu ý quan trọng trước và sau khi tiêm vaccine</h4>
+                                <p>Chuẩn bị đúng cách giúp quá trình tiêm chủng an toàn hơn.</p>
+                                <a href="#" class="more-link">Xem thêm</a>
+                            </div>
+                        </article>
+
+                        <article class="news-item">
+                            <div class="news-thumb"><img src="../../img/hpv.jpg" alt="Lịch tiêm phòng HPV"></div>
+                            <div>
+                                <div class="news-date">08/10/2026</div>
+                                <h4>Lịch tiêm phòng HPV: Tại sao bạn không nên bỏ lỡ?</h4>
+                                <p>HPV là vaccine quan trọng với trẻ vị thành niên và người trưởng thành.</p>
+                                <a href="#" class="more-link">Xem thêm</a>
+                            </div>
+                        </article>
+
+                        <article class="news-item">
+                            <div class="news-thumb"><img src="../../img/dau-hieu-sau-tiem.jpg"
+                                    alt="Theo dõi sau khi tiêm chủng">
+                            </div>
+                            <div>
+                                <div class="news-date">05/10/2026</div>
+                                <h4>Dấu hiệu cần theo dõi sau khi tiêm chủng</h4>
+                                <p>Những phản ứng thường gặp và thời điểm cần liên hệ bác sĩ.</p>
+                                <a href="#" class="more-link">Xem thêm</a>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </section>
+
+            <section class="process-section" id="quytrinh">
+                <div class="process-inner">
+                    <div class="process-title">
+                        <h2>Quy trình tiêm chủng an toàn</h2>
+                        <p>An toàn - chuyên nghiệp - tận tâm trong từng bước</p>
+                    </div>
+
+                    <div class="timeline">
+                        <div class="timeline-step">
+                            <div class="step-number">01</div>
+                            <h3>Đăng ký</h3>
+                            <p>Đăng ký thông tin và đặt lịch tiêm phù hợp.</p>
+                        </div>
+
+                        <div class="timeline-step">
+                            <div class="step-number">02</div>
+                            <h3>Khám sàng lọc</h3>
+                            <p>Bác sĩ khám, tư vấn và chỉ định vắc xin phù hợp.</p>
+                        </div>
+
+                        <div class="timeline-step">
+                            <div class="step-number">03</div>
+                            <h3>Tiêm chủng</h3>
+                            <p>Điều dưỡng thực hiện tiêm theo quy trình 5 bước an toàn.</p>
+                        </div>
+
+                        <div class="timeline-step">
+                            <div class="step-number">04</div>
+                            <h3>Theo dõi</h3>
+                            <p>Theo dõi sau tiêm và nhắc lịch mũi tiêm tiếp theo.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="section-alt">
+
+                <section class="section" id="coso">
+
+                    <div class="section-title center">
+                        <h2>Hệ thống cơ sở tiêm chủng</h2>
+                    </div>
+
+                    <!-- TÌM KIẾM CƠ SỞ -->
+                    <div class="branch-search">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+
+                        <input type="text" id="branchSearchInput" placeholder="Tìm theo tên hoặc địa chỉ cơ sở..."
+                            autocomplete="off" aria-label="Tìm kiếm cơ sở tiêm chủng">
+
+                        <button type="button" class="branch-search-clear" id="branchSearchClear" title="Xóa tìm kiếm"
+                            aria-label="Xóa từ khóa tìm kiếm">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+
+                    <!-- THÔNG BÁO KẾT QUẢ -->
+                    <p class="branch-search-message" id="branchSearchMessage" aria-live="polite"></p>
+
+                    <!-- DANH SÁCH CƠ SỞ -->
+                    <div class="branch-slider-wrap">
+
+                        <button type="button" class="branch-nav prev" id="branchPrev" aria-label="Cơ sở trước">
+                            ❮
+                        </button>
+
+                        <div class="branch-grid" id="branchGrid">
+                            <p style="grid-column: 1 / -1; text-align:center; color:#64748b;">
+                                Đang tải danh sách cơ sở...
+                            </p>
+                        </div>
+
+                        <button type="button" class="branch-nav next" id="branchNext" aria-label="Cơ sở tiếp theo">
+                            ❯
+                        </button>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+            <footer class="footer">
+                <div class="footer-inner">
+                    <div class="footer-grid">
+                        <div>
+                            <h3>VAX AI</h3>
+                            <p>Hệ thống trung tâm tiêm chủng chất lượng cao, an toàn cho mọi gia đình.</p>
+                        </div>
+                        <div>
+                            <h4>Dịch vụ</h4>
+                            <p><a href="#dichvu">Tiêm chủng trẻ em</a></p>
+                            <p><a href="#dichvu">Tiêm chủng người lớn</a></p>
+                            <p><a href="#dichvu">Tiêm theo yêu cầu</a></p>
+                        </div>
+                        <div>
+                            <h4>Hỗ trợ</h4>
+                            <p><a href="#">Hướng dẫn đặt lịch</a></p>
+                            <p><a href="#">Chính sách bảo mật</a></p>
+                            <p><a href="#">Câu hỏi thường gặp</a></p>
+                        </div>
+                        <div>
+                            <h4>Liên hệ</h4>
+                            <p><i class="fa-solid fa-phone"></i> 0939 456 789</p>
+                            <p><i class="fa-solid fa-envelope"></i> tiemchungvaxai@gmail.com</p>
+                        </div>
+                    </div>
+                    <div class="footer-bottom">
+                        <span>© 2026 Hệ thống tiêm chủng VAX AI. All rights reserved.</span>
+                        <span>Hotline: 0939 456 789 • Email: tiemchungvaxai@gmail.com</span>
+                    </div>
+                </div>
+            </footer>
+        </main>
+    </div>
+    <!-- AI CHAT FLOAT BUTTON -->
+    <div class="ai-chat-toggle" id="aiChatToggle" title="AI tư vấn vaccine">
+        <i class="fa-solid fa-comments"></i>
     </div>
 
-    <section class="section" id="tintuc">
-        <div class="section-title">
-            <div>
-                <h2>Tin tức sức khỏe & vắc xin</h2>
+    <!-- AI CHAT BOX -->
+    <div class="ai-chat-box" id="aiChatBox">
+        <div class="ai-chat-header">
+            <div class="ai-chat-header-left">
+                <div class="ai-avatar">
+                    <i class="fa-solid fa-shield-heart"></i>
+                </div>
+                <div>
+                    <div class="ai-chat-title">Trợ lý tiêm chủng Vax AI</div>
+                    <div class="ai-chat-subtitle">Hỗ trợ thông tin và vaccine và tiêm chủng</div>
+                </div>
             </div>
+            <button class="ai-chat-close" id="aiChatClose" type="button">&times;</button>
         </div>
 
-        <div class="news-tabs">
-            <button class="active">Tin tức sức khỏe</button>
+        <div class="ai-chat-body" id="aiChatBody">
+            <div class="ai-message ai-message-bot">Xin chào! 👋 Mình là trợ lý tiêm chủng VAX AI. Mình có thể giúp bạn
+                tìm hiểu thông tin về vaccine và tiêm chủng. Bạn cần hỗ trợ gì hôm nay? </div>
         </div>
 
-        <div class="news-layout">
-            <article class="news-featured">
-                <div class="news-featured-img"><img src="../../img/thunnal.jpg" alt="Tin tức sức khỏe và vắc xin">
-                </div>
-                <div class="news-featured-body">
-                    <div class="news-date">15/10/2026</div>
-                    <h3>Tầm quan trọng của việc tiêm chủng định kỳ cho trẻ em trong mùa dịch bệnh</h3>
-                    <p>Tiêm chủng là biện pháp hữu hiệu giúp bảo vệ sức khỏe trẻ em trước các tác nhân gây bệnh nguy
-                        hiểm.</p>
-                    <a href="#" class="more-link">Xem thêm »</a>
-                </div>
-            </article>
-
-            <div class="news-list">
-                <article class="news-item">
-                    <div class="news-thumb"><img src="../../img/luu-y-khi-tiem.jpg"
-                            alt="Lưu ý trước và sau khi tiêm vaccine">
-                    </div>
-                    <div>
-                        <div class="news-date">12/10/2026</div>
-                        <h4>Những lưu ý quan trọng trước và sau khi tiêm vaccine</h4>
-                        <p>Chuẩn bị đúng cách giúp quá trình tiêm chủng an toàn hơn.</p>
-                        <a href="#" class="more-link">Xem thêm</a>
-                    </div>
-                </article>
-
-                <article class="news-item">
-                    <div class="news-thumb"><img src="../../img/hpv.jpg" alt="Lịch tiêm phòng HPV"></div>
-                    <div>
-                        <div class="news-date">08/10/2026</div>
-                        <h4>Lịch tiêm phòng HPV: Tại sao bạn không nên bỏ lỡ?</h4>
-                        <p>HPV là vaccine quan trọng với trẻ vị thành niên và người trưởng thành.</p>
-                        <a href="#" class="more-link">Xem thêm</a>
-                    </div>
-                </article>
-
-                <article class="news-item">
-                    <div class="news-thumb"><img src="../../img/dau-hieu-sau-tiem.jpg"
-                            alt="Theo dõi sau khi tiêm chủng">
-                    </div>
-                    <div>
-                        <div class="news-date">05/10/2026</div>
-                        <h4>Dấu hiệu cần theo dõi sau khi tiêm chủng</h4>
-                        <p>Những phản ứng thường gặp và thời điểm cần liên hệ bác sĩ.</p>
-                        <a href="#" class="more-link">Xem thêm</a>
-                    </div>
-                </article>
-            </div>
+        <div class="ai-chat-suggestions">
+            <button type="button" class="ai-suggestion-btn" onclick="fillSuggestion('Trẻ em nên tiêm vaccine gì?')">Trẻ
+                em</button>
+            <button type="button" class="ai-suggestion-btn"
+                onclick="fillSuggestion('Người lớn nên tiêm vaccine gì?')">Người
+                lớn</button>
+            <button type="button" class="ai-suggestion-btn"
+                onclick="fillSuggestion('Phụ nữ mang thai nên tiêm vaccine gì?')">Mang thai</button>
         </div>
-    </section>
 
-    <section class="process-section" id="quytrinh">
-        <div class="process-inner">
-            <div class="process-title">
-                <h2>Quy trình tiêm chủng an toàn</h2>
-                <p>An toàn - chuyên nghiệp - tận tâm trong từng bước</p>
-            </div>
-
-            <div class="timeline">
-                <div class="timeline-step">
-                    <div class="step-number">01</div>
-                    <h3>Đăng ký</h3>
-                    <p>Đăng ký thông tin và đặt lịch tiêm phù hợp.</p>
-                </div>
-
-                <div class="timeline-step">
-                    <div class="step-number">02</div>
-                    <h3>Khám sàng lọc</h3>
-                    <p>Bác sĩ khám, tư vấn và chỉ định vắc xin phù hợp.</p>
-                </div>
-
-                <div class="timeline-step">
-                    <div class="step-number">03</div>
-                    <h3>Tiêm chủng</h3>
-                    <p>Điều dưỡng thực hiện tiêm theo quy trình 5 bước an toàn.</p>
-                </div>
-
-                <div class="timeline-step">
-                    <div class="step-number">04</div>
-                    <h3>Theo dõi</h3>
-                    <p>Theo dõi sau tiêm và nhắc lịch mũi tiêm tiếp theo.</p>
-                </div>
-            </div>
+        <div class="ai-chat-input-wrap">
+            <input type="text" id="aiChatInput" class="ai-chat-input" placeholder="Nhập câu hỏi của bạn..." />
+            <button type="button" class="ai-chat-send" id="aiChatSend">Gửi</button>
         </div>
-    </section>
-
-    <div class="section-alt">
-
-        <section class="section" id="coso">
-
-            <div class="section-title center">
-                <h2>Hệ thống cơ sở tiêm chủng</h2>
-            </div>
-
-            <!-- TÌM KIẾM CƠ SỞ -->
-            <div class="branch-search">
-                <i class="fa-solid fa-magnifying-glass"></i>
-
-                <input type="text" id="branchSearchInput" placeholder="Tìm theo tên hoặc địa chỉ cơ sở..."
-                    autocomplete="off" aria-label="Tìm kiếm cơ sở tiêm chủng">
-
-                <button type="button" class="branch-search-clear" id="branchSearchClear" title="Xóa tìm kiếm"
-                    aria-label="Xóa từ khóa tìm kiếm">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-
-            <!-- THÔNG BÁO KẾT QUẢ -->
-            <p class="branch-search-message" id="branchSearchMessage" aria-live="polite"></p>
-
-            <!-- DANH SÁCH CƠ SỞ -->
-            <div class="branch-slider-wrap">
-
-                <button type="button" class="branch-nav prev" id="branchPrev" aria-label="Cơ sở trước">
-                    ❮
-                </button>
-
-                <div class="branch-grid" id="branchGrid">
-                    <p style="grid-column: 1 / -1; text-align:center; color:#64748b;">
-                        Đang tải danh sách cơ sở...
-                    </p>
-                </div>
-
-                <button type="button" class="branch-nav next" id="branchNext" aria-label="Cơ sở tiếp theo">
-                    ❯
-                </button>
-
-            </div>
-
-        </section>
-
     </div>
 
-    <footer class="footer">
-        <div class="footer-inner">
-            <div class="footer-grid">
-                <div>
-                    <h3>VAX AI</h3>
-                    <p>Hệ thống trung tâm tiêm chủng chất lượng cao, an toàn cho mọi gia đình.</p>
-                </div>
-                <div>
-                    <h4>Dịch vụ</h4>
-                    <p><a href="#dichvu">Tiêm chủng trẻ em</a></p>
-                    <p><a href="#dichvu">Tiêm chủng người lớn</a></p>
-                    <p><a href="#dichvu">Tiêm theo yêu cầu</a></p>
-                </div>
-                <div>
-                    <h4>Hỗ trợ</h4>
-                    <p><a href="#">Hướng dẫn đặt lịch</a></p>
-                    <p><a href="#">Chính sách bảo mật</a></p>
-                    <p><a href="#">Câu hỏi thường gặp</a></p>
-                </div>
-                <div>
-                    <h4>Liên hệ</h4>
-                    <p><i class="fa-solid fa-phone"></i> 0939 456 789</p>
-                    <p><i class="fa-solid fa-envelope"></i> tiemchungvaxai@gmail.com</p>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <span>© 2026 Hệ thống tiêm chủng VAX AI. All rights reserved.</span>
-                <span>Hotline: 0939 456 789 • Email: tiemchungvaxai@gmail.com</span>
-            </div>
-        </div>
-    </footer>
+    <script>
+        function scaleDesktopContent() {
+            const wrapper = document.getElementById("desktopScaleWrapper");
+            const content = document.getElementById("desktopScaleContent");
+
+            if (!wrapper || !content) return;
+
+            if (window.innerWidth > 1000) {
+                content.style.transform = "";
+                wrapper.style.height = "";
+                return;
+            }
+
+            const desktopWidth = 1180;
+            const availableWidth = wrapper.clientWidth;
+            const scale = availableWidth / desktopWidth;
+
+            content.style.transform = `scale(${scale})`;
+
+            wrapper.style.height =
+                `${content.scrollHeight * scale}px`;
+        }
+
+        window.addEventListener("load", scaleDesktopContent);
+        window.addEventListener("resize", scaleDesktopContent);
+
+        // Cập nhật khi danh sách vaccine, cơ sở được tải từ API...
+        const desktopContent =
+            document.getElementById("desktopScaleContent");
+
+        if (desktopContent) {
+            const resizeObserver = new ResizeObserver(() => {
+                scaleDesktopContent();
+            });
+
+            resizeObserver.observe(desktopContent);
+        }
+    </script>
 
     <script src="../../js/common/trangchu.js"></script>
     <script src="../../js/common/header.js"></script>
-    <!-- <script src="../js/chatbot.js"></script>  -->
+    <script src="../../js/common/chatbot.js"></script>
+</body>
 
 </html>
