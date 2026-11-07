@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết cơ sở tiêm chủng</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f4f8fc;
+            color: #1e293b;
+        }
+
+        /* =========================
+           NỘI DUNG CHÍNH
+        ========================= */
+
+        .container {
+            max-width: 1100px;
+            margin: 24px auto;
+            padding: 0 20px;
+        }
+
+        .page-title {
+            text-align: center;
+            color: #0288d1;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 14px;
+        }
+
+        /* =========================
+           ĐIỀU HƯỚNG CƠ SỞ
+        ========================= */
+
+        .branch-nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .arrow-btn {
+            width: 38px;
+            height: 38px;
+            border: none;
+            border-radius: 50%;
+            background: #0288d1;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s ease;
+            box-shadow: 0 4px 10px rgba(2, 136, 209, 0.16);
+        }
+
+        .arrow-btn:hover {
+            background: #0277bd;
+            transform: translateY(-1px);
+        }
+
+        .branch-indicator {
+            min-width: 140px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: #01579b;
+        }
+
+        /* =========================
+           THÔNG TIN CƠ SỞ
+        ========================= */
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 16px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.07);
+        }
+
+        .card h2 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: #01579b;
+            font-size: 18px;
+        }
+
+        .info-line {
+            margin-bottom: 10px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .info-line strong {
+            color: #0f172a;
+        }
+
+        .info-line a {
+            color: #0288d1;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .info-line a:hover {
+            text-decoration: underline;
+        }
+
+        /* =========================
+           GOOGLE MAPS
+        ========================= */
+
+        .map-box {
+            overflow: hidden;
+        }
+
+        .map-box iframe {
+            width: 100%;
+            height: 260px;
+            border: none;
+            border-radius: 10px;
+            display: block;
+        }
+
+        /* =========================
+           ĐÁNH GIÁ CƠ SỞ
+        ========================= */
+
+        .review-section {
+            background: #fff;
+            border-radius: 14px;
+            padding: 18px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.07);
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .review-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #01579b;
+        }
+
+        .rating-summary {
+            font-size: 14px;
+            color: #334155;
+        }
+
+        .rating-summary strong {
+            font-size: 24px;
+            color: #f59e0b;
+            margin-right: 6px;
+        }
+
+        /* =========================
+           FORM ĐÁNH GIÁ
+        ========================= */
+
+        .review-form {
+            background: #f8fbff;
+            border: 1px solid #dbeafe;
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 18px;
+        }
+
+        .review-form label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #0f172a;
+            font-size: 14px;
+        }
+
+        .star-select {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .star {
+            font-size: 28px;
+            color: #cbd5e1;
+            cursor: pointer;
+            transition: 0.2s;
+            user-select: none;
+        }
+
+        .star.active,
+        .star:hover {
+            color: #f59e0b;
+            transform: scale(1.05);
+        }
+
+        .review-form textarea {
+            width: 100%;
+            min-height: 90px;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-size: 14px;
+            resize: vertical;
+            outline: none;
+            margin-bottom: 12px;
+        }
+
+        .review-form textarea:focus {
+            border-color: #0288d1;
+            box-shadow: 0 0 0 3px rgba(2, 136, 209, 0.10);
+        }
+
+        .btn-submit {
+            background: #0288d1;
+            color: #fff;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-submit:hover {
+            background: #0277bd;
+        }
+
+        /* =========================
+           DANH SÁCH ĐÁNH GIÁ
+        ========================= */
+
+        .review-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .review-item {
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 12px;
+            background: #fff;
+        }
+
+        .review-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .review-user {
+            font-weight: 700;
+            color: #0f172a;
+            font-size: 14px;
+        }
+
+        .review-stars {
+            color: #f59e0b;
+            font-size: 16px;
+        }
+
+        .review-date {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .review-content {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #334155;
+        }
+
+        .empty-review {
+            padding: 14px;
+            border: 1px dashed #cbd5e1;
+            border-radius: 10px;
+            text-align: center;
+            color: #64748b;
+            background: #f8fbff;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 900px) {
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page-title {
+                font-size: 22px;
+            }
+
+            .map-box iframe {
+                height: 220px;
+            }
+        }
+
+
+        /* CHI TIẾT CƠ SỞ MOBILE */
+        /* Chỉ áp dụng cho điện thoại */
+
+
+        @media (max-width: 600px) {
+
+            /* 1. BỐ CỤC TỔNG THỂ */
+            .container {
+                margin: 12px auto 24px;
+                padding: 0 12px;
+            }
+
+            .page-title {
+                font-size: 20px;
+                line-height: 1.3;
+                margin-bottom: 10px;
+            }
+
+            /* 2. THANH CHUYỂN CƠ SỞ */
+            .branch-nav {
+                gap: 12px;
+                margin-bottom: 10px;
+            }
+
+            .arrow-btn {
+                width: 34px;
+                height: 34px;
+                flex-shrink: 0;
+                font-size: 16px;
+            }
+
+            .branch-indicator {
+                min-width: 100px;
+                font-size: 12px;
+            }
+
+            /* 3. HAI THẺ THÔNG TIN VÀ BẢN ĐỒ */
+            .detail-grid {
+                grid-template-columns: minmax(0, 1fr);
+                gap: 10px;
+                margin-bottom: 10px;
+            }
+
+            .card {
+                padding: 12px;
+                border-radius: 10px;
+            }
+
+            .card h2 {
+                margin-bottom: 8px;
+                font-size: 17px;
+                line-height: 1.35;
+            }
+
+            /* 4. THÔNG TIN CƠ SỞ */
+            .info-line {
+                margin-bottom: 6px;
+                font-size: 13px;
+                line-height: 1.45;
+                overflow-wrap: anywhere;
+            }
+
+            .info-line:last-child {
+                margin-bottom: 0;
+            }
+
+            /* 5. GOOGLE MAPS */
+            .map-box {
+                overflow: hidden;
+            }
+
+            .map-box iframe {
+                width: 100%;
+                height: 160px;
+                border-radius: 8px;
+            }
+
+            /* 6. PHẦN ĐÁNH GIÁ */
+            .review-section {
+                padding: 12px;
+                border-radius: 10px;
+            }
+
+            .review-header {
+                gap: 8px;
+                margin-bottom: 10px;
+                flex-wrap: wrap;
+            }
+
+            .review-title {
+                font-size: 17px;
+            }
+
+            .rating-summary {
+                font-size: 12px;
+            }
+
+            .rating-summary strong {
+                font-size: 19px;
+                margin-right: 3px;
+            }
+
+            /* 7. FORM ĐÁNH GIÁ */
+            .review-form {
+                padding: 10px;
+                margin-bottom: 10px;
+                border-radius: 8px;
+            }
+
+            .review-form label {
+                font-size: 12px;
+                margin-bottom: 5px;
+            }
+
+            .star-select {
+                gap: 5px;
+                margin-bottom: 10px;
+            }
+
+            .star {
+                font-size: 25px;
+                min-width: 30px;
+                min-height: 34px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .review-form textarea {
+                min-height: 68px;
+                padding: 9px 10px;
+                font-size: 13px;
+                line-height: 1.45;
+                margin-bottom: 8px;
+            }
+
+            .btn-submit {
+                min-height: 38px;
+                padding: 9px 14px;
+                font-size: 13px;
+            }
+
+            /* 8. DANH SÁCH ĐÁNH GIÁ */
+            .review-list {
+                gap: 8px;
+            }
+
+            .review-item,
+            .empty-review {
+                padding: 10px;
+                border-radius: 8px;
+            }
+
+            .review-user,
+            .review-content {
+                font-size: 13px;
+            }
+
+            .review-date {
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- =========================
+         HEADER DÙNG CHUNG
+    ========================= -->
+    <div id="header-container"></div>
+
+    <!-- =========================
+         NỘI DUNG CHÍNH
+    ========================= -->
+    <div class="container">
+
+        <div class="page-title">
+            Chi tiết cơ sở tiêm chủng
+        </div>
+
+        <!-- ĐIỀU HƯỚNG CƠ SỞ -->
+        <div class="branch-nav">
+
+            <button class="arrow-btn" id="prevBtn" title="Cơ sở trước" type="button">
+                &#10094;
+            </button>
+
+            <div class="branch-indicator" id="branchIndicator">
+                Cơ sở 1 / 3
+            </div>
+
+            <button class="arrow-btn" id="nextBtn" title="Cơ sở tiếp theo" type="button">
+                &#10095;
+            </button>
+
+        </div>
+
+        <!-- =========================
+             THÔNG TIN CƠ SỞ
+        ========================= -->
+        <div class="detail-grid">
+
+            <div class="card">
+
+                <h2 id="branchName">Tên cơ sở</h2>
+
+                <div class="info-line">
+                    <strong>Địa chỉ:</strong>
+                    <span id="branchAddress"></span>
+                </div>
+
+                <div class="info-line">
+                    <strong>Hotline:</strong>
+                    <span id="branchHotline"></span>
+                </div>
+
+                <div class="info-line">
+                    <strong>Giờ làm việc:</strong>
+                    <span id="branchHours"></span>
+                </div>
+
+                <div class="info-line">
+                    <strong>Mô tả:</strong>
+                    <span id="branchDescription"></span>
+                </div>
+
+            </div>
+
+            <!-- GOOGLE MAPS -->
+            <div class="card map-box">
+
+                <h2>Vị trí Google Maps</h2>
+
+                <div id="branchMap"></div>
+
+            </div>
+
+        </div>
+
+        <!-- =========================
+             ĐÁNH GIÁ CƠ SỞ
+        ========================= -->
+        <div class="review-section">
+
+            <div class="review-header">
+
+                <div class="review-title">
+                    Đánh giá cơ sở
+                </div>
+
+                <div class="rating-summary">
+                    <strong id="avgRating">0</strong>/5
+                    (<span id="reviewCount">0</span> đánh giá)
+                </div>
+
+            </div>
+
+            <!-- =========================
+                 FORM GỬI ĐÁNH GIÁ
+                 Chỉ KHACH_HANG được thấy
+            ========================= -->
+            <div class="review-form" id="reviewForm">
+
+                <label>Chọn số sao</label>
+
+                <div class="star-select" id="starSelect" aria-label="Chọn số sao">
+                    <span class="star" data-value="1" role="button" tabindex="0">★</span>
+                    <span class="star" data-value="2" role="button" tabindex="0">★</span>
+                    <span class="star" data-value="3" role="button" tabindex="0">★</span>
+                    <span class="star" data-value="4" role="button" tabindex="0">★</span>
+                    <span class="star" data-value="5" role="button" tabindex="0">★</span>
+                </div>
+
+                <label for="reviewText">
+                    Nhận xét của bạn
+                </label>
+
+                <textarea id="reviewText" placeholder="Nhập nhận xét về cơ sở tiêm chủng..."></textarea>
+
+                <div id="reviewError" style="color:red; font-size:13px; margin-top:4px;"></div>
+
+                <button class="btn-submit" id="btnSubmitReview" type="button">
+                    Gửi đánh giá
+                </button>
+
+                <div id="reviewErrorBottom" style="margin-top:10px; font-size:14px; color:#e53935;"></div>
+
+            </div>
+
+            <!-- ===========================
+                 DANH SÁCH ĐÁNH GIÁ
+                 Tất cả mọi người đều xem được
+            ========================= -->
+            <div class="review-list" id="reviewList"></div>
+
+        </div>
+
+    </div>
+    <script src="../../js/common/jwt-handler.js"></script>
+    <script src="../../js/common/header.js"></script>
+    <script src="../../js/common/chi-tiet-coso.js"></script>
+
+</body>
+
+</html>
