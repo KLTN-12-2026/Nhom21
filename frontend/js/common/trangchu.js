@@ -1,7 +1,17 @@
+
+/* ==========================================
+   HOME.JS - TRANG CHỦ VAX AI
+   Header được xử lý riêng trong header.js
+========================================== */
+
 const API_BASE_URL = "http://localhost:3000/api";
 const SERVER_URL = "http://localhost:3000";
 
 const DEFAULT_BRANCH_IMAGE = "../../img/co-so1.jpg";
+
+/* ==========================================
+   1. THÔNG TIN NGƯỜI DÙNG VÀ ĐẶT LỊCH
+========================================== */
 
 let user = null;
 
@@ -58,6 +68,10 @@ if (user) {
     }
 }
 
+/* ==========================================
+   2. QUẢN LÝ DANH SÁCH CƠ SỞ TRANG CHỦ
+========================================== */
+
 let allBranches = [];
 let filteredBranches = [];
 let currentBranchIndex = 0;
@@ -82,6 +96,10 @@ const branchNext =
 const branchPrev =
     document.getElementById("branchPrev");
 
+/* ==========================================
+   3. XỬ LÝ ĐƯỜNG DẪN ẢNH CƠ SỞ
+========================================== */
+
 function getBranchImageSrc(hinhAnh) {
     if (!hinhAnh || !String(hinhAnh).trim()) {
         return DEFAULT_BRANCH_IMAGE;
@@ -100,6 +118,9 @@ function getBranchImageSrc(hinhAnh) {
     return `${SERVER_URL}/${cleanPath}`;
 }
 
+/* ==========================================
+   4. CHUẨN HÓA TỪ KHÓA TÌM KIẾM
+========================================== */
 
 function normalizeBranchText(value) {
     return String(value ?? "")
@@ -111,6 +132,9 @@ function normalizeBranchText(value) {
         .trim();
 }
 
+/* ==========================================
+   5. TÌM KIẾM CƠ SỞ
+========================================== */
 
 function searchBranches() {
     const keyword = normalizeBranchText(
@@ -156,6 +180,10 @@ function searchBranches() {
     renderBranchSlider();
 }
 
+/* ==========================================
+   6. SỰ KIỆN TÌM KIẾM CƠ SỞ
+========================================== */
+
 if (branchSearchInput) {
     branchSearchInput.addEventListener(
         "input",
@@ -174,6 +202,9 @@ if (branchSearchClear) {
     });
 }
 
+/* ==========================================
+   7. TẢI CƠ SỞ TỪ BACKEND
+========================================== */
 
 async function loadBranchesHome() {
     if (!branchGrid) return;
@@ -237,6 +268,9 @@ async function loadBranchesHome() {
     }
 }
 
+/* ==========================================
+   8. HIỂN THỊ SLIDER CƠ SỞ
+========================================== */
 
 function renderBranchSlider() {
     if (!branchGrid) return;
@@ -336,6 +370,9 @@ function renderBranchSlider() {
     updateBranchButtons();
 }
 
+/* ==========================================
+   9. CẬP NHẬT NÚT SLIDER
+========================================== */
 
 function updateBranchButtons() {
     const isFirst = currentBranchIndex === 0;
@@ -363,6 +400,10 @@ function updateBranchButtons() {
     }
 }
 
+/* ==========================================
+   10. CHUYỂN SLIDER CƠ SỞ
+========================================== */
+
 if (branchNext) {
     branchNext.addEventListener("click", () => {
         if (
@@ -383,6 +424,10 @@ if (branchPrev) {
         }
     });
 }
+
+/* ==========================================
+   11. CHỐNG LỖI HIỂN THỊ HTML
+========================================== */
 
 function escapeHomeHTML(value) {
     return String(value ?? "")
@@ -415,6 +460,10 @@ function getHomeVaccineImage(hinhAnh) {
 
     return `${SERVER_URL}/${cleanPath}`;
 }
+
+/* ==========================================
+   13. HIỂN THỊ DANH SÁCH VACCINE
+========================================== */
 
 const vaccineGrid =
     document.getElementById("vaccineGrid");
@@ -525,6 +574,10 @@ function renderHomeVaccines(vaccines) {
     }).join("");
 }
 
+/* ==========================================
+   14. TẢI DANH SÁCH VACCINE TỪ BACKEND
+========================================== */
+
 async function loadVaccinesHome() {
     if (!vaccineGrid) return;
 
@@ -586,6 +639,10 @@ async function loadVaccinesHome() {
         `;
     }
 }
+
+/* ==========================================
+   15. KHỞI TẠO DỮ LIỆU TRANG CHỦ
+========================================== */
 
 loadVaccinesHome();
 loadBranchesHome();
