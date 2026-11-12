@@ -4,10 +4,7 @@ const cors = require("cors");
 const path = require("path");
 
 const app = express();
-
-// ================================
 // IMPORT ROUTES
-// ================================
 const xacThucRoutes = require("./routes/xac-thuc.routes");
 const nguoiDungRoutes = require("./routes/nguoi-dung.routes");
 const lichTiemRoutes = require("./routes/lich-tiem.routes");
@@ -17,9 +14,8 @@ const tongQuanRoutes = require("./routes/tong-quan.routes");
 const coSoRoutes = require("./routes/co-so.routes");
 const danhGiaRoutes = require("./routes/danh-gia.routes");
 const khamSangLocRoutes = require("./routes/kham-sang-loc.routes");
-// ================================
+
 // MIDDLEWARE
-// ================================
 app.use(cors());
 app.use(express.json());
 
@@ -39,11 +35,7 @@ app.get("/frontend/:page", (req, res) => {
     );
 });
 
-// ================================
 // MAPPING ROUTES
-// GIỮ NGUYÊN URL API HIỆN TẠI
-// ================================
-
 console.log("KIỂM TRA ROUTER");
 
 // Xác thực và người dùng
@@ -67,7 +59,6 @@ app.use("/api/coso", coSoRoutes);
 app.use("/api/danhgia", danhGiaRoutes);
 
 // File tải lên
-// app.use("/uploads", express.static("uploads"));
 app.use(
     "/uploads",
     express.static(path.join(__dirname, "../uploads"))
@@ -75,9 +66,9 @@ app.use(
 
 // Khám sàn lọc
 app.use("/api/kham-sang-loc", khamSangLocRoutes);
-// ================================
+
+
 // ROUTE TEST BACKEND
-// ================================
 app.get("/", (req, res) => {
     res.send("Backend vaccine-app đang chạy...");
 });
