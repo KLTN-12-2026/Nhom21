@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Bảng giá vaccine - Hệ thống tiêm chủng VAX AI</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #f5f8ff;
+      color: #333;
+    }
+
+    /* =========================
+           TIÊU ĐỀ TRANG
+        ========================= */
+
+    .page-header {
+      max-width: 900px;
+      margin: 26px auto 14px;
+      padding: 0 20px;
+    }
+
+    .breadcrumb {
+      font-size: 13px;
+      color: #607d8b;
+      margin-bottom: 10px;
+    }
+
+    .breadcrumb a {
+      color: #0288d1;
+      text-decoration: none;
+    }
+
+    .breadcrumb a:hover {
+      text-decoration: underline;
+    }
+
+    .page-header h1 {
+      margin: 0 0 8px;
+      color: #01579b;
+      font-size: 30px;
+    }
+
+    .page-header p {
+      margin: 0;
+      color: #607d8b;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    /* =========================
+           NỘI DUNG BẢNG GIÁ
+        ========================= */
+
+    .section {
+      max-width: 900px;
+      margin: 20px auto 40px;
+      padding: 0 20px;
+    }
+
+    .table-wrap {
+      width: 100%;
+      max-height: none;
+      overflow: visible;
+      border-radius: 10px;
+    }
+
+    .table-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .table-toolbar h2 {
+      margin: 0;
+      color: #0277bd;
+      font-size: 22px;
+    }
+
+    .sort-box {
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid #cfd8dc;
+      font-size: 14px;
+      background: #fff;
+      outline: none;
+    }
+
+    /* =========================
+           BẢNG GIÁ VACCINE
+        ========================= */
+
+    .price-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 850px;
+      font-size: 13px;
+    }
+
+    .price-table th {
+      position: sticky;
+      top: 0;
+      background: #1976d2;
+      color: #fff;
+      padding: 8px 6px;
+      text-align: center;
+      border: 1px solid #d6e4f0;
+      z-index: 2;
+    }
+
+    .price-table td {
+      padding: 8px 6px;
+      border: 1px solid #d6e4f0;
+      vertical-align: middle;
+      background: #fff;
+      line-height: 1.5;
+    }
+
+    .price-table tbody tr:nth-child(even) td {
+      background: #f7fbff;
+    }
+
+    .price-table tbody tr:hover td {
+      background: #eaf4ff;
+    }
+
+    .price-table td:nth-child(1),
+    .price-table td:nth-child(4),
+    .price-table td:nth-child(5),
+    .price-table td:nth-child(6),
+    .price-table td:nth-child(7) {
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    /* =========================
+           TRẠNG THÁI VACCINE
+        ========================= */
+
+    .status-yes {
+      color: #0d47a1;
+      font-weight: 700;
+    }
+
+    .status-no {
+      color: #d32f2f;
+      font-weight: 700;
+    }
+
+    /* =========================
+           GHI CHÚ
+        ========================= */
+
+    .note-box {
+      margin-top: 14px;
+      background: #e3f2fd;
+      border-left: 4px solid #0288d1;
+      padding: 12px 14px;
+      border-radius: 8px;
+      color: #01579b;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* =========================
+           FOOTER
+        ========================= */
+
+    .footer {
+      margin-top: 40px;
+      background: #01579b;
+      color: #fff;
+      padding: 20px 40px;
+      font-size: 13px;
+      text-align: center;
+    }
+
+    /* =========================
+           RESPONSIVE
+        ========================= */
+
+    @media (max-width: 900px) {
+      .page-header h1 {
+        font-size: 24px;
+      }
+
+      .table-toolbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    /* Bảng giá vừa khung, không cuộn ngang */
+    .price-table {
+      width: 100%;
+      min-width: 0;
+      table-layout: fixed;
+      border-collapse: collapse;
+    }
+
+    /* Nội dung tự xuống dòng */
+    .price-table th,
+    .price-table td {
+      padding: 12px 8px;
+      white-space: normal;
+      overflow-wrap: break-word;
+      word-break: normal;
+      vertical-align: middle;
+    }
+
+    /* Điều chỉnh độ rộng 7 cột */
+    .price-table th:nth-child(1) {
+      width: 5%;
+    }
+
+    .price-table th:nth-child(2) {
+      width: 23%;
+    }
+
+    .price-table th:nth-child(3) {
+      width: 17%;
+    }
+
+    .price-table th:nth-child(4) {
+      width: 11%;
+    }
+
+    .price-table th:nth-child(5) {
+      width: 15%;
+    }
+
+    .price-table th:nth-child(6) {
+      width: 15%;
+    }
+
+    .price-table th:nth-child(7) {
+      width: 14%;
+    }
+
+    /* Trạng thái không bị cắt chữ */
+    .price-table td:last-child {
+      text-align: center;
+      font-size: 13px;
+    }
+
+    /* Bo tròn toàn bộ bảng giá */
+    .table-wrap {
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    /* Giữ bảng vừa khung */
+    .price-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+
+    /* Bo góc trên bên trái */
+    .price-table thead tr:first-child th:first-child {
+      border-top-left-radius: 12px;
+    }
+
+    /* Bo góc trên bên phải */
+    .price-table thead tr:first-child th:last-child {
+      border-top-right-radius: 12px;
+    }
+
+    /* Bo góc dưới bên trái */
+    .price-table tbody tr:last-child td:first-child {
+      border-bottom-left-radius: 12px;
+    }
+
+    /* Bo góc dưới bên phải */
+    .price-table tbody tr:last-child td:last-child {
+      border-bottom-right-radius: 12px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- =========================
+         HEADER DÙNG CHUNG
+    ========================= -->
+  <div id="header-container"></div>
+
+  <!-- =========================
+         TIÊU ĐỀ TRANG
+    ========================= -->
+  <div class="page-header">
+
+    <div class="breadcrumb">
+      <a href="trangchu.html">Trang chủ</a>
+      » Bảng giá vaccine
+    </div>
+
+    <h1>Bảng giá tiêm chủng</h1>
+
+    <p>
+      Danh sách giá tham khảo một số vaccine phổ biến
+      tại hệ thống tiêm chủng VAX AI.
+    </p>
+
+  </div>
+
+  <!-- =========================
+         NỘI DUNG BẢNG GIÁ
+    ========================= -->
+  <div class="section">
+
+    <div class="table-wrap">
+
+      <div class="table-toolbar">
+
+
+
+        <select class="sort-box" id="sortSelect">
+          <option value="">Sắp xếp theo</option>
+          <option value="name-asc">Tên vắc xin A-Z</option>
+          <option value="price-asc">Giá tăng dần</option>
+          <option value="price-desc">Giá giảm dần</option>
+        </select>
+
+      </div>
+
+      <!-- BẢNG GIÁ -->
+      <table class="price-table" id="priceTable">
+
+        <thead>
+          <tr>
+            <th>STT</th>
+            <th>Phòng bệnh</th>
+            <th>Tên vắc xin</th>
+            <th>Nước sản xuất</th>
+            <th>Giá bán/lẻ/liều (VNĐ)</th>
+            <th>Giá ưu đãi/liều (VNĐ)</th>
+            <th>Trạng thái giá</th>
+          </tr>
+        </thead>
+
+        <tbody id="priceTableBody">
+          <!-- Dữ liệu render bằng JS -->
+        </tbody>
+
+      </table>
+
+    </div>
+
+    <!-- GHI CHÚ -->
+    <div class="note-box">
+      Lưu ý: Bảng giá trên mang tính tham khảo,
+      có thể thay đổi theo thời điểm và tình trạng vaccine
+      tại từng cơ sở.
+    </div>
+
+  </div>
+
+  <!-- =========================
+         FOOTER
+    ========================= -->
+  <div class="footer">
+    © 2025 Hệ thống tiêm chủng VAX AI
+    • Hotline: 0939 456 789
+    • Email: tiemchungvaxai@gmail.com
+  </div>
+
+  <!-- =========================
+         JAVASCRIPT
+    ========================= -->
+  <script src="../../js/common/header.js"></script>
+  <script src="../../js/common/banggia.js"></script>
+
+</body>
+
+</html>
