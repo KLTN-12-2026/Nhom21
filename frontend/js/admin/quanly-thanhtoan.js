@@ -97,7 +97,6 @@ const detailRefundStatus =
 const detailRefundProcessedDate =
     document.getElementById("detailRefundProcessedDate");
 
-
 const detailRefundProcessor =
     document.getElementById("detailRefundProcessor");
 
@@ -193,7 +192,6 @@ document.addEventListener(
 
         }
 
-
         if (btnModalClose) {
 
             btnModalClose.addEventListener(
@@ -275,7 +273,6 @@ function getCurrentUser() {
 
         }
 
-
         return JSON.parse(raw);
 
     } catch (err) {
@@ -319,7 +316,6 @@ function validateAdminLogin() {
 
     }
 
-
     const role =
         user.vai_tro ||
         user.role ||
@@ -336,7 +332,6 @@ function validateAdminLogin() {
 
     }
 
-
     return true;
 
 }
@@ -348,7 +343,6 @@ async function loadPayments() {
         return;
 
     }
-
 
     try {
 
@@ -363,7 +357,6 @@ async function loadPayments() {
             </tr>
         `;
 
-
         const response =
             await fetch(
                 PAYMENT_API_URL,
@@ -375,12 +368,10 @@ async function loadPayments() {
                 }
             );
 
-
         const result =
             await readJsonResponse(
                 response
             );
-
 
         if (!response.ok) {
 
@@ -390,7 +381,6 @@ async function loadPayments() {
             );
 
         }
-
 
         if (Array.isArray(result)) {
 
@@ -409,7 +399,6 @@ async function loadPayments() {
 
         }
 
-
         renderPayments();
 
     } catch (err) {
@@ -418,7 +407,6 @@ async function loadPayments() {
             "Lỗi tải danh sách thanh toán:",
             err
         );
-
 
         paymentBody.innerHTML = `
             <tr>
@@ -446,21 +434,17 @@ function renderPayments() {
 
     }
 
-
     const status =
         filterStatus?.value ||
         "ALL";
-
 
     const method =
         filterMethod?.value ||
         "ALL";
 
-
     const refundStatusFilter =
         filterRefundStatus?.value ||
         "ALL";
-
 
     const keyword =
         (
@@ -523,13 +507,11 @@ function renderPayments() {
                     ${item.ly_do || ""}
                 `.toLowerCase();
 
-
                 const matchKeyword =
                     !keyword ||
                     searchText.includes(
                         keyword
                     );
-
 
                 return (
                     matchStatus &&
@@ -672,7 +654,6 @@ function bindTableActionEvents() {
             "[data-payment-id]"
         );
 
-
     buttons.forEach(
         (button) => {
 
@@ -729,7 +710,6 @@ function openPaymentDetailById(
 
     }
 
-
     openPaymentDetail(
         item
     );
@@ -773,20 +753,17 @@ function openPaymentDetail(item) {
         getCustomerName(item)
     );
 
-
     setText(
         detailUsername,
         item.ten_dang_nhap ||
         "Không có"
     );
 
-
     setText(
         detailPhone,
         item.so_dien_thoai ||
         "Không có"
     );
-
 
     setText(
         detailEmail,
@@ -802,13 +779,11 @@ function openPaymentDetail(item) {
             : "Không có"
     );
 
-
     setText(
         detailVaccine,
         item.vaccine ||
         "Không có"
     );
-
 
     setText(
         detailAppointmentDate,
@@ -816,7 +791,6 @@ function openPaymentDetail(item) {
             item.ngay_tiem
         )
     );
-
 
     setText(
         detailAppointmentTime,
@@ -832,14 +806,12 @@ function openPaymentDetail(item) {
         )
     );
 
-
     setText(
         detailPaymentMethod,
         formatMethod(
             item.phuong_thuc
         )
     );
-
 
     setText(
         detailTransactionCode,
@@ -848,14 +820,12 @@ function openPaymentDetail(item) {
         )
     );
 
-
     setText(
         detailPaymentDate,
         formatPaymentDateTime(
             item.ngay_thanh_toan
         )
     );
-
 
     if (detailPaymentStatus) {
 
@@ -875,14 +845,12 @@ function openPaymentDetail(item) {
 
         }
 
-
         if (refundDetailContent) {
 
             refundDetailContent.style.display =
                 "none";
 
         }
-
 
         hideRefundActions();
 
@@ -899,14 +867,12 @@ function openPaymentDetail(item) {
 
     }
 
-
     if (refundDetailContent) {
 
         refundDetailContent.style.display =
             "block";
 
     }
-
 
     setText(
         detailRefundAmount,
@@ -917,7 +883,6 @@ function openPaymentDetail(item) {
         )
     );
 
-
     setText(
         detailRefundRequestDate,
         formatDateTime(
@@ -927,7 +892,6 @@ function openPaymentDetail(item) {
         )
     );
 
-
     if (detailRefundStatus) {
 
         detailRefundStatus.innerHTML =
@@ -936,7 +900,6 @@ function openPaymentDetail(item) {
             );
 
     }
-
 
     setText(
         detailRefundProcessedDate,
@@ -948,7 +911,6 @@ function openPaymentDetail(item) {
             )
             : "Chưa xử lý"
     );
-
 
     setText(
         detailRefundProcessor,
@@ -967,7 +929,6 @@ function openPaymentDetail(item) {
             item
         )
     );
-
 
     setText(
         detailRefundReason,
@@ -988,14 +949,12 @@ function openPaymentDetail(item) {
 
         }
 
-
         if (adminNoteDisplayGroup) {
 
             adminNoteDisplayGroup.style.display =
                 "none";
 
         }
-
 
         if (refundAdminNote) {
 
@@ -1007,14 +966,12 @@ function openPaymentDetail(item) {
 
         }
 
-
         if (btnRejectRefund) {
 
             btnRejectRefund.style.display =
                 "inline-flex";
 
         }
-
 
         if (btnConfirmRefund) {
 
@@ -1032,14 +989,12 @@ function openPaymentDetail(item) {
 
         }
 
-
         if (adminNoteDisplayGroup) {
 
             adminNoteDisplayGroup.style.display =
                 "block";
 
         }
-
 
         setText(
             detailAdminNote,
@@ -1048,11 +1003,9 @@ function openPaymentDetail(item) {
             )
         );
 
-
         hideRefundActions();
 
     }
-
 
     openRefundModal();
 
@@ -1066,11 +1019,9 @@ function openRefundModal() {
 
     }
 
-
     refundModal.classList.add(
         "show"
     );
-
 
     document.body.style.overflow =
         "hidden";
@@ -1079,7 +1030,6 @@ function openRefundModal() {
         refundModal.querySelector(
             ".modal-body"
         );
-
 
     if (modalBody) {
 
@@ -1100,23 +1050,18 @@ function closeRefundModal() {
 
     }
 
-
     refundModal.classList.remove(
         "show"
     );
 
-
     document.body.style.overflow =
         "";
-
 
     currentPayment =
         null;
 
-
     currentRefundId =
         null;
-
 
     if (refundAdminNote) {
 
@@ -1127,7 +1072,6 @@ function closeRefundModal() {
             false;
 
     }
-
 
     hideRefundActions();
 
@@ -1141,7 +1085,6 @@ function hideRefundActions() {
             "none";
 
     }
-
 
     if (btnConfirmRefund) {
 
@@ -1160,13 +1103,11 @@ async function rejectRefund() {
 
     }
 
-
     if (!validateAdminLogin()) {
 
         return;
 
     }
-
 
     if (
         !currentPayment ||
@@ -1181,12 +1122,10 @@ async function rejectRefund() {
 
     }
 
-
     const refundStatus =
         getRefundStatus(
             currentPayment
         );
-
 
     if (
         refundStatus !==
@@ -1206,13 +1145,11 @@ async function rejectRefund() {
             .trim() ||
         "";
 
-
     if (!note) {
 
         alert(
             "Vui lòng nhập ghi chú/lý do từ chối."
         );
-
 
         refundAdminNote?.focus();
 
@@ -1220,12 +1157,10 @@ async function rejectRefund() {
 
     }
 
-
     const confirmed =
         confirm(
             "Bạn có chắc muốn từ chối yêu cầu hoàn tiền này?"
         );
-
 
     if (!confirmed) {
 
@@ -1233,13 +1168,11 @@ async function rejectRefund() {
 
     }
 
-
     try {
 
         setRefundButtonsLoading(
             true
         );
-
 
         const response =
             await fetch(
@@ -1262,12 +1195,10 @@ async function rejectRefund() {
                 }
             );
 
-
         const result =
             await readJsonResponse(
                 response
             );
-
 
         if (!response.ok) {
 
@@ -1278,15 +1209,12 @@ async function rejectRefund() {
 
         }
 
-
         alert(
             result.message ||
             "Đã từ chối yêu cầu hoàn tiền."
         );
 
-
         forceCloseRefundModal();
-
 
         await loadPayments();
 
@@ -1296,7 +1224,6 @@ async function rejectRefund() {
             "Lỗi từ chối hoàn tiền:",
             err
         );
-
 
         alert(
             err.message ||
@@ -1321,13 +1248,11 @@ async function confirmRefund() {
 
     }
 
-
     if (!validateAdminLogin()) {
 
         return;
 
     }
-
 
     if (
         !currentPayment ||
@@ -1342,12 +1267,10 @@ async function confirmRefund() {
 
     }
 
-
     const refundStatus =
         getRefundStatus(
             currentPayment
         );
-
 
     if (
         refundStatus !==
@@ -1362,12 +1285,10 @@ async function confirmRefund() {
 
     }
 
-
     const note =
         refundAdminNote?.value
             .trim() ||
         "";
-
 
     const amount =
         formatMoney(
@@ -1376,12 +1297,10 @@ async function confirmRefund() {
             )
         );
 
-
     const customer =
         getCustomerName(
             currentPayment
         );
-
 
     const confirmed = confirm(
         `Xác nhận đã hoàn tiền ${amount} cho ${customer}?\n\n` +
@@ -1389,20 +1308,17 @@ async function confirmRefund() {
         "Bạn có chắc chắn muốn tiếp tục?"
     );
 
-
     if (!confirmed) {
 
         return;
 
     }
 
-
     try {
 
         setRefundButtonsLoading(
             true
         );
-
 
         const response =
             await fetch(
@@ -1425,12 +1341,10 @@ async function confirmRefund() {
                 }
             );
 
-
         const result =
             await readJsonResponse(
                 response
             );
-
 
         if (!response.ok) {
 
@@ -1441,15 +1355,12 @@ async function confirmRefund() {
 
         }
 
-
         alert(
             result.message ||
             "Xác nhận hoàn tiền thành công."
         );
 
-
         forceCloseRefundModal();
-
 
         await loadPayments();
 
@@ -1459,7 +1370,6 @@ async function confirmRefund() {
             "Lỗi xác nhận hoàn tiền:",
             err
         );
-
 
         alert(
             err.message ||
@@ -1483,14 +1393,12 @@ function setRefundButtonsLoading(
     isProcessingRefund =
         loading;
 
-
     if (btnRejectRefund) {
 
         btnRejectRefund.disabled =
             loading;
 
     }
-
 
     if (btnConfirmRefund) {
 
@@ -1499,14 +1407,12 @@ function setRefundButtonsLoading(
 
     }
 
-
     if (refundAdminNote) {
 
         refundAdminNote.disabled =
             loading;
 
     }
-
 
     if (btnCloseRefundModal) {
 
@@ -1515,14 +1421,12 @@ function setRefundButtonsLoading(
 
     }
 
-
     if (btnModalClose) {
 
         btnModalClose.disabled =
             loading;
 
     }
-
 
     if (loading) {
 
@@ -1532,7 +1436,6 @@ function setRefundButtonsLoading(
                 "Đang xử lý...";
 
         }
-
 
         if (btnConfirmRefund) {
 
@@ -1549,7 +1452,6 @@ function setRefundButtonsLoading(
                 "Từ chối";
 
         }
-
 
         if (btnConfirmRefund) {
 
@@ -1570,23 +1472,18 @@ function forceCloseRefundModal() {
 
     }
 
-
     refundModal.classList.remove(
         "show"
     );
 
-
     document.body.style.overflow =
         "";
-
 
     currentPayment =
         null;
 
-
     currentRefundId =
         null;
-
 
     if (refundAdminNote) {
 
@@ -1758,7 +1655,6 @@ function getAdminNote(item) {
     const value =
         item?.ghi_chu_admin;
 
-
     if (
         value === null ||
         value === undefined ||
@@ -1768,7 +1664,6 @@ function getAdminNote(item) {
         return "Không có";
 
     }
-
 
     return String(value);
 
@@ -1812,7 +1707,6 @@ function renderPaymentStatus(status) {
 
     };
 
-
     const config =
         statusMap[status] ||
         {
@@ -1822,7 +1716,6 @@ function renderPaymentStatus(status) {
             text:
                 "Không rõ"
         };
-
 
     return `
         <span class="status-badge ${config.className}">
@@ -1839,7 +1732,6 @@ function renderRefundStatus(status) {
         return `—`;
 
     }
-
 
     const statusMap = {
 
@@ -1869,7 +1761,6 @@ function renderRefundStatus(status) {
 
     };
 
-
     const config =
         statusMap[status] ||
         {
@@ -1879,7 +1770,6 @@ function renderRefundStatus(status) {
             text:
                 "Không rõ"
         };
-
 
     return `
         <span class="status-badge ${config.className}">
@@ -1900,7 +1790,6 @@ function formatMethod(method) {
             "Tiền mặt"
 
     };
-
 
     return (
         methodMap[method] ||
@@ -1925,7 +1814,6 @@ function formatMoney(value) {
     const number =
         Number(value);
 
-
     if (
         !Number.isFinite(number)
     ) {
@@ -1933,7 +1821,6 @@ function formatMoney(value) {
         return "0 ₫";
 
     }
-
 
     return (
         number.toLocaleString(
@@ -1951,12 +1838,10 @@ function formatDate(value) {
 
     }
 
-
     const match =
         String(value).match(
             /^(\d{4})-(\d{2})-(\d{2})/
         );
-
 
     if (match) {
 
@@ -1966,10 +1851,8 @@ function formatDate(value) {
 
     }
 
-
     const date =
         new Date(value);
-
 
     if (
         Number.isNaN(
@@ -1980,7 +1863,6 @@ function formatDate(value) {
         return String(value);
 
     }
-
 
     return date.toLocaleDateString(
         "vi-VN",
@@ -2000,10 +1882,8 @@ function formatTime(value) {
 
     }
 
-
     const text =
         String(value);
-
 
     if (
         /^\d{2}:\d{2}/.test(
@@ -2018,7 +1898,6 @@ function formatTime(value) {
 
     }
 
-
     return text;
 
 }
@@ -2030,7 +1909,6 @@ function formatPaymentDateTime(value) {
         return "Chưa thanh toán";
 
     }
-
 
     return formatDateTime(
         value
@@ -2045,7 +1923,6 @@ function formatDateTime(value) {
         return "Không có";
 
     }
-
 
     let normalizedValue =
         String(value);
@@ -2063,12 +1940,10 @@ function formatDateTime(value) {
 
     }
 
-
     const date =
         new Date(
             normalizedValue
         );
-
 
     if (
         Number.isNaN(
@@ -2079,7 +1954,6 @@ function formatDateTime(value) {
         return String(value);
 
     }
-
 
     return date.toLocaleString(
         "vi-VN",
@@ -2101,7 +1975,6 @@ async function readJsonResponse(response) {
             "content-type"
         ) || "";
 
-
     if (
         !contentType.includes(
             "application/json"
@@ -2109,7 +1982,6 @@ async function readJsonResponse(response) {
     ) {
 
         let text = "";
-
 
         try {
 
@@ -2122,19 +1994,16 @@ async function readJsonResponse(response) {
 
         }
 
-
         console.error(
             "Response không phải JSON:",
             text
         );
-
 
         throw new Error(
             `Server trả về dữ liệu không hợp lệ (HTTP ${response.status})`
         );
 
     }
-
 
     return await response.json();
 
@@ -2150,7 +2019,6 @@ function setText(
         return;
 
     }
-
 
     element.textContent =
         value === null ||

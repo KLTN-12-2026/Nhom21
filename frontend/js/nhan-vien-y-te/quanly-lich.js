@@ -96,6 +96,7 @@ const detailThanhToan =
 const detailGhiChu =
   document.getElementById("detailGhiChu");
 
+// THÔNG TIN KHÁM SÀNG LỌC TRONG MODAL CHI TIẾT
 const detailKetQuaSangLoc =
   document.getElementById("detailKetQuaSangLoc");
 
@@ -260,6 +261,7 @@ function isVaccinationDateToday(value) {
 
   return ngayTiem === homNay;
 }
+
 
 function hasReachedVaccinationDate(value) {
   const ngayTiem =
@@ -702,7 +704,9 @@ ${item.trang_thai === "DA_DUYET" &&
         cursor:pointer;
       "
     >
-      Khám sàng lọc
+   ${item.ket_qua_sang_loc
+        ? "Xem / Điều chỉnh khám sàng lọc"
+        : "Khám sàng lọc"}
     </button>
   `
       : ""
@@ -811,7 +815,6 @@ function createActionHtml(item) {
       ${createMoreActionHtml(item)}
     `;
   } else {
-
     html += `
       <button
         type="button"
@@ -1647,7 +1650,6 @@ async function confirmCancelSchedule() {
     return;
   }
 
-
   const lyDo =
     validateCancelReason();
 
@@ -1655,7 +1657,6 @@ async function confirmCancelSchedule() {
   if (!lyDo) {
     return;
   }
-
 
   btnConfirmCancel.disabled =
     true;
@@ -1818,7 +1819,6 @@ async function confirmCashPayment(
     return;
   }
 
-
   try {
     const response =
       await fetch(
@@ -1853,12 +1853,10 @@ async function confirmCashPayment(
       );
     }
 
-
     alert(
       result.message ||
       "Xác nhận thanh toán tiền mặt thành công"
     );
-
 
     await loadSchedules();
 
@@ -1867,7 +1865,6 @@ async function confirmCashPayment(
       "Lỗi xác nhận tiền mặt:",
       error
     );
-
 
     alert(
       error.message ||
@@ -1981,7 +1978,6 @@ async function confirmInjected(
       "Xác nhận đã tiêm thành công"
     );
 
-
     await loadSchedules();
 
   } catch (error) {
@@ -1989,7 +1985,6 @@ async function confirmInjected(
       "Lỗi xác nhận đã tiêm:",
       error
     );
-
 
     alert(
       error.message ||
@@ -2003,12 +1998,10 @@ btnReload.addEventListener(
   loadSchedules
 );
 
-
 filterStatus.addEventListener(
   "change",
   loadSchedules
 );
-
 
 filterDate.addEventListener(
   "change",
@@ -2020,12 +2013,10 @@ btnCloseDetailX.addEventListener(
   closeDetailModal
 );
 
-
 btnCloseDetail.addEventListener(
   "click",
   closeDetailModal
 );
-
 
 detailModal.addEventListener(
   "click",
@@ -2150,6 +2141,13 @@ const screeningGhiChu = document.getElementById("screeningGhiChu");
 const screeningError = document.getElementById("screeningError");
 const btnSaveScreening = document.getElementById("btnSaveScreening");
 
+const btnEditScreening = document.getElementById("btnEditScreening");
+const screeningEditReasonGroup = document.getElementById("screeningEditReasonGroup");
+const screeningEditReason = document.getElementById("screeningEditReason");
+
+let screeningHasRecord = false;
+let screeningOriginalData = null;
+
 function closeScreeningModal() {
   screeningModal.classList.remove("show");
 
@@ -2161,6 +2159,7 @@ function closeScreeningModal() {
   }
 }
 
+
 function setScreeningReadOnly(readOnly) {
   [
     screeningBacSi,
@@ -2171,15 +2170,35 @@ function setScreeningReadOnly(readOnly) {
     element.disabled = readOnly;
   });
 
-  btnSaveScreening.style.display = readOnly ? "none" : "inline-flex";
+  btnSaveScreening.style.display =
+    readOnly ? "none" : "inline-flex";
+
+  btnEditScreening.style.display =
+    readOnly && screeningHasRecord
+      ? "inline-flex"
+      : "none";
+
+  screeningEditReasonGroup.style.display =
+    !readOnly && screeningHasRecord
+      ? "flex"
+      : "none";
+
+  if (!screeningHasRecord) {
+    screeningEditReason.value = "";
+  }
+
+  btnSaveScreening.textContent =
+    screeningHasRecord
+      ? "Lưu thay đổi"
+      : "Lưu kết quả";
 }
 
 function toLocalDateTime(value) {
   if (!value) return "";
 
-  const str = String(value);
+  const str = String(value).trim();
 
-  if (/^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}/.test(str)) {
+  if (/^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?$/.test(str)) {
     return str.substring(0, 16).replace(" ", "T");
   }
 
@@ -2187,20 +2206,32 @@ function toLocalDateTime(value) {
 
   if (Number.isNaN(date.getTime())) return "";
 
-  const pad = (n) => String(n).padStart(2, "0");
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Asia/Ho_Chi_Minh",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23"
+  }).formatToParts(date);
 
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+  const getPart = (type) =>
+    parts.find(part => part.type === type)?.value;
+
+  return `${getPart("year")}-${getPart("month")}-${getPart("day")}T${getPart("hour")}:${getPart("minute")}`;
 }
+
 
 async function openScreeningModal(lichId) {
   const item = danhSachLich.find(
-    (lich) => Number(lich.id) === Number(lichId)
+    lich => Number(lich.id) === Number(lichId)
   );
-
   if (!item || item.trang_thai !== "DA_DUYET") {
     alert("Chỉ được khám sàng lọc cho lịch đã duyệt.");
     return;
   }
+
   if (isRefundPending(item)) {
     alert(
       "Lịch đang chờ xử lý hoàn tiền. " +
@@ -2211,7 +2242,7 @@ async function openScreeningModal(lichId) {
 
   if (!isVaccinationDateToday(item.ngay_tiem)) {
     alert(
-      `Chỉ được khám sàng lọc đúng ngày tiêm đã đăng ký ` +
+      "Chỉ được khám sàng lọc đúng ngày tiêm đã đăng ký " +
       `(${formatDateToDDMMYYYY(item.ngay_tiem)}).`
     );
     return;
@@ -2219,7 +2250,11 @@ async function openScreeningModal(lichId) {
 
   screeningForm.reset();
   screeningError.textContent = "";
-  screeningLichId.value = lichId;
+  screeningLichId.value = String(lichId);
+
+  screeningHasRecord = false;
+  screeningOriginalData = null;
+  screeningEditReason.value = "";
 
   setScreeningReadOnly(true);
 
@@ -2234,9 +2269,7 @@ async function openScreeningModal(lichId) {
   try {
     const response = await fetch(
       `${API_BASE_URL}/kham-sang-loc/${lichId}`,
-      {
-        headers: getAuthHeaders()
-      }
+      { headers: getAuthHeaders() }
     );
 
     if (await checkAuthResponse(response)) return;
@@ -2245,25 +2278,42 @@ async function openScreeningModal(lichId) {
 
     if (!response.ok) {
       throw new Error(
-        result.message || "Không thể tải kết quả khám sàng lọc"
+        result.message ||
+        "Không thể tải kết quả khám sàng lọc"
       );
+    }
+    if (
+      !screeningModal.classList.contains("show") ||
+      Number(screeningLichId.value) !== Number(lichId)
+    ) {
+      return;
     }
 
     const data = result.data;
-
     if (data) {
       screeningBacSi.value = data.bac_si_kham || "";
-      screeningThoiGian.value = toLocalDateTime(
-        data.thoi_gian_kham
-      );
+      screeningThoiGian.value =
+        toLocalDateTime(data.thoi_gian_kham);
       screeningKetQua.value = data.ket_qua || "";
       screeningGhiChu.value = data.ghi_chu || "";
+
+      screeningHasRecord = true;
+
+      screeningOriginalData = {
+        bac_si_kham: screeningBacSi.value.trim(),
+        thoi_gian_kham: screeningThoiGian.value,
+        ket_qua: screeningKetQua.value,
+        ghi_chu: screeningGhiChu.value.trim()
+      };
 
       document.getElementById("screeningModalTitle").textContent =
         "Xem kết quả khám sàng lọc";
 
       setScreeningReadOnly(true);
     } else {
+      screeningHasRecord = false;
+      screeningOriginalData = null;
+
       document.getElementById("screeningModalTitle").textContent =
         "Ghi nhận khám sàng lọc";
 
@@ -2271,6 +2321,8 @@ async function openScreeningModal(lichId) {
     }
   } catch (error) {
     screeningError.textContent = error.message;
+    screeningHasRecord = false;
+    screeningOriginalData = null;
     setScreeningReadOnly(true);
   }
 }
@@ -2331,6 +2383,16 @@ async function saveScreening(event) {
 
   if (
     !item ||
+    item.trang_thai !== "DA_DUYET" ||
+    !isVaccinationDateToday(item.ngay_tiem) ||
+    isRefundPending(item)
+  ) {
+    screeningError.textContent =
+      "Lịch tiêm không còn đủ điều kiện khám sàng lọc hoặc điều chỉnh.";
+    return;
+  }
+
+  if (
     payload.thoi_gian_kham.slice(0, 10) !==
     normalizeDateValue(item.ngay_tiem)
   ) {
@@ -2354,19 +2416,52 @@ async function saveScreening(event) {
     return;
   }
 
+  if (screeningHasRecord) {
+    const lyDo = screeningEditReason.value.trim();
+
+    if (!lyDo || lyDo.length > 500) {
+      screeningError.textContent =
+        "Vui lòng nhập lý do chỉnh sửa (tối đa 500 ký tự).";
+      screeningEditReason.focus();
+      return;
+    }
+
+    if (!screeningOriginalData) {
+      screeningError.textContent =
+        "Không tìm thấy dữ liệu khám ban đầu.";
+      return;
+    }
+
+    const daThayDoi =
+      payload.bac_si_kham !== screeningOriginalData.bac_si_kham ||
+      payload.thoi_gian_kham !== screeningOriginalData.thoi_gian_kham ||
+      payload.ket_qua !== screeningOriginalData.ket_qua ||
+      payload.ghi_chu !== screeningOriginalData.ghi_chu;
+
+    if (!daThayDoi) {
+      screeningError.textContent =
+        "Bạn chưa thay đổi thông tin khám sàng lọc.";
+      return;
+    }
+
+    payload.ly_do_chinh_sua = lyDo;
+  }
+
   screeningError.textContent = "";
   btnSaveScreening.disabled = true;
   btnSaveScreening.textContent = "Đang lưu...";
 
   try {
-    const response = await fetch(
-      `${API_BASE_URL}/kham-sang-loc`,
-      {
-        method: "POST",
-        headers: getAuthHeaders(true),
-        body: JSON.stringify(payload)
-      }
-    );
+
+    const url = screeningHasRecord
+      ? `${API_BASE_URL}/kham-sang-loc/${lichId}`
+      : `${API_BASE_URL}/kham-sang-loc`;
+
+    const response = await fetch(url, {
+      method: screeningHasRecord ? "PATCH" : "POST",
+      headers: getAuthHeaders(true),
+      body: JSON.stringify(payload)
+    });
 
     if (await checkAuthResponse(response)) return;
 
@@ -2378,7 +2473,11 @@ async function saveScreening(event) {
       );
     }
 
-    alert("Ghi nhận kết quả khám sàng lọc thành công!");
+    alert(
+      screeningHasRecord
+        ? "Điều chỉnh khám sàng lọc thành công!"
+        : "Ghi nhận kết quả khám sàng lọc thành công!"
+    );
 
     closeScreeningModal();
     await loadSchedules();
@@ -2386,9 +2485,38 @@ async function saveScreening(event) {
     screeningError.textContent = error.message;
   } finally {
     btnSaveScreening.disabled = false;
-    btnSaveScreening.textContent = "Lưu kết quả";
+    btnSaveScreening.textContent =
+      screeningHasRecord ? "Lưu thay đổi" : "Lưu kết quả";
   }
 }
+
+btnEditScreening.addEventListener("click", () => {
+  const lichId = Number(screeningLichId.value);
+
+  const item = danhSachLich.find(
+    lich => Number(lich.id) === lichId
+  );
+
+  if (
+    !screeningHasRecord ||
+    !item ||
+    item.trang_thai !== "DA_DUYET" ||
+    !isVaccinationDateToday(item.ngay_tiem) ||
+    isRefundPending(item)
+  ) {
+    screeningError.textContent =
+      "Lịch tiêm không còn đủ điều kiện chỉnh sửa.";
+    return;
+  }
+
+  screeningEditReason.value = "";
+  screeningError.textContent = "";
+
+  setScreeningReadOnly(false);
+
+  document.getElementById("screeningModalTitle").textContent =
+    "Điều chỉnh khám sàng lọc";
+});
 
 screeningForm.addEventListener("submit", saveScreening);
 
