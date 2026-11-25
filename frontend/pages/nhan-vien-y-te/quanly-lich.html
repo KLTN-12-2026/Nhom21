@@ -879,7 +879,6 @@
     }
 
     @media (max-width: 600px) {
-
       body {
         font-size: 14px;
       }
@@ -2105,10 +2104,21 @@
 
           <div class="screening-field">
             <label for="screeningGhiChu">Ghi chú</label>
-            <textarea id="screeningGhiChu" maxlength="2000" placeholder="Nhập ghi chú của bác sĩ (nếu có)"></textarea>
+            <textarea id="screeningGhiChu" maxlength="1000" placeholder="Nhập ghi chú của bác sĩ (nếu có)"></textarea>
           </div>
 
           <div id="screeningError" class="screening-error" role="alert"></div>
+
+          <!-- Lý do chỉnh sửa, chỉ hiện khi điều chỉnh kết quả đã lưu -->
+          <div class="screening-field" id="screeningEditReasonGroup" style="display: none;">
+            <label for="screeningEditReason">
+              Lý do chỉnh sửa
+              <span class="required-mark">*</span>
+            </label>
+
+            <textarea id="screeningEditReason" maxlength="500"
+              placeholder="Nhập lý do chỉnh sửa thông tin khám sàng lọc..."></textarea>
+          </div>
 
         </form>
       </div>
@@ -2122,6 +2132,11 @@
           style="margin-left:10px">
           Lưu kết quả
         </button>
+
+        <button type="button" id="btnEditScreening" class="btn btn-primary" style="display: none; margin-left: 10px;">
+          Điều chỉnh
+        </button>
+
       </div>
     </div>
   </div>
