@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thống kê báo cáo</title>
+  <link rel="stylesheet" href="../../css/style.css" />
+  <link rel="stylesheet" href="../../css/mobile.css">
+
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: transparent;
+      color: #1f2937;
+    }
+
+    .page {
+      width: 100%;
+      min-width: 0;
+      padding: 0;
+    }
+
+    .card {
+      background: #ffffff;
+      border: 1px solid #dbeafe;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 14px;
+      min-width: 0;
+    }
+
+    .filter-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      align-items: end;
+    }
+
+    .filter-actions {
+      grid-column: 1 / -1;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .filter-actions .btn {
+      min-width: 150px;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .filter-group label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #01579b;
+    }
+
+    .filter-group input,
+    .filter-group select {
+      width: 100%;
+      min-width: 0;
+      padding: 9px 10px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      font-size: 13px;
+      outline: none;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 8px;
+      padding: 9px 14px;
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: #0288d1;
+      color: #ffffff;
+    }
+
+    .btn-outline {
+      background: #ffffff;
+      color: #0288d1;
+      border: 1px solid #0288d1;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #01579b;
+      margin-bottom: 8px;
+    }
+
+    .section-desc {
+      font-size: 13px;
+      color: #546e7a;
+      margin-bottom: 12px;
+    }
+
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .overview-card {
+      background: linear-gradient(135deg, #f8fbff, #eef7ff);
+      border: 1px solid #dbeafe;
+      border-radius: 12px;
+      padding: 14px;
+      min-width: 0;
+    }
+
+    .overview-card-title {
+      color: #607d8b;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .overview-card-value {
+      font-size: 26px;
+      font-weight: 700;
+      color: #0277bd;
+    }
+
+    .chart-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .chart-box {
+      height: 320px;
+      min-width: 0;
+      border: 1px solid #dbeafe;
+      border-radius: 12px;
+      padding: 14px;
+      background: #ffffff;
+      position: relative;
+    }
+
+    .chart-box canvas {
+      display: block;
+      max-width: 100%;
+    }
+
+    .table-wrap {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      border: 1px solid #dbeafe;
+      border-radius: 10px;
+    }
+
+    .table-wrap table {
+      display: table;
+      width: 100%;
+      min-width: 800px;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .table-wrap thead {
+      display: table-header-group;
+    }
+
+    .table-wrap tbody {
+      display: table-row-group;
+    }
+
+    .table-wrap tr {
+      display: table-row;
+    }
+
+    .table-wrap th,
+    .table-wrap td {
+      display: table-cell;
+      border: 1px solid #dbeafe;
+      vertical-align: middle;
+    }
+
+    .table-wrap th {
+      background: #0288d1;
+      color: #ffffff;
+      padding: 10px 8px;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .table-wrap td {
+      padding: 9px 8px;
+      background: #ffffff;
+    }
+
+    .table-wrap tbody tr:nth-child(even) td {
+      background: #f8fbff;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    .money {
+      color: #d32f2f;
+      font-weight: 700;
+    }
+
+    .status-pill {
+      display: inline-block;
+      width: auto;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .status-ok {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    .status-low {
+      background: #fff8e1;
+      color: #ef6c00;
+    }
+
+    .status-empty {
+      background: #ffebee;
+      color: #c62828;
+    }
+
+    .section-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    #reportMessage {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #e53935;
+      min-height: 18px;
+    }
+
+    @media (max-width: 1100px) {
+
+      .filter-grid,
+      .overview-grid,
+      .chart-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+    }
+
+    @media (max-width: 700px) {
+
+      html,
+      body {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+      }
+
+      .page {
+        width: 100%;
+        min-width: 0;
+        padding: 0;
+      }
+
+      .card {
+        width: 100%;
+        min-width: 0;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 10px;
+      }
+
+      .section-title {
+        font-size: 15px;
+        margin-bottom: 10px;
+      }
+
+      .section-desc {
+        font-size: 12px;
+      }
+
+      .filter-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 10px;
+      }
+
+      .filter-group {
+        min-width: 0;
+      }
+
+      .filter-group input,
+      .filter-group select {
+        width: 100%;
+        min-width: 0;
+        font-size: 13px;
+        padding: 9px;
+      }
+
+      .overview-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .overview-card {
+        min-width: 0;
+        padding: 10px;
+        border-radius: 9px;
+      }
+
+      .overview-card-title {
+        font-size: 11px;
+        line-height: 1.4;
+        overflow-wrap: anywhere;
+      }
+
+      .overview-card-value {
+        font-size: 18px;
+        line-height: 1.4;
+        overflow-wrap: anywhere;
+      }
+
+      .chart-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 10px;
+      }
+
+      .chart-box {
+        width: 100%;
+        min-width: 0;
+        height: 250px;
+        padding: 8px;
+        overflow: hidden;
+      }
+
+      .chart-box canvas {
+        display: block;
+        max-width: 100%;
+      }
+
+      .table-wrap {
+        display: block !important;
+        width: 100%;
+        max-width: 100%;
+        overflow-x: auto !important;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .table-wrap table {
+        display: table !important;
+        width: max-content;
+        min-width: 700px;
+        border-collapse: collapse;
+        font-size: 11px;
+      }
+
+      .table-wrap thead {
+        display: table-header-group !important;
+      }
+
+      .table-wrap tbody {
+        display: table-row-group !important;
+      }
+
+      .table-wrap tr {
+        display: table-row !important;
+      }
+
+      .table-wrap th,
+      .table-wrap td {
+        display: table-cell !important;
+        position: static;
+        float: none;
+        width: auto;
+        padding: 8px;
+        white-space: nowrap;
+        text-align: center;
+        vertical-align: middle;
+      }
+
+      .table-wrap th {
+        background: #0288d1;
+        color: #ffffff;
+      }
+
+      .section-actions {
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .section-actions .btn {
+        width: 100%;
+        min-width: 0;
+        justify-content: center;
+        white-space: normal;
+        text-align: center;
+        padding: 10px;
+        font-size: 12px;
+      }
+
+      #btnReloadAll {
+        width: 100%;
+      }
+
+      #reportMessage {
+        font-size: 12px;
+        overflow-wrap: anywhere;
+      }
+
+    }
+
+    @media (max-width: 400px) {
+
+      .card {
+        padding: 8px;
+      }
+
+      .overview-card {
+        padding: 8px;
+      }
+
+      .overview-card-title {
+        font-size: 10px;
+      }
+
+      .overview-card-value {
+        font-size: 16px;
+      }
+
+      .chart-box {
+        height: 220px;
+      }
+
+      .table-wrap th,
+      .table-wrap td {
+        padding: 7px 6px;
+        font-size: 10px;
+      }
+
+      .section-actions .btn {
+        font-size: 11px;
+      }
+
+    }
+
+    @media (max-width: 700px) {
+
+      .vaccine-table-wrap {
+        display: block !important;
+        width: 100%;
+        max-width: 100%;
+        overflow-x: auto !important;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .vaccine-table-wrap table {
+        display: table !important;
+        table-layout: fixed !important;
+        width: 900px !important;
+        min-width: 900px !important;
+        border-collapse: collapse;
+      }
+
+      .vaccine-table-wrap thead {
+        display: table-header-group !important;
+      }
+
+      .vaccine-table-wrap tbody {
+        display: table-row-group !important;
+      }
+
+      .vaccine-table-wrap tr {
+        display: table-row !important;
+      }
+
+      .vaccine-table-wrap th,
+      .vaccine-table-wrap td {
+        display: table-cell !important;
+        width: auto !important;
+        min-width: 0 !important;
+        max-width: none !important;
+        white-space: nowrap !important;
+        word-break: normal !important;
+        overflow-wrap: normal !important;
+        text-align: center;
+        vertical-align: middle;
+        padding: 8px;
+      }
+
+      .vaccine-table-wrap th:first-child,
+      .vaccine-table-wrap td:first-child {
+        width: 180px !important;
+        text-align: left;
+      }
+    }
+
+    @media (max-width: 700px) {
+
+      .table-wrap.vaccine-table-wrap {
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .table-wrap.vaccine-table-wrap>table {
+        display: table !important;
+        table-layout: fixed !important;
+        width: 900px !important;
+        min-width: 900px !important;
+      }
+
+      .table-wrap.vaccine-table-wrap>table>thead {
+        display: table-header-group !important;
+      }
+
+      .table-wrap.vaccine-table-wrap>table>tbody {
+        display: table-row-group !important;
+      }
+
+      .table-wrap.vaccine-table-wrap>table tr {
+        display: table-row !important;
+      }
+
+      .table-wrap.vaccine-table-wrap>table th,
+      .table-wrap.vaccine-table-wrap>table td {
+        display: table-cell !important;
+        position: static !important;
+        float: none !important;
+        min-width: 0 !important;
+        max-width: none !important;
+        white-space: nowrap !important;
+        word-break: normal !important;
+        overflow-wrap: normal !important;
+        vertical-align: middle !important;
+        text-align: center;
+      }
+
+      .table-wrap.vaccine-table-wrap>table th:first-child,
+      .table-wrap.vaccine-table-wrap>table td:first-child {
+        width: 180px !important;
+        text-align: left;
+      }
+    }
+
+    @media (max-width: 700px) {
+
+      .table-wrap:has(#tblRevenueReport) {
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .table-wrap:has(#tblRevenueReport)>table {
+        display: table !important;
+        table-layout: fixed !important;
+        width: 900px !important;
+        min-width: 900px !important;
+        border-collapse: collapse;
+      }
+
+      .table-wrap:has(#tblRevenueReport) thead {
+        display: table-header-group !important;
+      }
+
+      .table-wrap:has(#tblRevenueReport) tbody {
+        display: table-row-group !important;
+      }
+
+      .table-wrap:has(#tblRevenueReport) tr {
+        display: table-row !important;
+      }
+
+      .table-wrap:has(#tblRevenueReport) th,
+      .table-wrap:has(#tblRevenueReport) td {
+        display: table-cell !important;
+        position: static !important;
+        float: none !important;
+        min-width: 0 !important;
+        max-width: none !important;
+        white-space: nowrap !important;
+        word-break: normal !important;
+        overflow-wrap: normal !important;
+        vertical-align: middle !important;
+        text-align: center;
+        padding: 8px !important;
+      }
+
+      .table-wrap:has(#tblRevenueReport) th:first-child,
+      .table-wrap:has(#tblRevenueReport) td:first-child {
+        width: 180px !important;
+        text-align: left;
+      }
+    }
+
+    @media (min-width: 701px) and (max-width: 1100px) {
+      .filter-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 700px) {
+      .filter-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 10px;
+      }
+
+      .filter-actions {
+        grid-column: 1 / -1;
+        width: 100%;
+      }
+
+      .filter-actions .btn {
+        width: 100%;
+      }
+    }
+
+    .filter-group input[type="number"] {
+      appearance: textfield;
+      -moz-appearance: textfield;
+    }
+
+    .filter-group input[type="number"]::-webkit-inner-spin-button,
+    .filter-group input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    .filter-group input:focus,
+    .filter-group select:focus {
+      border-color: #0288d1;
+    }
+
+    .filter-actions .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    @media (max-width: 700px) {
+      .filter-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .filter-actions {
+        grid-column: 1 / -1;
+        flex-direction: column;
+        width: 100%;
+        gap: 8px;
+      }
+
+      .filter-actions .btn {
+        width: 100%;
+        min-width: 0;
+      }
+    }
+
+    .filter-actions {
+      grid-column: 1 / -1;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      align-items: center;
+      flex-wrap: nowrap;
+      gap: 8px;
+    }
+
+    @media (min-width: 1101px) {
+
+      .filter-actions #btnResetFilters,
+      .filter-actions #btnReloadAll {
+        width: auto;
+        min-width: 0;
+        height: 35px;
+        min-height: 35px;
+        max-height: 35px;
+        padding: 0 12px;
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1;
+        white-space: nowrap;
+        border-radius: 8px;
+      }
+    }
+
+    @media (max-width: 700px) {
+
+      .filter-actions {
+        grid-column: 1 / -1;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        gap: 6px;
+      }
+
+      .filter-actions #btnResetFilters,
+      .filter-actions #btnReloadAll {
+        flex: 1 1 0;
+        width: 0;
+        min-width: 0;
+        min-height: 32px;
+        padding: 6px 4px;
+        margin: 0;
+        font-size: 10px;
+        font-weight: 500;
+        white-space: nowrap;
+        border-radius: 6px;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        gap: 4px;
+        box-sizing: border-box;
+      }
+
+      .filter-actions #btnResetFilters i,
+      .filter-actions #btnReloadAll i,
+      .filter-actions #btnResetFilters svg,
+      .filter-actions #btnReloadAll svg {
+        width: 12px;
+        height: 12px;
+        font-size: 12px;
+        flex-shrink: 0;
+      }
+    }
+
+    @media (max-width: 700px) {
+
+      .table-wrap.vaccine-table-wrap>table th:first-child,
+      .table-wrap.vaccine-table-wrap>table td:first-child {
+        width: 50px !important;
+        text-align: center !important;
+      }
+
+      .table-wrap.vaccine-table-wrap>table th:nth-child(2),
+      .table-wrap.vaccine-table-wrap>table td:nth-child(2) {
+        width: 180px !important;
+        text-align: left !important;
+      }
+    }
+
+    @media (min-width: 1101px) {
+
+      .filter-grid .filter-group input,
+      .filter-grid .filter-group select {
+        width: 100%;
+        height: 35px;
+        min-height: 35px;
+        padding: 0 10px;
+        font-size: 13px;
+        border-radius: 8px;
+        box-sizing: border-box;
+      }
+
+      .section-actions .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+
+        width: auto;
+        height: 35px;
+        min-height: 35px;
+        max-height: 35px;
+
+        padding: 0 12px;
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1;
+        border-radius: 8px;
+        box-sizing: border-box;
+        white-space: nowrap;
+      }
+
+      .filter-actions .btn .material-symbols-rounded,
+      .section-actions .btn .material-symbols-rounded {
+        font-size: 18px;
+        line-height: 1;
+        flex-shrink: 0;
+      }
+    }
+  </style>
+
+</head>
+
+<body>
+  <div class="page">
+    <div class="card">
+      <div class="filter-grid">
+
+        <div class="filter-group">
+          <label for="filterFacility">Cơ sở tiêm</label>
+          <select id="filterFacility">
+            <option value="ALL">Tất cả cơ sở</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="reportType">Kiểu thống kê</label>
+          <select id="reportType">
+            <option value="day">Theo ngày</option>
+            <option value="month">Theo tháng</option>
+            <option value="year">Theo năm</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="filterVaccine">Loại vaccine</label>
+          <select id="filterVaccine">
+            <option value="ALL">Tất cả vaccine</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="fromDate" id="fromDateLabel">Từ ngày</label>
+          <input type="date" id="fromDate">
+        </div>
+
+        <div class="filter-group">
+          <label for="toDate" id="toDateLabel">Đến ngày</label>
+          <input type="date" id="toDate">
+        </div>
+
+        <div class="filter-group">
+          <label for="filterPaymentMethod">
+            Phương thức thanh toán
+          </label>
+          <select id="filterPaymentMethod">
+            <option value="ALL">Tất cả</option>
+            <option value="VNPAY">VNPAY</option>
+            <option value="TIEN_MAT">Tiền mặt</option>
+          </select>
+        </div>
+
+        <div class="filter-actions">
+          <button class="btn btn-outline" id="btnResetFilters" type="button">
+            <span class="material-symbols-rounded">restart_alt</span>
+            <span>Đặt lại bộ lọc</span>
+          </button>
+
+          <button class="btn btn-primary" id="btnReloadAll" type="button">
+            <span class="material-symbols-rounded">filter_alt</span>
+            <span>Áp dụng bộ lọc</span>
+          </button>
+        </div>
+      </div>
+
+      <div id="reportMessage"></div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Thống kê vaccine</div>
+      <div class="overview-grid">
+        <div class="overview-card">
+          <div class="overview-card-title">Tổng lịch tiêm</div>
+          <div class="overview-card-value" id="totalSchedules">0</div>
+        </div>
+
+        <div class="overview-card">
+          <div class="overview-card-title">Lịch chờ tiêm</div>
+          <div class="overview-card-value" id="pendingSchedules">0</div>
+        </div>
+
+        <div class="overview-card">
+          <div class="overview-card-title">Tổng mũi đã tiêm</div>
+          <div class="overview-card-value" id="totalDosesInjected">0</div>
+        </div>
+
+        <div class="overview-card">
+          <div class="overview-card-title">Tổng liều trong kho</div>
+          <div class="overview-card-value" id="totalStockDoses">0</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Biểu đồ vaccine</div>
+      <div class="chart-grid">
+        <div class="chart-box">
+          <canvas id="chartInjectedByVaccine"></canvas>
+        </div>
+
+        <div class="chart-box">
+          <canvas id="chartStockByVaccine"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Chi tiết vaccine</div>
+
+      <div class="table-wrap vaccine-table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>STT</th>
+              <th>Vaccine</th>
+              <th>Số mũi đã tiêm</th>
+              <th>Số lịch chờ tiêm</th>
+              <th>Số lịch đã hủy</th>
+              <th>Tổng lịch</th>
+              <th>Tồn kho</th>
+              <th>Trạng thái</th>
+            </tr>
+          </thead>
+
+          <tbody id="tblVaccineReport">
+            <tr>
+              <td colspan="8" class="text-center">
+                Chưa có dữ liệu thống kê
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Thống kê doanh thu</div>
+      <div class="overview-grid">
+        <div class="overview-card">
+          <div class="overview-card-title">Tổng doanh thu</div>
+          <div class="overview-card-value" id="totalRevenue">0đ</div>
+        </div>
+
+        <div class="overview-card">
+          <div class="overview-card-title">Doanh thu thực nhận</div>
+          <div class="overview-card-value" id="paidRevenue">0đ</div>
+        </div>
+
+        <div class="overview-card">
+          <div class="overview-card-title">Đã hoàn tiền</div>
+          <div class="overview-card-value" id="refundRevenue">0đ</div>
+        </div>
+
+        <div class="overview-card">
+          <div class="overview-card-title">Số giao dịch</div>
+          <div class="overview-card-value" id="totalTransactions">0</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Biểu đồ doanh thu</div>
+      <div class="chart-grid">
+        <div class="chart-box">
+          <canvas id="chartRevenueByTime"></canvas>
+        </div>
+
+        <div class="chart-box">
+          <canvas id="chartRevenueByMethod"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Chi tiết doanh thu</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th id="revenueTimeHeader">Ngày</th>
+              <th>Vaccine</th>
+              <th>Số giao dịch</th>
+              <th>VNPAY</th>
+              <th>Tiền mặt</th>
+              <th>Doanh thu</th>
+            </tr>
+          </thead>
+          <tbody id="tblRevenueReport">
+            <tr>
+              <td colspan="6" class="text-center">Chưa có dữ liệu doanh thu</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Xuất báo cáo</div>
+
+      <div class="section-actions">
+        <button class="btn btn-primary" id="btnRefreshData" type="button">
+          <span class="material-symbols-rounded">sync</span>
+          <span>Cập nhật số liệu</span>
+        </button>
+
+        <button class="btn btn-outline" id="btnExportVaccineReport" type="button">
+          <span class="material-symbols-rounded">download</span>
+          <span>Xuất báo cáo vaccine</span>
+        </button>
+
+        <button class="btn btn-outline" id="btnExportRevenueReport" type="button">
+          <span class="material-symbols-rounded">payments</span>
+          <span>Xuất báo cáo doanh thu</span>
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="../../js/common/jwt-handler.js"></script>
+  <script src="../../js/admin/thongke-baocao.js"></script>
+</body>
+
+</html>
